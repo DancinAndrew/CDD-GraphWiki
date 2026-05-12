@@ -1,80 +1,104 @@
-# CDD-GraphWiki System Build and Reading Roadmap
+# CDD-GraphWiki 系統建構與論文閱讀路線圖
 
 Last updated: 2026-05-12
 
-## One-Line Direction
+## 一句話方向
 
-CDD-GraphWiki should be built as a regulatory knowledge compilation and compliance reasoning system for AML / CDD, not as a generic RAG chatbot.
+CDD-GraphWiki 要做的是 **AML / CDD 法規知識編譯與合規推理系統**，不是把 PDF 丟進 vector database 後讓 LLM 問答的 generic RAG chatbot。
 
-The core pipeline is:
+核心流程應該是：
 
 ```text
-raw regulatory sources
--> clause segmentation and provenance
--> obligation / condition / exception extraction
--> human-readable wiki pages
--> machine-readable regulatory graph
--> contradiction / supersession / policy-gap tracking
--> evidence-grounded CDD / EDD checklist generation
--> human review for ambiguous or high-risk cases
+原始法規與內規文件
+-> 條文切分與 provenance
+-> 義務 / 條件 / 例外 / 證據需求抽取
+-> 人類可讀的 wiki concept pages
+-> 機器可推理的 regulatory knowledge graph
+-> 矛盾 / 版本取代 / 內外規 gap tracking
+-> 有 citation 的 CDD / EDD checklist
+-> 高風險或模糊案例交給 human review
 ```
 
-## Product Thesis
+## 產品核心命題
 
-The system's job is to convert complex regulatory and internal policy documents into a knowledge system that compliance officers can read and machines can reason over.
+這套系統的價值不是「會回答法規問題」，而是把 FATF、MAS、FCA、內部 AML / KYC policy 這些複雜文件，轉成一套 **人看得懂、機器也能判斷** 的知識系統。
 
-A weak version of this project would upload FATF / MAS / FCA / internal policy PDFs into a vector database and answer questions with an LLM. That may produce useful summaries, but it cannot reliably answer operational CDD questions such as:
+普通 RAG chatbot 可能可以回答：
 
-- Which obligation applies to this customer type?
-- Which jurisdiction or policy version controls this decision?
-- Is this rule superseded by a newer or stricter rule?
-- Does internal AML policy conflict with external regulation?
-- Which documents are required for this exact CDD / EDD scenario?
-- Which source clauses support each checklist item?
+- FATF Recommendation 10 在說什麼？
+- MAS Notice 626 對 CDD 有哪些要求？
+- Beneficial Owner 是什麼？
 
-The better version separates document understanding, legal rule extraction, graph construction, conflict tracking, evidence retrieval, and decision generation.
+但它通常無法穩定回答真正有業務價值的問題：
 
-## Target Architecture
+- 這個 customer profile 到底觸發 standard CDD 還是 EDD？
+- 哪一條 obligation 適用於 corporate customer？
+- 哪個 jurisdiction 或 policy version 優先？
+- 內部 AML policy 是否比外部 regulation 寬鬆？
+- 新版條文是否取代舊版內規？
+- 這份 checklist 的每個文件要求依據哪一條 source clause？
+
+所以這個 project 不能從「聊天介面」開始，而要從「知識編譯 pipeline」開始。
+
+## 目標架構
 
 ### 1. Raw Regulatory Sources
 
-Purpose: preserve original authority, provenance, and version history.
+目的：保存原始權威來源、版本、引用位置與 provenance。
 
-Inputs:
+MVP 來源：
 
 - FATF Recommendation 10
-- MAS Notice 626
-- FCA AML / financial crime guidance
-- Internal AML / KYC policies
-- Mock internal policy for MVP testing
+- MAS Notice 626 的 CDD / EDD 相關章節
+- FCA AML / financial crime guidance 的部分章節
+- 一份 mock internal AML / KYC policy
 
-Build requirements:
+要建的東西：
 
-- Store source id, jurisdiction, issuer, document version, effective date, retrieval date, section id, clause id, page / paragraph reference, and raw text.
-- Never allow downstream generated content to replace the original clause.
-- Treat source provenance as a first-class data model, not as metadata pasted into a prompt.
+- `SourceDocument`
+- `Clause`
+- `Citation`
+- `SourceVersion`
 
-### 2. Clause Segmentation and Legal Parsing
+每個 clause 至少要保留：
 
-Purpose: turn long legal documents into stable units that can be cited, extracted, compared, and reviewed.
+- source id
+- issuer
+- jurisdiction
+- document version
+- effective date
+- retrieval date
+- section / clause / paragraph id
+- raw text
+- source URL 或 local file path
 
-Build requirements:
+判斷標準：任何後續 wiki page、obligation、conflict、CDD checklist，都要能回到原始 clause。
 
-- Segment documents into sections, clauses, subclauses, definitions, obligations, exceptions, and cross-references.
-- Keep each segment connected to the original source location.
-- Preserve hierarchy, because cross-references and exceptions often depend on parent clauses.
+### 2. Clause Segmentation / Legal Parsing
 
-Main paper support:
+目的：把長文件切成可以 citation、抽取、比較、review 的穩定單位。
 
-- [RAGulating Compliance](https://arxiv.org/html/2508.09893v1): ingestion, triplet extraction, source-linked triplets, and agent-based KG construction.
-- [Legal Requirements Translation from Law](https://arxiv.org/html/2507.02846v1): structural metadata such as sections, subsections, references, and rule relationships.
-- [LegalBench-RAG](https://arxiv.org/abs/2408.10343): minimal, highly relevant legal snippet retrieval as an evaluation target.
+不要只用固定 token chunk。法規文件的 hierarchy 很重要，因為例外、定義、cross-reference 通常依賴 parent clause。
+
+要建的東西：
+
+- section parser
+- clause id generator
+- hierarchy representation
+- cross-reference placeholder
+- extraction-ready clause records
+
+對應論文：
+
+- [RAGulating Compliance](https://arxiv.org/html/2508.09893v1)：看 ingestion agent、triplet extraction、source-linked triplets。
+- [Legal Requirements Translation from Law](https://arxiv.org/html/2507.02846v1)：看 sections、subsections、references、rule relationships 如何被表示。
+- [LegalBench-RAG](https://arxiv.org/abs/2408.10343)：看 retrieval evaluation 為什麼要找 minimal legal snippets，而不是大段 chunk。
 
 ### 3. Obligation Extraction Layer
 
-Purpose: convert legal clauses into structured compliance obligations.
+目的：把法律或內規條文轉成 structured obligation，不只是摘要。
 
-Canonical obligation shape:
+建議的 canonical obligation 格式：
 
 ```yaml
 obligation_id: identify_beneficial_owner
@@ -95,25 +119,32 @@ required_evidence:
 review_flags:
   - ubo_unclear
   - complex_ownership_structure
+confidence: 0.82
+review_status: pending_human_review
 ```
 
-Build requirements:
+要抽取的欄位：
 
-- Extract actor, action, object, condition, exception, evidence, timing, frequency, threshold, and review trigger.
-- Do not collapse obligation extraction into natural-language summary.
-- Track extraction confidence and human review status.
+- actor / addressee：誰有義務
+- action / predicate：必須做什麼
+- object：作用對象
+- condition：什麼情境下適用
+- exception：什麼情境下不適用
+- evidence required：需要什麼文件或證據
+- timing / frequency / threshold：時間、頻率、門檻
+- review trigger：什麼情境要人工審查
 
-Main paper support:
+對應論文：
 
-- [Approaching the AI Act... with AI](https://www.sciencedirect.com/science/article/pii/S2212473X25001026): modular workflow for identifying obligations, filtering deontic statements, analyzing deontic content, and building searchable KGs.
-- [ComplianceNLP](https://arxiv.org/abs/2604.23585): multi-task obligation extraction and compliance gap detection against institutional policies.
-- [Legal Requirements Translation from Law](https://arxiv.org/html/2507.02846v1): canonical executable representation of legal rules.
+- [Approaching the AI Act... with AI](https://www.sciencedirect.com/science/article/pii/S2212473X25001026)：主讀 obligation identification、deontic filtering、addressee / predicate classification、searchable KG construction。
+- [ComplianceNLP](https://arxiv.org/abs/2604.23585)：看 multi-task obligation extraction 和 external regulation 對 internal policy 的 gap detection。
+- [Legal Requirements Translation from Law](https://arxiv.org/html/2507.02846v1)：看 legal text 如何變成 canonical / executable representation。
 
 ### 4. Human-Readable Wiki Layer
 
-Purpose: give compliance officers readable concept pages without losing source grounding.
+目的：讓 compliance officer 能讀懂概念，但每個概念都要連回 source clauses 和 structured obligations。
 
-Example pages:
+初期 wiki pages：
 
 - Beneficial Owner / UBO
 - Customer Due Diligence
@@ -122,43 +153,45 @@ Example pages:
 - High-Risk Jurisdiction
 - Source of Funds / Source of Wealth
 
-Each page should include:
+每頁應包含：
 
-- Definition
-- Aliases and equivalent terms
-- Related concepts
-- Applicable jurisdictions
-- Source clauses
-- Known ambiguities
-- Linked obligations
-- Review notes
+- 定義
+- aliases / equivalent terms
+- related concepts
+- applicable jurisdictions
+- source references
+- linked obligations
+- known ambiguities
+- human review notes
 
-Main paper support:
+重要原則：wiki page 是人類閱讀層，不是 compliance reasoning 的唯一資料結構。
 
-- [RAGulating Compliance](https://arxiv.org/html/2508.09893v1): triplet + original text retrieval for explainable regulatory QA.
-- [Knowledge Graph Representations for LLM-Based Policy Compliance Reasoning](https://arxiv.org/abs/2604.27713): KG-augmented policy QA and schema choices.
+對應論文：
+
+- [RAGulating Compliance](https://arxiv.org/html/2508.09893v1)：看 triplets + original text 如何支撐可追溯 regulatory QA。
+- [Knowledge Graph Representations for LLM-Based Policy Compliance Reasoning](https://arxiv.org/abs/2604.27713)：看 KG-augmented policy QA 以及 ontology schema 選擇。
 
 ### 5. Machine-Readable Regulatory Graph
 
-Purpose: represent rules, concepts, obligations, conditions, exceptions, jurisdictions, evidence, and relationships in a typed graph.
+目的：把概念、義務、條件、例外、證據、jurisdiction、風險 trigger 和來源條文做成 typed graph，讓系統可以判斷。
 
-Important node types:
+建議 node types：
 
-- SourceDocument
-- Clause
-- Concept
-- Obligation
-- Condition
-- Exception
-- EvidenceRequirement
-- Jurisdiction
-- CustomerType
-- RiskTrigger
-- InternalPolicyRule
-- Conflict
-- ReviewCase
+- `SourceDocument`
+- `Clause`
+- `Concept`
+- `Obligation`
+- `Condition`
+- `Exception`
+- `EvidenceRequirement`
+- `Jurisdiction`
+- `CustomerType`
+- `RiskTrigger`
+- `InternalPolicyRule`
+- `Conflict`
+- `ReviewCase`
 
-Important edge types:
+建議 edge types：
 
 - `defines`
 - `requires`
@@ -175,29 +208,31 @@ Important edge types:
 - `conflicts_with`
 - `derived_from`
 
-Main paper support:
+對應論文：
 
-- [ComplianceNLP](https://arxiv.org/abs/2604.23585): regulatory KG plus KG-augmented RAG for cross-reference-heavy compliance tasks.
-- [GraphCompliance](https://arxiv.org/abs/2510.26309): policy graph for normative structure and context graph for runtime facts.
-- [Knowledge Graph Representations for LLM-Based Policy Compliance Reasoning](https://arxiv.org/abs/2604.27713): compares ontology-constrained and open-schema KG construction for policy QA.
-- [RAGulating Compliance](https://arxiv.org/html/2508.09893v1): ontology-free triplet graph, normalization, deduplication, and evidence-linked retrieval.
+- [ComplianceNLP](https://arxiv.org/abs/2604.23585)：看 regulatory KG + KG-augmented RAG 如何處理 cross-reference-heavy compliance task。
+- [GraphCompliance](https://arxiv.org/abs/2510.26309)：看 policy graph / context graph alignment。
+- [Knowledge Graph Representations for LLM-Based Policy Compliance Reasoning](https://arxiv.org/abs/2604.27713)：看 formal ontology vs open schema 的取捨。
+- [RAGulating Compliance](https://arxiv.org/html/2508.09893v1)：看 ontology-free triplet graph、normalization、deduplication、evidence-linked retrieval。
 
 ### 6. Contradiction / Supersession Layer
 
-Purpose: prevent the system from silently merging conflicting rules.
+目的：不要讓系統把衝突條文默默混在一起。
 
-The system should record:
+要記錄：
 
-- Source A
-- Source B
-- Conflict type
-- Whether the conflict is explicit or inferred
-- Whether one rule supersedes another
-- Whether one rule is stricter, narrower, or more recent
-- Whether the issue is retrieval-verifiable or requires expert review
-- Human review status and final resolution
+- statement A
+- statement B
+- source A
+- source B
+- conflict type
+- 是明確衝突還是推理衝突
+- 是否 supersedes / stricter_than / narrower_than
+- 是否 retrieval-verifiable
+- 是否需要 human review
+- 最終 resolution
 
-Example conflict record:
+建議 conflict record：
 
 ```yaml
 conflict_id: conflict_001
@@ -208,21 +243,21 @@ source_b: mas626_update_x
 conflict_type: temporal_or_frequency
 relationship: stricter_than
 preferred_rule: mas626_update_x
-status: pending_human_review
 verifiability: retrieval_verifiable
+status: pending_human_review
 ```
 
-Main paper support:
+對應論文：
 
-- [LegalWiz](https://arxiv.org/html/2510.03418v2): contradiction taxonomy, hybrid NLI + LLM contradiction detection, and human-in-the-loop validation.
-- [ComplianceNLP](https://arxiv.org/abs/2604.23585): gap analysis between external regulations and institutional policies.
-- [Legal Requirements Translation from Law](https://arxiv.org/html/2507.02846v1): explicit rule relationships, exceptions, and dependencies.
+- [LegalWiz](https://arxiv.org/html/2510.03418v2)：主讀 contradiction taxonomy、NLI + LLM hybrid scoring、retrieval-verifiable vs retrieval-resistant、human validation。
+- [ComplianceNLP](https://arxiv.org/abs/2604.23585)：看 external regulations 和 institutional policies 的 gap analysis。
+- [Legal Requirements Translation from Law](https://arxiv.org/html/2507.02846v1)：看 exceptions、dependencies、rule relationships 的 representation。
 
 ### 7. CDD Decision Layer
 
-Purpose: generate CDD / EDD checklists from customer profiles using the regulatory graph, not free-form LLM guessing.
+目的：根據 customer profile 產出 CDD / EDD checklist，而不是讓 LLM 自由生成。
 
-Customer context should become a graph or structured object:
+customer context 應該先變成 structured object 或 context graph：
 
 ```yaml
 customer_id: example_customer_001
@@ -236,184 +271,265 @@ source_of_funds_available: false
 source_of_wealth_available: false
 ```
 
-Expected output:
+系統輸出應包含：
 
 - CDD / EDD decision
-- Applicable obligations
-- Required documents
-- Risk triggers
-- Conflicts or unresolved policy issues
-- Human review flags
-- Citations to source clauses
+- applicable obligations
+- required documents
+- risk triggers
+- unresolved conflicts
+- human review flags
+- source citations
 
-Main paper support:
+對應論文：
 
-- [GraphCompliance](https://arxiv.org/abs/2510.26309): align policy graph and context graph to support compliance judgment.
-- [AI Application in Anti-Money Laundering for Sustainable and Transparent Financial Systems](https://arxiv.org/abs/2512.06240): KYC / CDD / EDD Graph RAG and customer relationship graph.
-- [ComplianceNLP](https://arxiv.org/abs/2604.23585): evidence-grounded regulatory monitoring and policy mapping.
+- [GraphCompliance](https://arxiv.org/abs/2510.26309)：主讀 policy graph 和 context graph 如何 alignment，這就是 CDD decision layer 的理論核心。
+- [AI Application in Anti-Money Laundering for Sustainable and Transparent Financial Systems](https://arxiv.org/abs/2512.06240)：看 KYC / CDD / EDD Graph RAG、customer relationship graph、audit trail、human review。
+- [ComplianceNLP](https://arxiv.org/abs/2604.23585)：看 evidence-grounded monitoring 和 internal policy mapping。
 
-### 8. Evidence Retrieval and Audit Layer
+### 8. Evidence Retrieval / Audit Layer
 
-Purpose: every generated answer, wiki page, obligation, conflict, and checklist item should be traceable to source clauses.
+目的：每個 answer、wiki page、obligation、conflict、checklist item 都要能引用 source clause。
 
-Build requirements:
+要建的能力：
 
-- Retrieve clause-level evidence, not only document-level chunks.
-- Prefer minimal supporting snippets over large vague context windows.
-- Show citations beside each decision item.
-- Separate "retrieved evidence" from "LLM interpretation."
-- Record retrieval failures as system failures, not as harmless missing context.
+- clause-level retrieval
+- graph-based retrieval
+- minimal supporting snippet retrieval
+- citation attachment
+- answer faithfulness check
+- retrieval failure logging
 
-Main paper support:
+重要原則：retrieval failure 不是小問題。法律 / 合規 RAG 中，很多 hallucination 其實是 retrieval failure 導致的。
 
-- [LegalBench-RAG](https://arxiv.org/abs/2408.10343): evaluates retrieval of minimal legal snippets and citation-ready evidence.
-- [Legal RAG Bench](https://arxiv.org/abs/2603.01710): end-to-end legal RAG evaluation and error decomposition between retrieval and reasoning.
-- [RAGulating Compliance](https://arxiv.org/html/2508.09893v1): retrieved triplets plus source text sections for traceable answers.
+對應論文：
 
-## Paper-to-Architecture Map
+- [LegalBench-RAG](https://arxiv.org/abs/2408.10343)：主讀 legal retrieval step evaluation，尤其 minimal relevant snippets。
+- [Legal RAG Bench](https://arxiv.org/abs/2603.01710)：主讀 end-to-end legal RAG evaluation 和 retrieval / reasoning error decomposition。
+- [RAGulating Compliance](https://arxiv.org/html/2508.09893v1)：看 retrieved triplets + source text sections 如何支撐 traceable answer。
 
-| Paper | Read when building | Main system component | What to extract |
+## 論文對應到哪個架構部件
+
+| 論文 | 閱讀時機 | 對應系統部件 | 你要學什麼 |
 | --- | --- | --- | --- |
-| [ComplianceNLP](https://arxiv.org/abs/2604.23585) | First | Overall compliance architecture, obligation extraction, KG-augmented RAG, policy gap analysis | End-to-end shape: regulatory updates -> obligations -> KG -> internal policy mapping -> evidence-grounded gap detection |
-| [GraphCompliance](https://arxiv.org/abs/2510.26309) | First | CDD Decision Layer | Policy graph vs context graph alignment; use this to model customer facts separately from regulatory rules |
-| [AI Application in AML](https://arxiv.org/abs/2512.06240) | First | Customer risk graph and KYC / CDD / EDD workflow | How Graph RAG can support due diligence reporting from customer, account, transaction, sanctions, and PEP relationships |
-| [Approaching the AI Act... with AI](https://www.sciencedirect.com/science/article/pii/S2212473X25001026) | Second | Obligation Extraction Layer | Deontic filtering, obligation type, addressee, predicate, and searchable KG construction |
-| [Legal Requirements Translation from Law](https://arxiv.org/html/2507.02846v1) | Second | Machine-readable rule representation | Legal text -> canonical Python-like rule model with sections, references, conditions, exceptions, and obligations |
-| [RAGulating Compliance](https://arxiv.org/html/2508.09893v1) | Second | Ingestion, concept dedupe, GraphRAG QA | Agent pipeline for document ingestion, SPO triplets, normalization, deduplication, retrieval, and answer generation |
-| [Knowledge Graph Representations for Policy Compliance Reasoning](https://arxiv.org/abs/2604.27713) | Second | KG schema design and retrieval strategy | Compare formal ontology vs open LLM-discovered schema; task taxonomy from lookup to cross-policy reasoning |
-| [LegalWiz](https://arxiv.org/html/2510.03418v2) | Third | Contradiction / Supersession Layer | Conflict taxonomy, hybrid scoring, retrieval-verifiable vs retrieval-resistant conflicts, human validation |
-| [LegalBench-RAG](https://arxiv.org/abs/2408.10343) | Third | Evidence retrieval evaluation | Minimal relevant legal snippet retrieval and citation readiness |
-| [Legal RAG Bench](https://arxiv.org/abs/2603.01710) | Third | End-to-end evaluation | Separate retrieval failure from reasoning failure; design final benchmark loops |
+| [ComplianceNLP](https://arxiv.org/abs/2604.23585) | 第一輪 | 整體 compliance architecture、obligation extraction、regulatory KG、policy gap analysis | 法規更新 -> 義務抽取 -> KG -> 內規 mapping -> gap detection -> grounded answer 的主架構 |
+| [GraphCompliance](https://arxiv.org/abs/2510.26309) | 第一輪 | CDD Decision Layer | policy graph 和 context graph 要分開建模；customer profile 不是 prompt，而是 context graph |
+| [AI Application in AML](https://arxiv.org/abs/2512.06240) | 第一輪 | Customer risk graph、KYC / CDD / EDD workflow | AML / KYC domain grounding、customer relationship graph、due diligence report、audit / human review |
+| [Approaching the AI Act... with AI](https://www.sciencedirect.com/science/article/pii/S2212473X25001026) | 第二輪 | Obligation Extraction Layer | obligation identification、deontic filtering、addressee / predicate classification、KG construction |
+| [Legal Requirements Translation from Law](https://arxiv.org/html/2507.02846v1) | 第二輪 | Machine-readable rule representation | legal text 如何變成 canonical / executable representation，並保留 conditions、exceptions、references |
+| [RAGulating Compliance](https://arxiv.org/html/2508.09893v1) | 第二輪 | Ingestion、concept dedupe、GraphRAG QA | ingestion agent、SPO triplets、normalization、deduplication、evidence-grounded retrieval |
+| [Knowledge Graph Representations for Policy Compliance Reasoning](https://arxiv.org/abs/2604.27713) | 第二輪 | KG schema design、retrieval strategy | formal ontology vs open schema，還有從 lookup 到 cross-policy reasoning 的 task taxonomy |
+| [LegalWiz](https://arxiv.org/html/2510.03418v2) | 第三輪 | Contradiction / Supersession Layer | conflict taxonomy、hybrid contradiction scoring、retrieval-verifiable vs retrieval-resistant、human validation |
+| [LegalBench-RAG](https://arxiv.org/abs/2408.10343) | 第三輪 | Evidence retrieval evaluation | 怎麼評估 legal RAG 的 retrieval step，尤其 minimal citation-ready snippets |
+| [Legal RAG Bench](https://arxiv.org/abs/2603.01710) | 第三輪 | End-to-end evaluation | 怎麼把 retrieval failure 和 reasoning failure 拆開看 |
 
-## Recommended Reading Order
+## 建議閱讀順序
 
-### Round 1: Understand the Whole System Shape
+### 第一輪：先建立整體架構感
 
-1. [ComplianceNLP](https://arxiv.org/abs/2604.23585)
+#### 1. ComplianceNLP
 
-   You are reading this for the overall system skeleton. This corresponds to the path from regulatory sources to obligation extraction, regulatory KG, internal policy mapping, gap analysis, and grounded answer generation.
+你現在讀這篇，是在讀 CDD-GraphWiki 的 **主幹架構**。
 
-   Build after reading:
+對應部件：
 
-   - Draft the first `Obligation` schema.
-   - Draft the first `InternalPolicyRule` schema.
-   - Define how an external rule maps to an internal policy clause.
+- Raw Regulatory Sources
+- Obligation Extraction
+- Regulatory Knowledge Graph
+- Internal Policy Mapping
+- Gap Analysis
+- Evidence-grounded Answer
 
-2. [GraphCompliance](https://arxiv.org/abs/2510.26309)
+讀完要產出：
 
-   You are reading this for the CDD Decision Layer. This corresponds to separating regulatory rules as a policy graph and customer facts as a context graph.
+- 第一版 `Obligation` schema
+- 第一版 `InternalPolicyRule` schema
+- external regulation 對 internal policy 的 mapping 方式
+- 一張 end-to-end architecture diagram
 
-   Build after reading:
+#### 2. GraphCompliance
 
-   - Draft a `CustomerContext` schema.
-   - Define the first graph alignment question: "Does this customer profile trigger EDD?"
-   - Write 5 sample customer profiles that should produce different CDD / EDD outcomes.
+你現在讀這篇，是在讀 CDD-GraphWiki 的 **CDD Decision Layer**。
 
-3. [AI Application in AML](https://arxiv.org/abs/2512.06240)
+對應部件：
 
-   You are reading this for AML / KYC domain grounding. This corresponds to the customer risk graph, due diligence report generation, audit trails, and human review expectations.
+- Policy Graph
+- Customer Context Graph
+- Compliance Gate
+- CDD / EDD decision logic
 
-   Build after reading:
+讀完要產出：
 
-   - Draft the customer risk graph node and edge types.
-   - Define which customer facts belong to regulatory reasoning and which belong to financial crime risk analysis.
-   - Keep this as domain reference, not as the regulatory obligation graph itself.
+- 第一版 `CustomerContext` schema
+- 5 個 customer profiles
+- 5 個 expected CDD / EDD outcomes
+- 第一個問題：「這個 customer profile 是否觸發 EDD？」
 
-### Round 2: Learn How to Compile Law into Data
+#### 3. AI Application in AML
 
-4. [Approaching the AI Act... with AI](https://www.sciencedirect.com/science/article/pii/S2212473X25001026)
+你現在讀這篇，是在讀 CDD-GraphWiki 的 **AML / KYC domain grounding**。
 
-   You are reading this for obligation extraction. This corresponds to turning clauses into addressee, predicate, obligation type, and KG entries.
+對應部件：
 
-   Build after reading:
+- Customer risk graph
+- KYC / CDD / EDD report generation
+- Audit trail
+- Human review expectations
 
-   - Create extraction prompts or rules for actor / action / object / condition / exception.
-   - Create a small manually reviewed obligation dataset from FATF Recommendation 10 or MAS 626.
+讀完要產出：
 
-5. [Legal Requirements Translation from Law](https://arxiv.org/html/2507.02846v1)
+- customer risk graph 的 node / edge 草稿
+- 區分哪些 facts 屬於 regulatory reasoning，哪些屬於 financial crime risk analysis
+- 決定 MVP 是否只做 CDD checklist，不做 transaction monitoring
 
-   You are reading this for machine-readable representation. This corresponds to the internal canonical format that sits between source text and the regulatory graph.
+### 第二輪：學會把法規編譯成資料
 
-   Build after reading:
+#### 4. Approaching the AI Act... with AI
 
-   - Convert 5 obligations into a typed Python / YAML representation.
-   - Explicitly model section hierarchy, cross-reference, condition, exception, and evidence requirement.
+你現在讀這篇，是在讀 **obligation extraction pipeline**。
 
-6. [RAGulating Compliance](https://arxiv.org/html/2508.09893v1)
+對應部件：
 
-   You are reading this for ingestion, triplet extraction, normalization, concept deduplication, and evidence-grounded QA.
+- Clause -> obligation
+- deontic statement filtering
+- addressee / predicate extraction
+- searchable KG construction
 
-   Build after reading:
+讀完要產出：
 
-   - Create the first concept alias map: UBO / Beneficial Owner / Controlling Party.
-   - Create a source-linked triplet format.
-   - Decide which triplets are useful for wiki generation and which are too weak for compliance decisions.
+- actor / action / object / condition / exception 的 extraction prompt 或 rule
+- 10 條 FATF / MAS 手動標註 obligation gold examples
+- low-confidence obligation 的 review queue 規則
 
-7. [Knowledge Graph Representations for Policy Compliance Reasoning](https://arxiv.org/abs/2604.27713)
+#### 5. Legal Requirements Translation from Law
 
-   You are reading this for KG schema strategy. This corresponds to deciding whether CDD-GraphWiki should start with a strict ontology, an open schema, or a hybrid.
+你現在讀這篇，是在讀 **machine-readable canonical representation**。
 
-   Build after reading:
+對應部件：
 
-   - Define the MVP graph ontology.
-   - Mark which relation types are strict and which can remain exploratory.
-   - Create 5 graph QA tasks: definition lookup, relation enumeration, attribute retrieval, multi-hop reasoning, compliance check.
+- Legal rule object
+- Section hierarchy
+- Cross-reference
+- Condition / exception / dependency
+- Executable or schema-validatable representation
 
-### Round 3: Make the System Trustworthy
+讀完要產出：
 
-8. [LegalWiz](https://arxiv.org/html/2510.03418v2)
+- 5 條 obligation 的 YAML / Python typed representation
+- clause hierarchy 的資料格式
+- exception 與 cross-reference 的表示方式
 
-   You are reading this for contradiction and review design. This corresponds to the conflict log, supersession layer, and human review queue.
+#### 6. RAGulating Compliance
 
-   Build after reading:
+你現在讀這篇，是在讀 **ingestion + concept deduplication + GraphRAG QA**。
 
-   - Create a `Conflict` schema.
-   - Define conflict types for AML / CDD: temporal, threshold, jurisdiction, authority, procedure, specificity, policy reversal.
-   - Build mock examples such as 12-month vs 6-month high-risk review frequency.
+對應部件：
 
-9. [LegalBench-RAG](https://arxiv.org/abs/2408.10343)
+- Ingestion Agent
+- Triplet Extraction Agent
+- Normalization Agent
+- Deduplication Agent
+- Retrieval Agent
+- Answer Agent
 
-   You are reading this for retrieval evaluation. This corresponds to proving that the system can retrieve exact supporting clauses, not just approximate chunks.
+讀完要產出：
 
-   Build after reading:
+- 第一版 alias map：UBO / Beneficial Owner / Controlling Party
+- source-linked triplet format
+- 判斷哪些 triplets 可以進 wiki，哪些可以進 regulatory KG
 
-   - Create 20 query -> supporting clause test cases.
-   - Score whether retrieval returns the minimal correct clause.
-   - Track citation precision and recall.
+#### 7. Knowledge Graph Representations for Policy Compliance Reasoning
 
-10. [Legal RAG Bench](https://arxiv.org/abs/2603.01710)
+你現在讀這篇，是在讀 **KG schema strategy**。
 
-   You are reading this for end-to-end evaluation. This corresponds to separating failures caused by retrieval from failures caused by reasoning.
+對應部件：
 
-   Build after reading:
+- Formal ontology vs open schema
+- Graph retrieval strategy
+- KG QA task taxonomy
 
-   - Define the final benchmark categories: retrieval correctness, obligation extraction accuracy, graph consistency, conflict detection precision, checklist correctness, citation faithfulness.
-   - Add an error taxonomy so each failed CDD answer has a clear cause.
+讀完要產出：
+
+- MVP graph ontology
+- strict relation types 與 exploratory relation types 的分界
+- 5 種 graph QA test：definition lookup、relation enumeration、attribute retrieval、multi-hop reasoning、compliance check
+
+### 第三輪：讓系統可驗證、可審計、可被信任
+
+#### 8. LegalWiz
+
+你現在讀這篇，是在讀 **contradiction / supersession layer**。
+
+對應部件：
+
+- Conflict schema
+- Contradiction taxonomy
+- Hybrid NLI + LLM contradiction scoring
+- Retrieval-verifiable vs retrieval-resistant
+- Human review queue
+
+讀完要產出：
+
+- 第一版 `Conflict` schema
+- AML / CDD conflict types：temporal、threshold、jurisdiction、authority、procedure、specificity、policy reversal
+- 3 個 mock conflicts，例如 high-risk customer review 12 個月 vs 6 個月
+
+#### 9. LegalBench-RAG
+
+你現在讀這篇，是在讀 **evidence retrieval evaluation**。
+
+對應部件：
+
+- Clause retrieval
+- Minimal legal snippet retrieval
+- Citation precision / recall
+
+讀完要產出：
+
+- 20 個 query -> supporting clause test cases
+- retrieval precision / recall 評估方式
+- citation correctness check
+
+#### 10. Legal RAG Bench
+
+你現在讀這篇，是在讀 **end-to-end evaluation**。
+
+對應部件：
+
+- Retrieval failure analysis
+- Reasoning failure analysis
+- Groundedness
+- Checklist correctness
+
+讀完要產出：
+
+- 評估分類：retrieval correctness、obligation extraction accuracy、graph consistency、conflict detection precision、checklist correctness、citation faithfulness
+- error taxonomy，讓每個錯誤都能歸因到 retrieval、extraction、graph modeling、conflict handling 或 final reasoning
 
 ## MVP Build Path
 
-### Phase 0: Project Skeleton and Specs
+### Phase 0：Project Skeleton and Spec
 
-Goal: make the project explainable before adding infrastructure.
+目標：先把 project 說清楚，再寫 code。
 
-Deliverables:
+Deliverables：
 
 - `docs/system-build-roadmap.md`
 - `docs/note.md`
-- `docs/spec.md` or equivalent product specification
-- MVP scope: FATF Recommendation 10, MAS Notice 626 CDD / EDD clauses, one mock internal AML policy
+- `docs/spec.md` 或等價產品規格
+- MVP scope：FATF Recommendation 10、MAS Notice 626 CDD / EDD clauses、一份 mock internal AML policy
 
-Done when:
+Done when：
 
-- The project has a clear anti-RAG-chatbot thesis.
-- The first architecture diagram and module boundaries are written.
-- Every paper has a known role in the architecture.
+- project anti-goal 清楚：不是 generic RAG chatbot
+- 每個 module 的邊界清楚
+- 每篇 paper 都知道對應哪個系統部件
 
-### Phase 1: Data Contracts
+### Phase 1：Data Contracts
 
-Goal: define the shapes before building extraction logic.
+目標：先定義資料結構，再做 extraction。
 
-Deliverables:
+Deliverables：
 
 - `SourceDocument`
 - `Clause`
@@ -424,143 +540,144 @@ Deliverables:
 - `Conflict`
 - `CDDChecklist`
 
-Done when:
+Done when：
 
-- Each object has a JSON or YAML example.
-- Each object has fields for provenance and review status.
-- The first sample CDD checklist can be written manually from structured objects.
+- 每個 object 都有 JSON / YAML example
+- 每個 object 都有 provenance 和 review status
+- 可以手動用 structured objects 寫出一份 CDD checklist
 
-### Phase 2: Manual Gold Dataset
+### Phase 2：Manual Gold Dataset
 
-Goal: build a tiny trusted dataset before asking an LLM to automate extraction.
+目標：先做小而可信的人工標註集，不要一開始就全自動。
 
-Deliverables:
+Deliverables：
 
-- 10 manually segmented clauses.
-- 10 manually extracted obligations.
-- 5 concept pages.
-- 5 customer profiles.
-- 5 expected CDD / EDD checklist outputs.
-- 3 conflict examples.
+- 10 個 manually segmented clauses
+- 10 個 manually extracted obligations
+- 5 個 concept pages
+- 5 個 customer profiles
+- 5 個 expected CDD / EDD checklist outputs
+- 3 個 conflict examples
 
-Done when:
+Done when：
 
-- A human can inspect every source-to-output link.
-- The examples cover individual customer, corporate customer, PEP, high-risk jurisdiction, complex ownership, and unclear UBO.
+- 每個 output 都能回到 source clause
+- 覆蓋 individual customer、corporate customer、PEP、high-risk jurisdiction、complex ownership、UBO unclear
 
-### Phase 3: Ingestion and Clause Segmentation
+### Phase 3：Ingestion and Clause Segmentation
 
-Goal: preserve source text and make every downstream object citeable.
+目標：讓原始文件變成可引用、可抽取、可比對的 clause records。
 
-Deliverables:
+Deliverables：
 
-- Parser for source files.
-- Clause segmentation output.
-- Source metadata and version metadata.
-- Clause ids that remain stable across reruns.
+- source parser
+- clause segmentation output
+- source metadata / version metadata
+- stable clause ids
 
-Done when:
+Done when：
 
-- Each clause points back to source document, section, page or paragraph, and raw text.
-- A generated wiki page or obligation never loses its source clause id.
+- 每個 clause 都能回到 source document、section、page / paragraph、raw text
+- rerun 後 clause id 不會任意漂移
 
-### Phase 4: Obligation Extraction Prototype
+### Phase 4：Obligation Extraction Prototype
 
-Goal: turn clauses into structured obligations.
+目標：把 clauses 轉成 structured obligations。
 
-Deliverables:
+Deliverables：
 
-- Extraction prompt or rule pipeline.
-- Obligation schema validation.
-- Human review queue for low-confidence extractions.
-- Comparison against the manual gold dataset.
+- extraction prompt 或 rule pipeline
+- obligation schema validation
+- low-confidence human review queue
+- manual gold dataset comparison
 
-Done when:
+Done when：
 
-- Extracted obligations contain actor, action, object, condition, exception, required evidence, and source clause.
-- Failed extraction cases are categorized.
+- extracted obligation 包含 actor、action、object、condition、exception、required evidence、source clause
+- extraction failure 有分類，而不是只說模型答錯
 
-### Phase 5: Wiki and Concept Deduplication
+### Phase 5：Wiki and Concept Deduplication
 
-Goal: produce human-readable concept pages connected to structured rules.
+目標：產生人類可讀 concept pages，並處理同義詞 / 近義詞。
 
-Deliverables:
+Deliverables：
 
-- Concept page generator.
-- Alias map.
-- Related concept links.
-- Source-backed ambiguity notes.
+- concept page generator
+- alias map
+- related concept links
+- source-backed ambiguity notes
 
-Done when:
+Done when：
 
-- A concept page such as Beneficial Owner shows aliases, definitions, obligations, related concepts, source clauses, and ambiguity notes.
-- Synonyms do not create duplicate concepts without review.
+- Beneficial Owner 頁面能顯示 aliases、definitions、obligations、related concepts、source clauses、ambiguity notes
+- UBO / BO / Beneficial Owner / Controlling Party 不會無審查地變成四個孤立概念
 
-### Phase 6: Regulatory Graph
+### Phase 6：Regulatory Graph
 
-Goal: build the first machine-reasonable graph.
+目標：建立第一個 machine-reasonable graph。
 
-Deliverables:
+Deliverables：
 
-- Graph schema.
-- Nodes and edges for clauses, concepts, obligations, evidence, risk triggers, and jurisdictions.
-- Graph export format such as JSON, RDF, or a graph database import file.
+- graph schema
+- clauses / concepts / obligations / evidence / risk triggers / jurisdictions nodes
+- typed edges
+- JSON / RDF / graph database import export
 
-Done when:
+Done when：
 
-- A query can find all obligations triggered by `corporate_customer + high_risk_jurisdiction + complex_ownership_structure`.
-- Each graph answer can return source clauses.
+- 可以查詢：`corporate_customer + high_risk_jurisdiction + complex_ownership_structure` 觸發哪些 obligations
+- 每個 graph answer 都能回 source clauses
 
-### Phase 7: Contradiction and Supersession Log
+### Phase 7：Contradiction and Supersession Log
 
-Goal: stop the system from hiding conflicts.
+目標：讓系統顯示衝突，而不是默默選一個答案。
 
-Deliverables:
+Deliverables：
 
-- Conflict schema.
-- Supersession / stricter-than / narrower-than relationships.
-- Human review status.
-- Mock internal policy conflicts.
+- conflict schema
+- supersedes / stricter_than / narrower_than relationships
+- human review status
+- mock internal policy conflicts
 
-Done when:
+Done when：
 
-- The system can record that one internal policy rule conflicts with or is weaker than an external regulatory rule.
-- The CDD checklist can show unresolved conflicts instead of choosing silently.
+- 系統能記錄 internal policy 比 external regulation 寬鬆或衝突
+- CDD checklist 能顯示 unresolved conflicts
 
-### Phase 8: CDD Decision Engine
+### Phase 8：CDD Decision Engine
 
-Goal: generate evidence-grounded CDD / EDD outputs from customer profiles.
+目標：從 customer profile 產生 evidence-grounded CDD / EDD checklist。
 
-Deliverables:
+Deliverables：
 
-- Customer profile schema.
-- Rule matching logic.
-- Checklist generator.
-- Human review flags.
-- Citation attachment.
+- customer profile schema
+- rule matching logic
+- checklist generator
+- human review flags
+- citation attachment
 
-Done when:
+Done when：
 
-- Given a corporate customer with complex ownership and a high-risk UBO jurisdiction, the system outputs EDD, required documents, applicable obligations, risk triggers, conflicts, and citations.
+- corporate customer + complex ownership + high-risk UBO jurisdiction 會輸出 EDD、required documents、applicable obligations、risk triggers、conflicts、citations
 
-### Phase 9: Evaluation Harness
+### Phase 9：Evaluation Harness
 
-Goal: prove the system is better than a generic RAG demo.
+目標：證明它比普通 RAG chatbot 更可靠。
 
-Deliverables:
+Deliverables：
 
-- Retrieval tests.
-- Obligation extraction tests.
-- Conflict detection tests.
-- Checklist correctness tests.
-- Citation faithfulness checks.
+- retrieval tests
+- obligation extraction tests
+- conflict detection tests
+- checklist correctness tests
+- citation faithfulness checks
 
-Done when:
+Done when：
 
-- Each failed answer can be traced to retrieval, extraction, graph modeling, conflict handling, or final reasoning.
-- The baseline comparison includes a simple vector-RAG chatbot, so the architecture difference is measurable.
+- 每個錯誤能被歸因到 retrieval、extraction、graph modeling、conflict handling 或 final reasoning
+- 有 simple vector-RAG chatbot baseline 可以比較
 
-## Suggested MVP Repository Shape
+## 建議 MVP Repo 結構
 
 ```text
 CDD-GraphWiki/
@@ -592,34 +709,36 @@ CDD-GraphWiki/
   tests/
 ```
 
-## What Not to Build First
+## 現在不要先做的事
 
-Do not start with:
+先不要做：
 
-- A polished chatbot UI.
-- A vector database as the core architecture.
-- A broad multi-jurisdiction regulatory corpus.
-- Live financial institution integrations.
-- Fully automated legal judgment.
+- 漂亮 chatbot UI
+- 以 vector database 作為核心架構
+- 一次吃 FATF + MAS + FCA + HKMA + 多份內規
+- live financial institution integration
+- 全自動 legal judgment
 
-Start with:
+先做：
 
-- Small source set.
-- Stable clause ids.
-- Manual gold examples.
-- Structured obligations.
-- A tiny graph.
-- Evidence-backed checklists.
-- Explicit conflict handling.
+- 小範圍 source set
+- stable clause ids
+- manual gold examples
+- structured obligations
+- tiny regulatory graph
+- evidence-backed checklist
+- explicit conflict handling
 
-## Best Portfolio Framing
+## 最適合的 Portfolio / Research Framing
 
-Strong title:
+工程型 title：
 
 > CDD-GraphWiki: A Human-Readable and Machine-Reasonable Knowledge Compilation System for AML Compliance
 
-Research-style framing:
+研究型 title：
 
 > Regulatory Knowledge Compilation for Customer Due Diligence: A Graph-Augmented LLM System for AML Compliance Reasoning
 
-The contribution is not "a chatbot for compliance." The contribution is a layered architecture that compiles regulatory text into human-readable wiki pages and machine-readable compliance objects, then uses graph reasoning and evidence retrieval to generate auditable CDD / EDD decisions.
+這個 project 的貢獻不是「做一個合規聊天機器人」，而是：
+
+> 把法規文字編譯成 human-readable wiki pages 和 machine-readable compliance objects，並用 graph reasoning、conflict tracking、evidence retrieval 產生可審計的 CDD / EDD decision。
