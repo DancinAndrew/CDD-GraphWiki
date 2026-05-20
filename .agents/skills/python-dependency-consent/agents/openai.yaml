@@ -1,0 +1,4 @@
+interface:
+  display_name: "Python Dependency Consent"
+  short_description: "Approval gate for Python dependencies"
+  default_prompt: "Use $python-dependency-consent before adding Python packages or tools."

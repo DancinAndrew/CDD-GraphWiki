@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verification Loop"
+  short_description: "Build lint test and diff verification"
+  default_prompt: "Use $verification-loop to verify the completed change."

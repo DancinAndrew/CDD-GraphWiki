@@ -1,0 +1,4 @@
+interface:
+  display_name: "TDD Workflow"
+  short_description: "Red green refactor development flow"
+  default_prompt: "Use $tdd-workflow to drive this change with tests first."

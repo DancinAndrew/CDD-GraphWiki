@@ -1,0 +1,40 @@
+schema: spec-driven
+
+context: |
+  Project: CDD-GraphWiki
+  Domain: AML / CDD regulatory knowledge compilation and compliance reasoning.
+
+  Purpose:
+  - Build a system that compiles regulatory and internal policy sources into human-readable wiki pages and machine-readable compliance objects.
+  - Produce evidence-backed CDD / EDD checklist output from structured customer context.
+
+  Current state:
+  - The repository currently contains planning and research documents.
+  - No runtime application, dependency setup, source parser, graph engine, UI, or tests have been added.
+  - SPEC.md, OpenSpec change artifacts, and ADRs are the controlling planning layer.
+
+  Hard constraints:
+  - Do not start with a generic RAG chatbot.
+  - Do not introduce package dependencies or runtime services without approval.
+  - Keep the MVP source corpus small: FATF Recommendation 10, MAS Notice 626 CDD / EDD clauses, and one mock internal AML / KYC policy.
+  - Preserve clause-level provenance for every derived object.
+  - Route legal, regulatory, threshold, conflict, or required-evidence decisions through human review.
+
+  Development workflow:
+  - Discuss and update SPEC.md for broad product scope.
+  - Capture requirement changes in OpenSpec under openspec/changes/.
+  - Capture architectural rationale in docs/adr/.
+  - Implement only after specs and tasks are clear enough to verify.
+  - Validate active OpenSpec changes before treating them as ready.
+
+rules:
+  proposal:
+    - Keep proposals concise and distinguish product motivation from implementation design.
+    - Always list OpenSpec capabilities in kebab-case.
+  specs:
+    - Every requirement must use SHALL or MUST language.
+    - Every requirement must include at least one scenario with a four-hash Scenario heading.
+  tasks:
+    - Use checkbox tasks only.
+    - Order tasks by dependency and keep each task small enough for one focused session.
+

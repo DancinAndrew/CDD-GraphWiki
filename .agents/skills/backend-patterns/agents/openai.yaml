@@ -1,0 +1,4 @@
+interface:
+  display_name: "Backend Patterns"
+  short_description: "Backend service architecture patterns"
+  default_prompt: "Use $backend-patterns to structure backend Python services cleanly."
