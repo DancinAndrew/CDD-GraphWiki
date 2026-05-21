@@ -1,0 +1,40 @@
+- conflict_id: conf_ubo_threshold
+  conflict_type: Numerical
+  source_clause_ids:
+  - mas626_clause_03
+  - mock_policy_clause_01
+  verifiability: retrieval-verifiable
+  description: Numerical discrepancy in Ultimate Beneficial Owner (UBO) ownership
+    threshold. MAS Notice 626 defines controlling interest as >25% shareholding, whereas
+    Global Bank Internal Policy mandates a stricter threshold of >=10%.
+  reconciliation_rule: Apply the stricter internal threshold of >=10% for internal
+    compliance, while ensuring regulatory minimum (>25%) is satisfied.
+  adjudication_status: resolved
+  resolved_by: Compliance Committee Decision 2025-01
+- conflict_id: conf_pep_jurisdiction
+  conflict_type: PolicyReversal
+  source_clause_ids:
+  - mas626_clause_04
+  - mock_policy_clause_02
+  verifiability: retrieval-verifiable
+  description: Conflict regarding PEP onboarding permissions. MAS Notice 626 permits
+    onboarding PEPs with senior management approval and EDD. Global Bank Policy strictly
+    prohibits onboarding PEPs specifically from high-risk jurisdictions.
+  reconciliation_rule: 'Apply the stricter prohibition: reject onboarding if the PEP
+    resides in or is associated with a high-risk jurisdiction, even if regulatory
+    authority allows it.'
+  adjudication_status: resolved
+  resolved_by: Global Head of AML
+- conflict_id: conf_occasional_threshold
+  conflict_type: Numerical
+  source_clause_ids:
+  - fatf_rec10_clause_02
+  - mas626_clause_01
+  verifiability: retrieval-verifiable
+  description: Numerical difference in occasional transaction triggers. FATF Recommendation
+    10 recommends USD/EUR 15,000, whereas MAS Notice 626 mandates SGD 20,000 for banks
+    in Singapore.
+  reconciliation_rule: For banks operating under MAS jurisdiction in Singapore, apply
+    the SGD 20,000 threshold or its equivalent.
+  adjudication_status: resolved
+  resolved_by: MAS Regulation

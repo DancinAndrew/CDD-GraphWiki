@@ -1,0 +1,43 @@
+{
+  "description": "合規概念的強型別模型，用於支持別名同名化與條款級溯源。",
+  "properties": {
+    "concept_id": {
+      "description": "Canonical ID, e.g., 'ubo'",
+      "title": "Concept Id",
+      "type": "string"
+    },
+    "name": {
+      "description": "Display name of the concept",
+      "title": "Name",
+      "type": "string"
+    },
+    "description": {
+      "description": "Brief Chinese description",
+      "title": "Description",
+      "type": "string"
+    },
+    "aliases": {
+      "description": "Synonym aliases",
+      "items": {
+        "type": "string"
+      },
+      "title": "Aliases",
+      "type": "array"
+    },
+    "source_clause_ids": {
+      "description": "Clause-level provenance IDs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Clause Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "concept_id",
+    "name",
+    "description"
+  ],
+  "title": "Concept",
+  "type": "object"
+}

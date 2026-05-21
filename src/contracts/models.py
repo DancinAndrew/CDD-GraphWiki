@@ -107,3 +107,15 @@ class CDDChecklist(BaseModel):
     unresolved_conflicts: List[str] = Field(..., description="Foreign keys to unresolved Conflicts")
     human_review_required: bool = Field(..., description="Routing flag to human queue")
     citations: List[str] = Field(..., description="Provenance citations back to clauses")
+
+
+class Concept(BaseModel):
+    """
+    合規概念的強型別模型，用於支持別名同名化與條款級溯源。
+    """
+    concept_id: str = Field(..., description="Canonical ID, e.g., 'ubo'")
+    name: str = Field(..., description="Display name of the concept")
+    description: str = Field(..., description="Brief Chinese description")
+    aliases: List[str] = Field(default_factory=list, description="Synonym aliases")
+    source_clause_ids: List[str] = Field(default_factory=list, description="Clause-level provenance IDs")
+
