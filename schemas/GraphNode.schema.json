@@ -1,0 +1,44 @@
+{
+  "description": "圖譜中的單一合規知識或事實節點。",
+  "properties": {
+    "node_id": {
+      "description": "Unique node ID, e.g. 'mas626_clause_04'",
+      "title": "Node Id",
+      "type": "string"
+    },
+    "node_type": {
+      "description": "Node classification type",
+      "enum": [
+        "SourceDocument",
+        "Clause",
+        "Concept",
+        "Obligation",
+        "CustomerContext",
+        "Conflict",
+        "CDDChecklist",
+        "EvidenceRequirement",
+        "RiskTrigger"
+      ],
+      "title": "Node Type",
+      "type": "string"
+    },
+    "label": {
+      "description": "Human-readable node title/label",
+      "title": "Label",
+      "type": "string"
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Factual metadata payload, e.g., raw_text, version, attributes",
+      "title": "Properties"
+    }
+  },
+  "required": [
+    "node_id",
+    "node_type",
+    "label"
+  ],
+  "title": "GraphNode",
+  "type": "object"
+}

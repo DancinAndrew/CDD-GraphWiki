@@ -14,7 +14,10 @@ from contracts.models import (
     Obligation,
     CustomerContext,
     Conflict,
-    CDDChecklist
+    CDDChecklist,
+    GraphNode,
+    GraphEdge,
+    RegulatoryGraph
 )
 
 EXAMPLES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'schemas', 'examples'))
@@ -143,3 +146,50 @@ class TestComplianceDataContracts:
         schema = load_json_schema("CDDChecklist.schema.json")
         with pytest.raises(JsonSchemaValidationError):
             validate(instance=bad_data, schema=schema)
+
+    def test_regulatory_graph_components_valid(self):
+        # 1. 測試 GraphNode
+        node_data = {
+            "node_id": "mas626_clause_04",
+            "node_type": "Clause",
+            "label": "MAS 626 Clause 4",
+            "properties": {
+                "raw_text": "Determine PEP status",
+                "section_ref": "Paragraph 7.2"
+            }
+        }
+        node = GraphNode(**node_data)
+        assert node.node_id == "mas626_clause_04"
+        node_schema = load_json_schema("GraphNode.schema.json")
+        validate(instance=node_data, schema=node_schema)
+
+        # 2. 測試 GraphEdge
+        edge_data = {
+            "edge_id": "cust_to_clause_applies_to",
+            "source_id": "CUST-999",
+            "target_id": "mas626_clause_04",
+            "edge_type": "applies_to",
+            "label": "Applies CDD to",
+            "properties": {
+                "reason": "PEP exposure"
+            }
+        }
+        edge = GraphEdge(**edge_data)
+        assert edge.edge_id == "cust_to_clause_applies_to"
+        edge_schema = load_json_schema("GraphEdge.schema.json")
+        validate(instance=edge_data, schema=edge_schema)
+
+        # 3. 測試 RegulatoryGraph
+        graph_data = {
+            "nodes": {
+                "mas626_clause_04": node_data
+            },
+            "edges": [
+                edge_data
+            ]
+        }
+        graph = RegulatoryGraph(**graph_data)
+        assert "mas626_clause_04" in graph.nodes
+        graph_schema = load_json_schema("RegulatoryGraph.schema.json")
+        validate(instance=graph_data, schema=graph_schema)
+

@@ -7,7 +7,10 @@ from .models import (
     CDDChecklist,
     Concept,
     ProvenanceNode,
-    ExplanationPath
+    ExplanationPath,
+    GraphNode,
+    GraphEdge,
+    RegulatoryGraph
 )
 
 __all__ = [
@@ -19,6 +22,10 @@ __all__ = [
     "CDDChecklist",
     "Concept",
     "ProvenanceNode",
-    "ExplanationPath"
+    "ExplanationPath",
+    "GraphNode",
+    "GraphEdge",
+    "RegulatoryGraph"
 ]
+
 

@@ -144,3 +144,64 @@ class ExplanationPath(BaseModel):
     description: str = Field(..., description="Human-readable synthesis explanation")
 
 
+class GraphNode(BaseModel):
+    """
+    圖譜中的單一合規知識或事實節點。
+    """
+    node_id: str = Field(..., description="Unique node ID, e.g. 'mas626_clause_04'")
+    node_type: Literal[
+        "SourceDocument", 
+        "Clause", 
+        "Concept", 
+        "Obligation", 
+        "CustomerContext", 
+        "Conflict", 
+        "CDDChecklist",
+        "EvidenceRequirement",
+        "RiskTrigger"
+    ] = Field(..., description="Node classification type")
+    label: str = Field(..., description="Human-readable node title/label")
+    properties: Dict[str, Any] = Field(
+        default_factory=dict, 
+        description="Factual metadata payload, e.g., raw_text, version, attributes"
+    )
+
+
+class GraphEdge(BaseModel):
+    """
+    圖譜中節點與節點之間的有向關係邊。
+    """
+    edge_id: str = Field(..., description="Unique edge identifier, e.g. 'nodeA_to_nodeB_requires'")
+    source_id: str = Field(..., description="Source node ID")
+    target_id: str = Field(..., description="Target node ID")
+    edge_type: Literal[
+        "defines",              # Concept defines Concept, Document defines Clause
+        "requires",             # Obligation requires Evidence
+        "applies_to",           # Obligation applies to CustomerType/CustomerContext
+        "conditioned_on",       # Obligation conditioned on facts
+        "except_when",          # Exception relation
+        "requires_evidence",    # Obligation requires EvidenceRequirement
+        "references_clause",    # Obligation references Clause, Conflict references Clause
+        "same_as",              # Concept alias mapping
+        "stricter_than",        # Conflict/Rule comparison
+        "supersedes",           # Version superseding
+        "conflicts_with",       # Conflict/Rule collision
+        "derived_from",         # Provenance lineage relation
+        "decision_path"         # Highlighted active decision path
+    ] = Field(..., description="Relationship semantic type")
+    label: str = Field(..., description="Human-readable edge label")
+    properties: Dict[str, Any] = Field(
+        default_factory=dict, 
+        description="Edge metadata payload, e.g., weight, reasoning_logic"
+    )
+
+
+class RegulatoryGraph(BaseModel):
+    """
+    大一統法規合規知識圖譜資料結構。
+    """
+    nodes: Dict[str, GraphNode] = Field(default_factory=dict, description="Fast access map of node ID to Node")
+    edges: List[GraphEdge] = Field(default_factory=list, description="Collection of all relationship edges")
+
+
+

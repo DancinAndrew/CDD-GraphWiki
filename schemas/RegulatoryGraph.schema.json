@@ -1,0 +1,129 @@
+{
+  "$defs": {
+    "GraphEdge": {
+      "description": "圖譜中節點與節點之間的有向關係邊。",
+      "properties": {
+        "edge_id": {
+          "description": "Unique edge identifier, e.g. 'nodeA_to_nodeB_requires'",
+          "title": "Edge Id",
+          "type": "string"
+        },
+        "source_id": {
+          "description": "Source node ID",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "target_id": {
+          "description": "Target node ID",
+          "title": "Target Id",
+          "type": "string"
+        },
+        "edge_type": {
+          "description": "Relationship semantic type",
+          "enum": [
+            "defines",
+            "requires",
+            "applies_to",
+            "conditioned_on",
+            "except_when",
+            "requires_evidence",
+            "references_clause",
+            "same_as",
+            "stricter_than",
+            "supersedes",
+            "conflicts_with",
+            "derived_from",
+            "decision_path"
+          ],
+          "title": "Edge Type",
+          "type": "string"
+        },
+        "label": {
+          "description": "Human-readable edge label",
+          "title": "Label",
+          "type": "string"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Edge metadata payload, e.g., weight, reasoning_logic",
+          "title": "Properties"
+        }
+      },
+      "required": [
+        "edge_id",
+        "source_id",
+        "target_id",
+        "edge_type",
+        "label"
+      ],
+      "title": "GraphEdge",
+      "type": "object"
+    },
+    "GraphNode": {
+      "description": "圖譜中的單一合規知識或事實節點。",
+      "properties": {
+        "node_id": {
+          "description": "Unique node ID, e.g. 'mas626_clause_04'",
+          "title": "Node Id",
+          "type": "string"
+        },
+        "node_type": {
+          "description": "Node classification type",
+          "enum": [
+            "SourceDocument",
+            "Clause",
+            "Concept",
+            "Obligation",
+            "CustomerContext",
+            "Conflict",
+            "CDDChecklist",
+            "EvidenceRequirement",
+            "RiskTrigger"
+          ],
+          "title": "Node Type",
+          "type": "string"
+        },
+        "label": {
+          "description": "Human-readable node title/label",
+          "title": "Label",
+          "type": "string"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Factual metadata payload, e.g., raw_text, version, attributes",
+          "title": "Properties"
+        }
+      },
+      "required": [
+        "node_id",
+        "node_type",
+        "label"
+      ],
+      "title": "GraphNode",
+      "type": "object"
+    }
+  },
+  "description": "大一統法規合規知識圖譜資料結構。",
+  "properties": {
+    "nodes": {
+      "additionalProperties": {
+        "$ref": "#/$defs/GraphNode"
+      },
+      "description": "Fast access map of node ID to Node",
+      "title": "Nodes",
+      "type": "object"
+    },
+    "edges": {
+      "description": "Collection of all relationship edges",
+      "items": {
+        "$ref": "#/$defs/GraphEdge"
+      },
+      "title": "Edges",
+      "type": "array"
+    }
+  },
+  "title": "RegulatoryGraph",
+  "type": "object"
+}
