@@ -119,3 +119,28 @@ class Concept(BaseModel):
     aliases: List[str] = Field(default_factory=list, description="Synonym aliases")
     source_clause_ids: List[str] = Field(default_factory=list, description="Clause-level provenance IDs")
 
+
+class ProvenanceNode(BaseModel):
+    """
+    溯源路徑中的單一實體或事實節點。
+    """
+    node_id: str = Field(..., description="Unique node identifier")
+    node_type: Literal["customer_fact", "obligation", "clause", "document"] = Field(
+        ..., description="Node classification"
+    )
+    label: str = Field(..., description="Display label")
+    properties: Dict[str, Any] = Field(
+        default_factory=dict, 
+        description="Factual metadata payload, e.g., raw_text, values"
+    )
+
+
+class ExplanationPath(BaseModel):
+    """
+    表達某一特定檢核清單要求（如 Senior Management Approval Form）的完整有向合規解釋鏈。
+    """
+    target_item: str = Field(..., description="The checklist item being explained")
+    path_nodes: List[ProvenanceNode] = Field(..., min_length=2, description="Lineage path from fact to document")
+    description: str = Field(..., description="Human-readable synthesis explanation")
+
+

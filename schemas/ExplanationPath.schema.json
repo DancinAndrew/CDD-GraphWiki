@@ -1,0 +1,72 @@
+{
+  "$defs": {
+    "ProvenanceNode": {
+      "description": "溯源路徑中的單一實體或事實節點。",
+      "properties": {
+        "node_id": {
+          "description": "Unique node identifier",
+          "title": "Node Id",
+          "type": "string"
+        },
+        "node_type": {
+          "description": "Node classification",
+          "enum": [
+            "customer_fact",
+            "obligation",
+            "clause",
+            "document"
+          ],
+          "title": "Node Type",
+          "type": "string"
+        },
+        "label": {
+          "description": "Display label",
+          "title": "Label",
+          "type": "string"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Factual metadata payload, e.g., raw_text, values",
+          "title": "Properties"
+        }
+      },
+      "required": [
+        "node_id",
+        "node_type",
+        "label"
+      ],
+      "title": "ProvenanceNode",
+      "type": "object"
+    }
+  },
+  "description": "表達某一特定檢核清單要求（如 Senior Management Approval Form）的完整有向合規解釋鏈。",
+  "properties": {
+    "target_item": {
+      "description": "The checklist item being explained",
+      "title": "Target Item",
+      "type": "string"
+    },
+    "path_nodes": {
+      "description": "Lineage path from fact to document",
+      "items": {
+        "$ref": "#/$defs/ProvenanceNode"
+      },
+      "minItems": 2,
+      "title": "Path Nodes",
+      "type": "array"
+    },
+    "description": {
+      "description": "Human-readable synthesis explanation",
+      "title": "Description",
+      "type": "string"
+    }
+  },
+  "required": [
+    "target_item",
+    "path_nodes",
+    "description"
+  ],
+  "title": "ExplanationPath",
+  "type": "object"
+}

@@ -5,7 +5,9 @@ from .models import (
     CustomerContext,
     Conflict,
     CDDChecklist,
-    Concept
+    Concept,
+    ProvenanceNode,
+    ExplanationPath
 )
 
 __all__ = [
@@ -15,5 +17,8 @@ __all__ = [
     "CustomerContext",
     "Conflict",
     "CDDChecklist",
-    "Concept"
+    "Concept",
+    "ProvenanceNode",
+    "ExplanationPath"
 ]
+

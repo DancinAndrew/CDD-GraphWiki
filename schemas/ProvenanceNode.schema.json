@@ -1,0 +1,39 @@
+{
+  "description": "溯源路徑中的單一實體或事實節點。",
+  "properties": {
+    "node_id": {
+      "description": "Unique node identifier",
+      "title": "Node Id",
+      "type": "string"
+    },
+    "node_type": {
+      "description": "Node classification",
+      "enum": [
+        "customer_fact",
+        "obligation",
+        "clause",
+        "document"
+      ],
+      "title": "Node Type",
+      "type": "string"
+    },
+    "label": {
+      "description": "Display label",
+      "title": "Label",
+      "type": "string"
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Factual metadata payload, e.g., raw_text, values",
+      "title": "Properties"
+    }
+  },
+  "required": [
+    "node_id",
+    "node_type",
+    "label"
+  ],
+  "title": "ProvenanceNode",
+  "type": "object"
+}
