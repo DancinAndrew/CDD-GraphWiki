@@ -1,0 +1,190 @@
+- obligation_id: ob_prohibit_anonymous
+  source_clause_ids:
+  - fatf_rec10_introduction
+  jurisdiction: Global
+  actor: financial_institution
+  action: prohibit
+  object: anonymous_accounts
+  applies_to: {}
+  conditions: []
+  exceptions: []
+  required_evidence: []
+  review_flags:
+  - anonymous_account_creation_attempt
+  confidence: 0.95
+  review_status: approved
+- obligation_id: ob_verify_customer_identity
+  source_clause_ids:
+  - fatf_rec10_cdd_measures_10_2_core_requirements_a
+  jurisdiction: Global
+  actor: financial_institution
+  action: identify_and_verify
+  object: customer_identity
+  applies_to: {}
+  conditions:
+  - cdd_triggered
+  exceptions: []
+  required_evidence:
+  - reliable_independent_source_documents
+  review_flags:
+  - unverifiable_identity_documents
+  confidence: 0.94
+  review_status: approved
+- obligation_id: ob_identify_ubo_25
+  source_clause_ids:
+  - fatf_rec10_cdd_measures_10_2_core_requirements_b
+  jurisdiction: Global
+  actor: financial_institution
+  action: identify_and_verify
+  object: beneficial_owner
+  applies_to:
+    customer_type: legal_person
+  conditions:
+  - controlling_ownership_interest_above_25_percent
+  exceptions: []
+  required_evidence:
+  - ownership_chart
+  - identity_documents_of_ubo
+  review_flags:
+  - unclear_ownership_structure
+  - complex_multi_layer_ownership
+  confidence: 0.93
+  review_status: approved
+- obligation_id: ob_cdd_on_relationship
+  source_clause_ids:
+  - fatf_rec10_cdd_measures_10_2_core_requirements_d
+  jurisdiction: Global
+  actor: financial_institution
+  action: perform_cdd
+  object: customer
+  applies_to: {}
+  conditions:
+  - establishing_business_relationship
+  - occasional_transaction_above_15000_usd_eur
+  - suspicion_of_money_laundering
+  - doubts_about_veracity_of_data
+  exceptions: []
+  required_evidence:
+  - cdd_checklist_completed
+  review_flags: []
+  confidence: 0.92
+  review_status: approved
+- obligation_id: ob_cdd_on_relationship_mas
+  source_clause_ids:
+  - mas_notice_626_s_6_cdd
+  jurisdiction: Singapore
+  actor: bank
+  action: perform_cdd
+  object: customer
+  applies_to: {}
+  conditions:
+  - establishing_business_relations
+  - occasional_transaction_above_20000_sgd
+  - suspicion_of_money_laundering
+  - doubts_about_veracity_of_data
+  exceptions: []
+  required_evidence:
+  - cdd_completed_signoff
+  review_flags: []
+  confidence: 0.96
+  review_status: approved
+- obligation_id: ob_pep_edd_mas
+  source_clause_ids:
+  - mas_notice_626_s_6_cdd_6_2_edd_b
+  jurisdiction: Singapore
+  actor: bank
+  action: perform_edd
+  object: pep
+  applies_to:
+    pep_exposure: true
+  conditions:
+  - pep_detected
+  exceptions: []
+  required_evidence:
+  - senior_management_approval
+  - source_of_wealth_verification
+  - source_of_funds_verification
+  review_flags:
+  - pep_without_senior_mgmt_signoff
+  - insufficient_source_of_wealth_evidence
+  confidence: 0.97
+  review_status: approved
+- obligation_id: ob_verify_customer_mas
+  source_clause_ids:
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification_a
+  jurisdiction: Internal
+  actor: bank
+  action: identify_and_verify
+  object: customer_identity
+  applies_to: {}
+  conditions: []
+  exceptions: []
+  required_evidence:
+  - full_name
+  - unique_id_number
+  - residential_address
+  - date_of_birth
+  - nationality
+  review_flags:
+  - missing_mandatory_identification_fields
+  confidence: 0.95
+  review_status: approved
+- obligation_id: ob_identify_ubo_25_mas
+  source_clause_ids:
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification
+  jurisdiction: Singapore
+  actor: bank
+  action: identify_and_verify
+  object: beneficial_owner
+  applies_to:
+    customer_type: legal_person
+  conditions:
+  - controlling_ownership_interest_above_25_percent
+  exceptions: []
+  required_evidence:
+  - ubo_declaration
+  - corporate_profile
+  review_flags:
+  - ubo_not_identified
+  - multi_jurisdictional_layers
+  confidence: 0.94
+  review_status: approved
+- obligation_id: ob_identify_ubo_10_gb
+  source_clause_ids:
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a
+  jurisdiction: Internal
+  actor: bank
+  action: identify_and_verify
+  object: beneficial_owner
+  applies_to:
+    customer_type: legal_person
+  conditions:
+  - controlling_ownership_interest_above_10_percent
+  exceptions: []
+  required_evidence:
+  - ubo_proof_of_identity
+  - shareholder_registry
+  review_flags:
+  - ownership_between_10_and_25_percent
+  confidence: 0.98
+  review_status: approved
+- obligation_id: ob_pep_prohibitions_gb
+  source_clause_ids:
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_3_high_risk_reviews_and_escalations
+  jurisdiction: Internal
+  actor: bank
+  action: restrict_relationship
+  object: pep
+  applies_to:
+    pep_exposure: true
+  conditions:
+  - pep_from_high_risk_jurisdiction
+  exceptions: []
+  required_evidence:
+  - head_of_compliance_approval
+  - two_levels_senior_mgmt_approval
+  review_flags:
+  - pep_from_high_risk_country
+  - pep_without_head_compliance_signoff
+  confidence: 0.99
+  review_status: approved

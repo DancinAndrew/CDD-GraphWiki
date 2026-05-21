@@ -1,0 +1,169 @@
+- clause_id: fatf_rec10_cdd_measures
+  section_ref: Customer Due Diligence Measures
+  raw_text: '## Customer Due Diligence Measures Financial institutions should be required
+    to undertake customer due diligence (CDD) measures when:'
+  failure_reason: MISSING_CORE_ELEMENTS
+- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers
+  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers
+  raw_text: '### 10.1 CDD Triggers The financial institution shall apply CDD measures
+    when:'
+  failure_reason: MISSING_CORE_ELEMENTS
+- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_a
+  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (a)
+  raw_text: (a) Establishing business relationships.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_b
+  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (b)
+  raw_text: '(b) Carrying out occasional transactions:'
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_b_i
+  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (b) > (i)
+  raw_text: (i) Above the designated threshold (USD/EUR 15,000); or
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_b_ii
+  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (b) > (ii)
+  raw_text: (ii) That are wire transfers in the circumstances covered by the Interpretative
+    Note to Recommendation 16.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_c
+  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (c)
+  raw_text: (c) There is a suspicion of money laundering or terrorist financing.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_d
+  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (d)
+  raw_text: (d) The financial institution has doubts about the veracity or adequacy
+    of previously obtained customer identification data.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: fatf_rec10_cdd_measures_10_2_core_requirements
+  section_ref: Customer Due Diligence Measures > 10.2 Core Requirements
+  raw_text: '### 10.2 Core Requirements The CDD measures to be taken are as follows:'
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: fatf_rec10_cdd_measures_10_2_core_requirements_c
+  section_ref: Customer Due Diligence Measures > 10.2 Core Requirements > (c)
+  raw_text: (c) Understanding and, as appropriate, obtaining information on the purpose
+    and intended nature of the business relationship.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements
+  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements'
+  raw_text: '### 6.1 General CDD Requirements A bank shall perform Customer Due Diligence
+    measures in the following circumstances:'
+  failure_reason: MISSING_CORE_ELEMENTS
+- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_a
+  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
+    (a)'
+  raw_text: (a) When the bank establishes business relations with a customer.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_b
+  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
+    (b)'
+  raw_text: '(b) When the bank undertakes any occasional transaction for a customer:'
+  failure_reason: MISSING_CORE_ELEMENTS
+- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_b_i
+  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
+    (b) > (i)'
+  raw_text: (i) That is equal to or exceeds SGD 5,000; or
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_b_ii
+  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
+    (b) > (ii)'
+  raw_text: (ii) That is a wire transfer, regardless of the transaction amount.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_c
+  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
+    (c)'
+  raw_text: (c) When there is suspicion of money laundering or terrorism financing.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_d
+  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
+    (d)'
+  raw_text: (d) When the bank has doubts about the veracity or adequacy of any information
+    or documentation previously obtained.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mas_notice_626_s_6_cdd_6_2_edd
+  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence'
+  raw_text: '### 6.2 Enhanced Due Diligence A bank shall perform Enhanced Due Diligence
+    (EDD) measures in respect of any customer who:'
+  failure_reason: MISSING_CORE_ELEMENTS
+- clause_id: mas_notice_626_s_6_cdd_6_2_edd_a
+  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > (a)'
+  raw_text: (a) Is identified as presenting a high risk of money laundering or terrorism
+    financing.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mas_notice_626_s_6_cdd_6_2_edd_c
+  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > (c)'
+  raw_text: (c) In respect of whom there are complex or unusually large transactions,
+    or unusual patterns of transactions, which have no apparent economic or lawful
+    purpose.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures
+  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > 6.2.1
+    High Risk Measures'
+  raw_text: '#### 6.2.1 High Risk Measures For high-risk customers, a bank shall perform
+    the following measures:'
+  failure_reason: MISSING_CORE_ELEMENTS
+- clause_id: mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures_i
+  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > 6.2.1
+    High Risk Measures > (i)'
+  raw_text: (i) Obtain approval from senior management to establish or continue the
+    business relationship.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures_ii
+  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > 6.2.1
+    High Risk Measures > (ii)'
+  raw_text: (ii) Take reasonable measures to establish the customer’s source of wealth
+    and source of funds.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures_iii
+  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > 6.2.1
+    High Risk Measures > (iii)'
+  raw_text: (iii) Conduct enhanced ongoing monitoring of the business relationship.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mock_internal_policy_s_1_customer_onboarding_standards
+  section_ref: 'Section 1: Customer Onboarding Standards'
+  raw_text: '## Section 1: Customer Onboarding Standards Global Bank requires all
+    corporate and individual customers to undergo standard Know Your Customer (KYC)
+    procedures.'
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification
+  section_ref: 'Section 1: Customer Onboarding Standards > 1.1 Customer Identification'
+  raw_text: '### 1.1 Customer Identification Every customer must be identified and
+    verified before onboarding.'
+  failure_reason: MISSING_CORE_ELEMENTS
+- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification_b
+  section_ref: 'Section 1: Customer Onboarding Standards > 1.1 Customer Identification
+    > (b)'
+  raw_text: '(b) For corporate entities: Legal entity name, registration number, registered
+    address, and the names of all active directors must be verified against official
+    registry extracts.'
+  failure_reason: MISSING_CORE_ELEMENTS
+- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b
+  section_ref: 'Section 1: Customer Onboarding Standards > 1.2 Beneficial Ownership
+    Verification > (b)'
+  raw_text: '(b) In cases where the ownership structure is complex, including three
+    or more layers of intermediary holding companies:'
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b_i
+  section_ref: 'Section 1: Customer Onboarding Standards > 1.2 Beneficial Ownership
+    Verification > (b) > (i)'
+  raw_text: (i) The corporate entity is automatically classified as presenting a high
+    risk.
+  failure_reason: NON_OBLIGATION_TEXT
+- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b_ii
+  section_ref: 'Section 1: Customer Onboarding Standards > 1.2 Beneficial Ownership
+    Verification > (b) > (ii)'
+  raw_text: (ii) Full ownership charts detailing each layer must be signed off by
+    a compliance officer.
+  failure_reason: MISSING_CORE_ELEMENTS
+- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_3_high_risk_reviews_and_escalations_a
+  section_ref: 'Section 1: Customer Onboarding Standards > 1.3 High-Risk Reviews and
+    Escalations > (a)'
+  raw_text: (a) High-risk customer files MUST be reviewed every 12 months (annual
+    review) to ensure compliance documentation is up-to-date.
+  failure_reason: MISSING_CORE_ELEMENTS
+- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_3_high_risk_reviews_and_escalations_b
+  section_ref: 'Section 1: Customer Onboarding Standards > 1.3 High-Risk Reviews and
+    Escalations > (b)'
+  raw_text: (b) If a review reveals significant discrepancies or failure to verify
+    a UBO, the case must be escalated to the Group AML Committee within 5 business
+    days.
+  failure_reason: MISSING_CORE_ELEMENTS

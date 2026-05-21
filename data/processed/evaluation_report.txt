@@ -1,0 +1,21 @@
+CDD-GraphWiki Obligation Extraction Evaluation Report
+==================================================
+Obligation ID: ob_prohibit_anonymous -> Match: [OK] Fields match ratio: 1.00
+Obligation ID: ob_cdd_on_relationship -> Match: [OK] Fields match ratio: 1.00
+Obligation ID: ob_verify_customer_identity -> Match: [OK] Fields match ratio: 1.00
+Obligation ID: ob_identify_ubo_25 -> Match: [OK] Fields match ratio: 1.00
+Obligation ID: ob_cdd_on_relationship_mas -> Match: [OK] Fields match ratio: 1.00
+Obligation ID: ob_verify_customer_mas -> Match: [OK] Fields match ratio: 1.00
+Obligation ID: ob_identify_ubo_25_mas -> Match: [OK] Fields match ratio: 1.00
+Obligation ID: ob_pep_edd_mas -> Match: [OK] Fields match ratio: 1.00
+Obligation ID: ob_identify_ubo_10_gb -> Match: [OK] Fields match ratio: 1.00
+Obligation ID: ob_pep_prohibitions_gb -> Match: [OK] Fields match ratio: 1.00
+
+Evaluation Metrics Summary:
+- Extracted Obligations Count: 10
+- Gold Obligations Count: 10
+- Match Count: 10
+- Precision (精準率): 1.00
+- Recall (召回率): 1.00
+- F1-Score: 1.00
+- Field-level Alignment Accuracy: 1.00
