@@ -1,0 +1,90 @@
+- checklist_id: chk_low_risk
+  customer_id: cust_individual_low_risk
+  decision: standard_cdd
+  required_documents:
+    - "National Identity Card (NRIC)"
+    - "Proof of Residential Address"
+  risk_triggers: []
+  applicable_obligations:
+    - ob_cdd_on_relationship_mas
+    - ob_verify_customer_mas
+  unresolved_conflicts: []
+  human_review_required: false
+  citations:
+    - "MAS Notice 626 Paragraph 6.2"
+    - "MAS Notice 626 Paragraph 6.6"
+
+- checklist_id: chk_corp_standard
+  customer_id: cust_corp_standard
+  decision: standard_cdd
+  required_documents:
+    - "Certificate of Incorporation"
+    - "ACRA Company Profile"
+    - "Shareholder Registry"
+    - "UBO 15% Shareholder Identity Document (NRIC/Passport)"
+  risk_triggers:
+    - internal_ubo_threshold_triggered_10_percent
+  applicable_obligations:
+    - ob_cdd_on_relationship_mas
+    - ob_verify_customer_mas
+    - ob_identify_ubo_10_gb
+  unresolved_conflicts: []
+  human_review_required: true
+  citations:
+    - "MAS Notice 626 Paragraph 6.13"
+    - "Global Bank Policy Section 3.2.1"
+
+- checklist_id: chk_individual_pep
+  customer_id: cust_individual_pep
+  decision: enhanced_due_diligence
+  required_documents:
+    - "National Identity Card (NRIC) or Passport"
+    - "Proof of Address"
+    - "Senior Management Approval Form"
+    - "Source of Funds Declaration & Evidence"
+    - "Source of Wealth Declaration & Evidence"
+  risk_triggers:
+    - pep_exposure_detected
+  applicable_obligations:
+    - ob_cdd_on_relationship_mas
+    - ob_verify_customer_mas
+    - ob_pep_edd_mas
+  unresolved_conflicts: []
+  human_review_required: true
+  citations:
+    - "MAS Notice 626 Paragraph 7.2"
+
+- checklist_id: chk_individual_high_risk_pep
+  customer_id: cust_individual_high_risk_pep
+  decision: enhanced_due_diligence
+  required_documents:
+    - "Rejected Onboarding Notification"
+    - "Suspicious Transaction Report (STR) Draft"
+  risk_triggers:
+    - pep_from_high_risk_jurisdiction
+    - onboarding_prohibited_by_policy
+  applicable_obligations:
+    - ob_pep_prohibitions_gb
+  unresolved_conflicts: []
+  human_review_required: true
+  citations:
+    - "Global Bank Policy Section 4.5.3"
+
+- checklist_id: chk_corp_unclear_ubo
+  customer_id: cust_corp_unclear_ubo
+  decision: enhanced_due_diligence
+  required_documents:
+    - "Account Opening Rejection Notice"
+    - "STR Evaluation File"
+  risk_triggers:
+    - unclear_ubo_status
+    - excessive_layering_5
+    - missing_source_of_funds_evidence
+  applicable_obligations:
+    - ob_cdd_on_relationship_mas
+    - ob_identify_ubo_25_mas
+  unresolved_conflicts: []
+  human_review_required: true
+  citations:
+    - "MAS Notice 626 Paragraph 6.13"
+    - "FATF Recommendation 10, P3"

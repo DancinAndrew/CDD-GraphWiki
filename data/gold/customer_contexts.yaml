@@ -1,0 +1,64 @@
+- customer_id: cust_individual_low_risk
+  customer_type: individual
+  registration_jurisdiction: Singapore
+  ownership_layers: 0
+  ubo_status: identified
+  ubo_country_risk: low
+  pep_exposure: false
+  source_of_funds_available: true
+  source_of_wealth_available: false
+  custom_attributes:
+    occupation: "Software Engineer"
+    annual_income_sgd: 120000
+
+- customer_id: cust_corp_standard
+  customer_type: corporate
+  registration_jurisdiction: Singapore
+  ownership_layers: 2
+  ubo_status: identified
+  ubo_country_risk: low
+  pep_exposure: false
+  source_of_funds_available: true
+  source_of_wealth_available: true
+  custom_attributes:
+    major_shareholder_pct: 15
+    has_smf_appointed: true
+
+- customer_id: cust_individual_pep
+  customer_type: individual
+  registration_jurisdiction: Singapore
+  ownership_layers: 0
+  ubo_status: identified
+  ubo_country_risk: low
+  pep_exposure: true
+  source_of_funds_available: true
+  source_of_wealth_available: true
+  custom_attributes:
+    pep_role: "Member of Parliament"
+    jurisdiction_risk: "low"
+
+- customer_id: cust_individual_high_risk_pep
+  customer_type: individual
+  registration_jurisdiction: Myanmar
+  ownership_layers: 0
+  ubo_status: identified
+  ubo_country_risk: high
+  pep_exposure: true
+  source_of_funds_available: true
+  source_of_wealth_available: false
+  custom_attributes:
+    pep_role: "Military General relative"
+    jurisdiction_risk: "high"
+
+- customer_id: cust_corp_unclear_ubo
+  customer_type: corporate
+  registration_jurisdiction: Cayman Islands
+  ownership_layers: 5
+  ubo_status: unclear
+  ubo_country_risk: medium
+  pep_exposure: false
+  source_of_funds_available: false
+  source_of_wealth_available: false
+  custom_attributes:
+    layering_reason: "tax_optimization"
+    has_bearer_shares: true

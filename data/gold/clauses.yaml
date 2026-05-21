@@ -1,0 +1,89 @@
+- clause_id: fatf_rec10_clause_01
+  source_document_id: fatf_rec10
+  section_ref: "Recommendation 10, Paragraph 1"
+  parent_clause_id: null
+  raw_text: "Financial institutions should be prohibited from keeping anonymous accounts or accounts in fictitious names."
+  normalized_text: "Financial institutions should be prohibited from keeping anonymous accounts or accounts in fictitious names."
+  citations:
+    - "FATF Recommendation 10, P1"
+
+- clause_id: fatf_rec10_clause_02
+  source_document_id: fatf_rec10
+  section_ref: "Recommendation 10, Paragraph 2"
+  parent_clause_id: null
+  raw_text: "Financial institutions should be required to undertake customer due diligence (CDD) measures when: (a) establishing business relationships; (b) carrying out occasional transactions above the designated threshold (USD/EUR 15,000); (c) there is a suspicion of money laundering or terrorist financing; or (d) the financial institution has doubts about the veracity or adequacy of previously obtained customer identification data."
+  normalized_text: "Financial institutions should be required to undertake customer due diligence (CDD) measures when: (a) establishing business relationships; (b) carrying out occasional transactions above the designated threshold (USD/EUR 15,000); (c) there is a suspicion of money laundering or terrorist financing; or (d) the financial institution has doubts about the veracity or adequacy of previously obtained customer identification data."
+  citations:
+    - "FATF Recommendation 10, P2"
+
+- clause_id: fatf_rec10_clause_03
+  source_document_id: fatf_rec10
+  section_ref: "Recommendation 10, Paragraph 3"
+  parent_clause_id: null
+  raw_text: "The CDD measures to be taken are as follows: (a) Identifying the customer and verifying that customer’s identity using reliable, independent source documents, data or information. (b) Identifying the beneficial owner, and taking reasonable measures to verify the identity of the beneficial owner... For legal persons and arrangements this should include financial institutions understanding the ownership and control structure of the customer."
+  normalized_text: "The CDD measures to be taken are as follows: (a) Identifying the customer and verifying that customer’s identity using reliable, independent source documents, data or information. (b) Identifying the beneficial owner, and taking reasonable measures to verify the identity of the beneficial owner... For legal persons and arrangements this should include financial institutions understanding the ownership and control structure of the customer."
+  citations:
+    - "FATF Recommendation 10, P3"
+
+- clause_id: fatf_rec10_clause_04
+  source_document_id: fatf_rec10
+  section_ref: "Interpretive Note to Recommendation 10, Paragraph 5(b)(i)"
+  parent_clause_id: "fatf_rec10_clause_03"
+  raw_text: "For customers that are legal persons, the financial institution should identify and take reasonable measures to verify the identity of beneficial owners by obtaining information on the identity of the natural persons who ultimately have a controlling ownership interest in a legal person. Controlling ownership interest is typically determined by holding more than 25% of the shares or voting rights."
+  normalized_text: "For customers that are legal persons, the financial institution should identify and take reasonable measures to verify the identity of beneficial owners by obtaining information on the identity of the natural persons who ultimately have a controlling ownership interest in a legal person. Controlling ownership interest is typically determined by holding more than 25% of the shares or voting rights."
+  citations:
+    - "Interpretive Note to FATF Recommendation 10, P5(b)(i)"
+
+- clause_id: mas626_clause_01
+  source_document_id: mas_notice_626
+  section_ref: "Paragraph 6.2"
+  parent_clause_id: null
+  raw_text: "A bank shall perform Customer Due Diligence (CDD) measures when: (a) the bank establishes business relations with a customer; (b) the bank undertakes any occasional transaction for any customer who does not otherwise have business relations with the bank, where the value of the transaction exceeds SGD 20,000; (c) there is suspicion of money laundering or terrorism financing; or (d) the bank has doubts about the veracity or adequacy of any information previously obtained."
+  normalized_text: "A bank shall perform Customer Due Diligence (CDD) measures when: (a) the bank establishes business relations with a customer; (b) the bank undertakes any occasional transaction for any customer who does not otherwise have business relations with the bank, where the value of the transaction exceeds SGD 20,000; (c) there is suspicion of money laundering or terrorism financing; or (d) the bank has doubts about the veracity or adequacy of any information previously obtained."
+  citations:
+    - "MAS Notice 626, Paragraph 6.2"
+
+- clause_id: mas626_clause_02
+  source_document_id: mas_notice_626
+  section_ref: "Paragraph 6.6"
+  parent_clause_id: null
+  raw_text: "A bank shall identify each customer. For this purpose, the bank shall obtain the customer's full name, unique identification number, residential address, date of birth, and nationality. The bank shall verify the customer's identity using reliable, independent source documents, data or information."
+  normalized_text: "A bank shall identify each customer. For this purpose, the bank shall obtain the customer's full name, unique identification number, residential address, date of birth, and nationality. The bank shall verify the customer's identity using reliable, independent source documents, data or information."
+  citations:
+    - "MAS Notice 626, Paragraph 6.6"
+
+- clause_id: mas626_clause_03
+  source_document_id: mas_notice_626
+  section_ref: "Paragraph 6.13"
+  parent_clause_id: null
+  raw_text: "A bank shall identify the beneficial owners of a customer. In the case of a customer that is a legal person, the bank shall identify the natural persons who ultimately own or control the legal person, including those holding a controlling ownership interest. A controlling ownership interest refers to an interest of more than 25% of the shares or voting rights in the legal person."
+  normalized_text: "A bank shall identify the beneficial owners of a customer. In the case of a customer that is a legal person, the bank shall identify the natural persons who ultimately own or control the legal person, including those holding a controlling ownership interest. A controlling ownership interest refers to an interest of more than 25% of the shares or voting rights in the legal person."
+  citations:
+    - "MAS Notice 626, Paragraph 6.13"
+
+- clause_id: mas626_clause_04
+  source_document_id: mas_notice_626
+  section_ref: "Paragraph 7.2"
+  parent_clause_id: null
+  raw_text: "A bank shall determine whether a customer or any beneficial owner is a politically exposed person (PEP). Where a customer or beneficial owner is identified as a PEP, the bank shall perform Enhanced Customer Due Diligence (EDD), which must include: (a) obtaining senior management approval to establish or continue business relations; (b) taking reasonable measures to establish the source of wealth and source of funds; and (c) conducting enhanced ongoing monitoring of the business relations."
+  normalized_text: "A bank shall determine whether a customer or any beneficial owner is a politically exposed person (PEP). Where a customer or beneficial owner is identified as a PEP, the bank shall perform Enhanced Customer Due Diligence (EDD), which must include: (a) obtaining senior management approval to establish or continue business relations; (b) taking reasonable measures to establish the source of wealth and source of funds; and (c) conducting enhanced ongoing monitoring of the business relations."
+  citations:
+    - "MAS Notice 626, Paragraph 7.2"
+
+- clause_id: mock_policy_clause_01
+  source_document_id: mock_internal_policy
+  section_ref: "Section 3.2.1"
+  parent_clause_id: null
+  raw_text: "For legal entities, Global Bank applies a stricter threshold for identifying Ultimate Beneficial Owners (UBO) to mitigate high-layering risks. Compliance officers must identify and verify any natural person who directly or indirectly holds 10% or more of the shares or voting rights in the customer entity."
+  normalized_text: "For legal entities, Global Bank applies a stricter threshold for identifying Ultimate Beneficial Owners (UBO) to mitigate high-layering risks. Compliance officers must identify and verify any natural person who directly or indirectly holds 10% or more of the shares or voting rights in the customer entity."
+  citations:
+    - "Global Bank Policy, Section 3.2.1"
+
+- clause_id: mock_policy_clause_02
+  source_document_id: mock_internal_policy
+  section_ref: "Section 4.5.3"
+  parent_clause_id: null
+  raw_text: "Global Bank strictly prohibits establishing relationships with PEPs from high-risk jurisdictions. For all other PEPs, relationships must be approved by the Head of Compliance, require Source of Funds and Source of Wealth verification, and a minimum of 2 levels of independent senior management sign-off."
+  normalized_text: "Global Bank strictly prohibits establishing relationships with PEPs from high-risk jurisdictions. For all other PEPs, relationships must be approved by the Head of Compliance, require Source of Funds and Source of Wealth verification, and a minimum of 2 levels of independent senior management sign-off."
+  citations:
+    - "Global Bank Policy, Section 4.5.3"

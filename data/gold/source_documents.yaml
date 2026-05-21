@@ -1,0 +1,32 @@
+- source_document_id: fatf_rec10
+  title: "FATF Recommendation 10: Customer due diligence"
+  issuer: FATF
+  jurisdiction: Global
+  version: "2012 (updated 2023)"
+  effective_date: "2012-02-15"
+  retrieval_date: "2026-05-21"
+  source_url: "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/FATF-Recommendations.html"
+  local_path: "data/cached/fatf_rec10.pdf"
+  content_hash: "d3b07384d113edec49eaa6238ad5ff00"
+
+- source_document_id: mas_notice_626
+  title: "MAS Notice 626: Prevention of Money Laundering and Countering the Financing of Terrorism"
+  issuer: MAS
+  jurisdiction: Singapore
+  version: "2015 (updated 2024)"
+  effective_date: "2015-05-24"
+  retrieval_date: "2026-05-21"
+  source_url: "https://www.mas.gov.sg/regulatory-sandboxes/mas-notice-626"
+  local_path: "data/cached/mas_notice_626.pdf"
+  content_hash: "8f31bc5f7d24a919cd1d73cd5d14e321"
+
+- source_document_id: mock_internal_policy
+  title: "Global Bank AML and KYC Compliance Policy"
+  issuer: "Global Bank Compliance Committee"
+  jurisdiction: Internal
+  version: "4.2"
+  effective_date: "2025-01-01"
+  retrieval_date: "2026-05-21"
+  source_url: null
+  local_path: "data/cached/global_bank_policy.pdf"
+  content_hash: "c4ca4238a0b923820dcc509a6f75849b"
