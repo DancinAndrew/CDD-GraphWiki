@@ -1,0 +1,89 @@
+{
+  "description": "用於追溯多條法規或政策之間時間性、特異性或權威性衝突的動態記錄。",
+  "properties": {
+    "conflict_id": {
+      "title": "Conflict Id",
+      "type": "string"
+    },
+    "conflict_type": {
+      "description": "Categorized conflict type",
+      "enum": [
+        "Temporal",
+        "Numerical",
+        "Specificity",
+        "PolicyReversal",
+        "Authority",
+        "Process"
+      ],
+      "title": "Conflict Type",
+      "type": "string"
+    },
+    "source_clause_ids": {
+      "description": "Pairwise or multiple conflict sources",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Source Clause Ids",
+      "type": "array"
+    },
+    "verifiability": {
+      "description": "Verification approach suitability",
+      "enum": [
+        "retrieval-verifiable",
+        "retrieval-resistant"
+      ],
+      "title": "Verifiability",
+      "type": "string"
+    },
+    "description": {
+      "description": "Human-readable conflict narrative",
+      "title": "Description",
+      "type": "string"
+    },
+    "reconciliation_rule": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Reconciliation logic if decidable",
+      "title": "Reconciliation Rule"
+    },
+    "adjudication_status": {
+      "description": "Reconciliation workflow status",
+      "enum": [
+        "pending_human_review",
+        "resolved"
+      ],
+      "title": "Adjudication Status",
+      "type": "string"
+    },
+    "resolved_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resolved By"
+    }
+  },
+  "required": [
+    "conflict_id",
+    "conflict_type",
+    "source_clause_ids",
+    "verifiability",
+    "description",
+    "adjudication_status"
+  ],
+  "title": "Conflict",
+  "type": "object"
+}

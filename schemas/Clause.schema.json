@@ -1,0 +1,61 @@
+{
+  "description": "從源文件中分割出的最小獨立條款。",
+  "properties": {
+    "clause_id": {
+      "description": "e.g., mas626_cdd_001",
+      "title": "Clause Id",
+      "type": "string"
+    },
+    "source_document_id": {
+      "description": "Foreign key to SourceDocument",
+      "title": "Source Document Id",
+      "type": "string"
+    },
+    "section_ref": {
+      "description": "Human-readable section citation",
+      "title": "Section Ref",
+      "type": "string"
+    },
+    "parent_clause_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Allows multi-layer nested tree representation",
+      "title": "Parent Clause Id"
+    },
+    "raw_text": {
+      "description": "Exact original text",
+      "title": "Raw Text",
+      "type": "string"
+    },
+    "normalized_text": {
+      "description": "Cleaned text for embedding",
+      "title": "Normalized Text",
+      "type": "string"
+    },
+    "citations": {
+      "description": "List of stable provenance citations",
+      "items": {
+        "type": "string"
+      },
+      "title": "Citations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "clause_id",
+    "source_document_id",
+    "section_ref",
+    "raw_text",
+    "normalized_text",
+    "citations"
+  ],
+  "title": "Clause",
+  "type": "object"
+}

@@ -1,0 +1,10 @@
+adjudication_status: pending_human_review
+conflict_id: conflict_001
+conflict_type: Authority
+description: MAS requires 10% UBO threshold but internal policy states 25%.
+reconciliation_rule: Apply stricter threshold.
+resolved_by: null
+source_clause_ids:
+- mas626_cdd_001
+- internal_policy_002
+verifiability: retrieval-verifiable

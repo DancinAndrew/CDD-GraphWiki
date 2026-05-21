@@ -1,0 +1,18 @@
+action: identify_and_verify
+actor: financial_institution
+applies_to:
+  customer_type: corporate
+conditions:
+- ownership_layers > 2
+confidence: 0.95
+exceptions: []
+jurisdiction: Singapore
+object: beneficial_owner
+obligation_id: identify_beneficial_owner
+required_evidence:
+- ubo_identity_document
+review_flags:
+- complex_structure
+review_status: approved
+source_clause_ids:
+- mas626_cdd_001

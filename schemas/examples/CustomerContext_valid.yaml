@@ -1,0 +1,11 @@
+custom_attributes:
+  industry: crypto
+customer_id: CUST-999
+customer_type: corporate
+ownership_layers: 3
+pep_exposure: false
+registration_jurisdiction: Cayman Islands
+source_of_funds_available: true
+source_of_wealth_available: false
+ubo_country_risk: high
+ubo_status: identified

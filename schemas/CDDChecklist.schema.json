@@ -1,0 +1,82 @@
+{
+  "description": "最終生成的客戶合規檢核表決策與所需行動輸出。",
+  "properties": {
+    "checklist_id": {
+      "title": "Checklist Id",
+      "type": "string"
+    },
+    "customer_id": {
+      "description": "Foreign key to CustomerContext",
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "decision": {
+      "description": "CDD Tier Decision",
+      "enum": [
+        "simplified_cdd",
+        "standard_cdd",
+        "enhanced_due_diligence"
+      ],
+      "title": "Decision",
+      "type": "string"
+    },
+    "required_documents": {
+      "description": "Auditable checklists",
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Documents",
+      "type": "array"
+    },
+    "risk_triggers": {
+      "description": "Factual triggers activated",
+      "items": {
+        "type": "string"
+      },
+      "title": "Risk Triggers",
+      "type": "array"
+    },
+    "applicable_obligations": {
+      "description": "Foreign keys to active Obligations",
+      "items": {
+        "type": "string"
+      },
+      "title": "Applicable Obligations",
+      "type": "array"
+    },
+    "unresolved_conflicts": {
+      "description": "Foreign keys to unresolved Conflicts",
+      "items": {
+        "type": "string"
+      },
+      "title": "Unresolved Conflicts",
+      "type": "array"
+    },
+    "human_review_required": {
+      "description": "Routing flag to human queue",
+      "title": "Human Review Required",
+      "type": "boolean"
+    },
+    "citations": {
+      "description": "Provenance citations back to clauses",
+      "items": {
+        "type": "string"
+      },
+      "title": "Citations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "checklist_id",
+    "customer_id",
+    "decision",
+    "required_documents",
+    "risk_triggers",
+    "applicable_obligations",
+    "unresolved_conflicts",
+    "human_review_required",
+    "citations"
+  ],
+  "title": "CDDChecklist",
+  "type": "object"
+}

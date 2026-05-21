@@ -1,0 +1,103 @@
+{
+  "description": "從條款中抽取的機器可讀合規義務規則。",
+  "properties": {
+    "obligation_id": {
+      "description": "e.g., identify_beneficial_owner",
+      "title": "Obligation Id",
+      "type": "string"
+    },
+    "source_clause_ids": {
+      "description": "List of clause IDs, ensuring clause-level provenance",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Source Clause Ids",
+      "type": "array"
+    },
+    "jurisdiction": {
+      "description": "Jurisdiction of the obligation",
+      "title": "Jurisdiction",
+      "type": "string"
+    },
+    "actor": {
+      "description": "e.g., financial_institution",
+      "title": "Actor",
+      "type": "string"
+    },
+    "action": {
+      "description": "e.g., identify_and_verify",
+      "title": "Action",
+      "type": "string"
+    },
+    "object": {
+      "description": "e.g., beneficial_owner",
+      "title": "Object",
+      "type": "string"
+    },
+    "applies_to": {
+      "additionalProperties": true,
+      "description": "Entity constraints",
+      "title": "Applies To",
+      "type": "object"
+    },
+    "conditions": {
+      "description": "Factual triggers",
+      "items": {
+        "type": "string"
+      },
+      "title": "Conditions",
+      "type": "array"
+    },
+    "exceptions": {
+      "description": "Exemptions",
+      "items": {
+        "type": "string"
+      },
+      "title": "Exceptions",
+      "type": "array"
+    },
+    "required_evidence": {
+      "description": "Required evidence",
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Evidence",
+      "type": "array"
+    },
+    "review_flags": {
+      "description": "Triggers for human review",
+      "items": {
+        "type": "string"
+      },
+      "title": "Review Flags",
+      "type": "array"
+    },
+    "confidence": {
+      "description": "Extraction confidence score",
+      "title": "Confidence",
+      "type": "number"
+    },
+    "review_status": {
+      "default": "pending_human_review",
+      "description": "Verification state",
+      "enum": [
+        "pending_human_review",
+        "approved"
+      ],
+      "title": "Review Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "obligation_id",
+    "source_clause_ids",
+    "jurisdiction",
+    "actor",
+    "action",
+    "object",
+    "confidence"
+  ],
+  "title": "Obligation",
+  "type": "object"
+}

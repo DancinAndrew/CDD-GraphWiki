@@ -1,0 +1,19 @@
+applicable_obligations:
+- identify_beneficial_owner
+- edd_high_risk
+checklist_id: chk_001
+citations:
+- MAS Notice 626 Paragraph 10.1
+- MAS Notice 626 Paragraph 12.2
+customer_id: CUST-999
+decision: enhanced_due_diligence
+human_review_required: true
+required_documents:
+- certificate_of_inc
+- ubo_passport
+- sow_declaration
+risk_triggers:
+- complex_ownership_structure
+- high_risk_jurisdiction
+unresolved_conflicts:
+- conflict_001

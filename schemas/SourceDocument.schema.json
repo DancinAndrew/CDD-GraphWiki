@@ -1,0 +1,90 @@
+{
+  "description": "原始法規或內部政策文件的元數據記錄。",
+  "properties": {
+    "source_document_id": {
+      "description": "Primary identifier",
+      "title": "Source Document Id",
+      "type": "string"
+    },
+    "title": {
+      "description": "Document title",
+      "title": "Title",
+      "type": "string"
+    },
+    "issuer": {
+      "description": "Regulatory body, e.g., 'MAS'",
+      "title": "Issuer",
+      "type": "string"
+    },
+    "jurisdiction": {
+      "description": "Jurisdiction region, e.g., 'Singapore'",
+      "title": "Jurisdiction",
+      "type": "string"
+    },
+    "version": {
+      "description": "Document version",
+      "title": "Version",
+      "type": "string"
+    },
+    "effective_date": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "ISO date (YYYY-MM-DD)",
+      "title": "Effective Date"
+    },
+    "retrieval_date": {
+      "description": "ISO date (YYYY-MM-DD)",
+      "title": "Retrieval Date",
+      "type": "string"
+    },
+    "source_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Web source path",
+      "title": "Source Url"
+    },
+    "local_path": {
+      "description": "Path to cached source document",
+      "title": "Local Path",
+      "type": "string"
+    },
+    "content_hash": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Integrity verification",
+      "title": "Content Hash"
+    }
+  },
+  "required": [
+    "source_document_id",
+    "title",
+    "issuer",
+    "jurisdiction",
+    "version",
+    "retrieval_date",
+    "local_path"
+  ],
+  "title": "SourceDocument",
+  "type": "object"
+}

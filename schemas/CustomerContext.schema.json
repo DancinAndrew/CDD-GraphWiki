@@ -1,0 +1,76 @@
+{
+  "description": "結構化客戶情境，用於進行 CDD 風險畫像比對。",
+  "properties": {
+    "customer_id": {
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "customer_type": {
+      "description": "Customer classification",
+      "enum": [
+        "individual",
+        "corporate"
+      ],
+      "title": "Customer Type",
+      "type": "string"
+    },
+    "registration_jurisdiction": {
+      "title": "Registration Jurisdiction",
+      "type": "string"
+    },
+    "ownership_layers": {
+      "title": "Ownership Layers",
+      "type": "integer"
+    },
+    "ubo_status": {
+      "description": "Ultimate Beneficial Owner status",
+      "enum": [
+        "identified",
+        "unclear"
+      ],
+      "title": "Ubo Status",
+      "type": "string"
+    },
+    "ubo_country_risk": {
+      "description": "Country-associated risk level",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "Ubo Country Risk",
+      "type": "string"
+    },
+    "pep_exposure": {
+      "title": "Pep Exposure",
+      "type": "boolean"
+    },
+    "source_of_funds_available": {
+      "title": "Source Of Funds Available",
+      "type": "boolean"
+    },
+    "source_of_wealth_available": {
+      "title": "Source Of Wealth Available",
+      "type": "boolean"
+    },
+    "custom_attributes": {
+      "additionalProperties": true,
+      "description": "Dynamic data payload for 'schema-light' flexibility",
+      "title": "Custom Attributes",
+      "type": "object"
+    }
+  },
+  "required": [
+    "customer_id",
+    "customer_type",
+    "registration_jurisdiction",
+    "ownership_layers",
+    "ubo_status",
+    "ubo_country_risk",
+    "pep_exposure",
+    "source_of_funds_available",
+    "source_of_wealth_available"
+  ],
+  "title": "CustomerContext",
+  "type": "object"
+}
