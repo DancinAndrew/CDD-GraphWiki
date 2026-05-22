@@ -5,6 +5,7 @@ import {
   History, 
   Network,
   FileUp,
+  BookOpen,
   ShieldAlert as ShieldIcon
 } from 'lucide-react';
 
@@ -27,6 +28,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'timeline', label: '防篡改稽核', icon: History, statusDot: true },
     { id: 'graph', label: '法規可視化圖譜', icon: Network },
     { id: 'ingestion', label: '法規自主導入', icon: FileUp },
+    { id: 'guide', label: '系統使用手冊', icon: BookOpen },
   ];
 
   return (
@@ -189,10 +191,16 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '12px 16px',
+    paddingTop: '12px',
+    paddingRight: '16px',
+    paddingBottom: '12px',
+    paddingLeft: '16px',
     borderRadius: '10px',
     background: 'transparent',
-    border: 'none',
+    borderTop: 'none',
+    borderRight: 'none',
+    borderBottom: 'none',
+    borderLeft: '3px solid transparent',
     cursor: 'pointer',
     width: '100%',
     textAlign: 'left' as const,
