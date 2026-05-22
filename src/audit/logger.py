@@ -84,27 +84,33 @@ class AuditLogger:
             
         return entry
 
-    def verify_integrity(self) -> bool:
+    def verify_integrity(self, return_index: bool = False) -> Any:
         """
         驗證整條日誌鏈的完整性與連續性。
-        :return: 若無任何修改或偽造則回傳 True，否則回傳 False 並且偵測雜湊鏈斷裂。
+        :param return_index: 若為 True，則回傳 (is_intact, tampered_index) 元組；預設只回傳 bool。
+        :return: 若無任何修改或偽造則回傳 True，否則回傳 False；當 return_index=True 時回傳 (is_intact, tampered_index)
         """
         expected_previous_hash = "0" * 64
         
         for idx, entry in enumerate(self.entries):
             # 1. 驗證上一條哈希鏈是否連續
             if entry.previous_hash != expected_previous_hash:
-                # 發現雜湊鏈斷裂，寫入報警事件但不要遞迴觸發 log_event
+                if return_index:
+                    return False, idx
                 return False
                 
             # 2. 重新計算並比對當前雜湊值，防止 Payload 被人為修改
             recalculated_hash = self._calculate_entry_hash(entry)
             if entry.current_hash != recalculated_hash:
+                if return_index:
+                    return False, idx
                 return False
                 
             # 3. 滾動更新預期的 previous_hash
             expected_previous_hash = entry.current_hash
             
+        if return_index:
+            return True, -1
         return True
 
     def save_to_file(self) -> None:
