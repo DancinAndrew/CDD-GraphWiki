@@ -10,6 +10,7 @@ from src.contracts.models import (
 from src.decision.engine import CDDChecklistEngine
 from src.audit.logger import AuditLogger
 from src.audit.manager import ReviewCaseManager
+from src.graph.store import get_neo4j_session
 
 # 定義本地持久化路徑
 GOLD_DIR = "data/gold"
@@ -53,29 +54,58 @@ def get_manager() -> ReviewCaseManager:
     return _manager
 
 
+def clear_knowledge_base_cache():
+    """
+    清除緩存，以便在 Ingestion 導入新法規後實施熱加載。
+    """
+    global _cached_documents, _cached_clauses, _cached_obligations, _cached_customers, _cached_conflicts
+    _cached_documents = []
+    _cached_clauses = []
+    _cached_obligations = []
+    _cached_customers = []
+    _cached_conflicts = []
+    print("🧹 已清除法規知識庫記憶體緩存")
+
+
 def load_knowledge_base():
     """
-    加載金標法規知識數據庫並緩存。
+    加載法規知識數據庫（優先從 data/processed 載入以支持增量 Ingestion，否則 fallback 至 data/gold）。
     """
     global _cached_documents, _cached_clauses, _cached_obligations, _cached_customers, _cached_conflicts
     
     if not _cached_documents:
-        with open(os.path.join(GOLD_DIR, "source_documents.yaml"), "r", encoding="utf-8") as f:
-            raw_docs = yaml.safe_load(f) or []
-        with open(os.path.join(GOLD_DIR, "clauses.yaml"), "r", encoding="utf-8") as f:
-            raw_clauses = yaml.safe_load(f) or []
-        with open(os.path.join(GOLD_DIR, "obligations.yaml"), "r", encoding="utf-8") as f:
-            raw_obs = yaml.safe_load(f) or []
-        with open(os.path.join(GOLD_DIR, "customer_contexts.yaml"), "r", encoding="utf-8") as f:
-            raw_custs = yaml.safe_load(f) or []
-            
-        raw_confs = []
+        # 決定各類別檔案的路徑
+        doc_file = os.path.join(PROCESSED_DIR, "source_documents.yaml") if os.path.exists(
+            os.path.join(PROCESSED_DIR, "source_documents.yaml")
+        ) else os.path.join(GOLD_DIR, "source_documents.yaml")
+
+        clause_file = os.path.join(PROCESSED_DIR, "clauses.yaml") if os.path.exists(
+            os.path.join(PROCESSED_DIR, "clauses.yaml")
+        ) else os.path.join(GOLD_DIR, "clauses.yaml")
+
+        obs_file = os.path.join(PROCESSED_DIR, "obligations.yaml") if os.path.exists(
+            os.path.join(PROCESSED_DIR, "obligations.yaml")
+        ) else os.path.join(GOLD_DIR, "obligations.yaml")
+
+        cust_file = os.path.join(PROCESSED_DIR, "customer_contexts.yaml") if os.path.exists(
+            os.path.join(PROCESSED_DIR, "customer_contexts.yaml")
+        ) else os.path.join(GOLD_DIR, "customer_contexts.yaml")
+
         conflict_file = os.path.join(PROCESSED_DIR, "conflicts.yaml") if os.path.exists(
             os.path.join(PROCESSED_DIR, "conflicts.yaml")
         ) else os.path.join(GOLD_DIR, "conflicts.yaml")
-        if os.path.exists(conflict_file):
-            with open(conflict_file, "r", encoding="utf-8") as f:
-                raw_confs = yaml.safe_load(f) or []
+
+        # 讀取檔案
+        with open(doc_file, "r", encoding="utf-8") as f:
+            raw_docs = yaml.safe_load(f) or []
+        with open(clause_file, "r", encoding="utf-8") as f:
+            raw_clauses = yaml.safe_load(f) or []
+        with open(obs_file, "r", encoding="utf-8") as f:
+            raw_obs = yaml.safe_load(f) or []
+        with open(cust_file, "r", encoding="utf-8") as f:
+            raw_custs = yaml.safe_load(f) or []
+        with open(conflict_file, "r", encoding="utf-8") as f:
+            raw_confs = yaml.safe_load(f) or []
 
         # 轉化為強型別 Pydantic 模型
         _cached_documents = [SourceDocument(**doc) for doc in raw_docs]
@@ -91,3 +121,4 @@ def load_knowledge_base():
         "customers": _cached_customers,
         "conflicts": _cached_conflicts
     }
+

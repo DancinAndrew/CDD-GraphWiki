@@ -937,5 +937,1456 @@
     },
     "previous_hash": "c95e9bbeee58d046e0792a06f3af886c18364736c231429ad00acd677bb503eb",
     "current_hash": "79688f09ed2988786be0d73b22b820b125b1568ee629ca68e4b6e19a29dc222b"
+  },
+  {
+    "log_id": "log_20260522062413_000058",
+    "timestamp": "2026-05-22T06:24:13.570587",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_low_risk",
+    "payload": {
+      "checklist_id": "chk_individual_low_risk",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "79688f09ed2988786be0d73b22b820b125b1568ee629ca68e4b6e19a29dc222b",
+    "current_hash": "bea9b500e9f53f257baf206f4fcb154b18a7170d70a53b56a8b837d339565328"
+  },
+  {
+    "log_id": "log_20260522062413_000059",
+    "timestamp": "2026-05-22T06:24:13.571595",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "checklist_id": "chk_corp_standard",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "bea9b500e9f53f257baf206f4fcb154b18a7170d70a53b56a8b837d339565328",
+    "current_hash": "e3885f03c6a2ce3b4b3b56db55e7ec980688e5dbb9a0c9889a14e781a5e9c84f"
+  },
+  {
+    "log_id": "log_20260522062413_000060",
+    "timestamp": "2026-05-22T06:24:13.572331",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "case_id": "rev_corp_standard",
+      "checklist_id": "chk_corp_standard",
+      "review_reason": [
+        "manual_routing_required"
+      ]
+    },
+    "previous_hash": "e3885f03c6a2ce3b4b3b56db55e7ec980688e5dbb9a0c9889a14e781a5e9c84f",
+    "current_hash": "148089ec889d9ee7427f68d9aae06e556b491a631de5a0fcde224cbd5ff18986"
+  },
+  {
+    "log_id": "log_20260522062413_000061",
+    "timestamp": "2026-05-22T06:24:13.573102",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "checklist_id": "chk_individual_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "148089ec889d9ee7427f68d9aae06e556b491a631de5a0fcde224cbd5ff18986",
+    "current_hash": "6c23b1dc70f794ef0bd88edc64ba537e4116f03fa5e07003becafa3ed942acde"
+  },
+  {
+    "log_id": "log_20260522062413_000062",
+    "timestamp": "2026-05-22T06:24:13.574019",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "case_id": "rev_individual_pep",
+      "checklist_id": "chk_individual_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "6c23b1dc70f794ef0bd88edc64ba537e4116f03fa5e07003becafa3ed942acde",
+    "current_hash": "8950ebfc256b7c2c0297b7d74df09238081c278a621b71b3b85c7afb9e8df975"
+  },
+  {
+    "log_id": "log_20260522062413_000063",
+    "timestamp": "2026-05-22T06:24:13.574853",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "checklist_id": "chk_individual_high_risk_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "8950ebfc256b7c2c0297b7d74df09238081c278a621b71b3b85c7afb9e8df975",
+    "current_hash": "0d468f4f2df93fe2de13fb36d2d23fb309faf6d5e4b8a93486ff46bde88ac149"
+  },
+  {
+    "log_id": "log_20260522062413_000064",
+    "timestamp": "2026-05-22T06:24:13.575638",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "case_id": "rev_individual_high_risk_pep",
+      "checklist_id": "chk_individual_high_risk_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "0d468f4f2df93fe2de13fb36d2d23fb309faf6d5e4b8a93486ff46bde88ac149",
+    "current_hash": "660e020b5591ab792f212386b1655b056dfec21896b45027bac762c133906c67"
+  },
+  {
+    "log_id": "log_20260522062413_000065",
+    "timestamp": "2026-05-22T06:24:13.576449",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "checklist_id": "chk_corp_unclear_ubo",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "660e020b5591ab792f212386b1655b056dfec21896b45027bac762c133906c67",
+    "current_hash": "14f967e9fb0dafb8bf6473212649d51a0b2db59483fb2308fea2112291e8dcd3"
+  },
+  {
+    "log_id": "log_20260522062413_000066",
+    "timestamp": "2026-05-22T06:24:13.577273",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "case_id": "rev_corp_unclear_ubo",
+      "checklist_id": "chk_corp_unclear_ubo",
+      "review_reason": [
+        "unclear_ubo_layers",
+        "excessive_ownership_layers"
+      ]
+    },
+    "previous_hash": "14f967e9fb0dafb8bf6473212649d51a0b2db59483fb2308fea2112291e8dcd3",
+    "current_hash": "8787a9ea6ab7109bc9fe68deae80f9f57feefe6baaf8b384ce99a0ff39849295"
+  },
+  {
+    "log_id": "log_20260522063815_000067",
+    "timestamp": "2026-05-22T06:38:15.230618",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_low_risk",
+    "payload": {
+      "checklist_id": "chk_individual_low_risk",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "8787a9ea6ab7109bc9fe68deae80f9f57feefe6baaf8b384ce99a0ff39849295",
+    "current_hash": "8cf3ee5a518efd284935956f957d8a4f6744d3793661e7c0bddf3303501a77f3"
+  },
+  {
+    "log_id": "log_20260522063815_000068",
+    "timestamp": "2026-05-22T06:38:15.232612",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "checklist_id": "chk_corp_standard",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "8cf3ee5a518efd284935956f957d8a4f6744d3793661e7c0bddf3303501a77f3",
+    "current_hash": "b83cc62bfc5fe6d071e485ea35eb8cc713da351a5cbd8abd2f87f605d09e4332"
+  },
+  {
+    "log_id": "log_20260522063815_000069",
+    "timestamp": "2026-05-22T06:38:15.233535",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "case_id": "rev_corp_standard",
+      "checklist_id": "chk_corp_standard",
+      "review_reason": [
+        "manual_routing_required"
+      ]
+    },
+    "previous_hash": "b83cc62bfc5fe6d071e485ea35eb8cc713da351a5cbd8abd2f87f605d09e4332",
+    "current_hash": "4c33a4bdc6a8cde2e4a74f898e18913d150f4f3bb1efda5d2925beb1c4fc8278"
+  },
+  {
+    "log_id": "log_20260522063815_000070",
+    "timestamp": "2026-05-22T06:38:15.234470",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "checklist_id": "chk_individual_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "4c33a4bdc6a8cde2e4a74f898e18913d150f4f3bb1efda5d2925beb1c4fc8278",
+    "current_hash": "2fc0902ce7e2ff9a522e099721702d3406ec2a499b46faa4a30fcd077dcf5808"
+  },
+  {
+    "log_id": "log_20260522063815_000071",
+    "timestamp": "2026-05-22T06:38:15.235551",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "case_id": "rev_individual_pep",
+      "checklist_id": "chk_individual_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "2fc0902ce7e2ff9a522e099721702d3406ec2a499b46faa4a30fcd077dcf5808",
+    "current_hash": "43f1ff00c19a17a57f6d85766bec2bfc2597700f4c0d8d7650511a03a5406d46"
+  },
+  {
+    "log_id": "log_20260522063815_000072",
+    "timestamp": "2026-05-22T06:38:15.236803",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "checklist_id": "chk_individual_high_risk_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "43f1ff00c19a17a57f6d85766bec2bfc2597700f4c0d8d7650511a03a5406d46",
+    "current_hash": "a8975498a37dccc403af1472e53da514a5a71c754f5c9a8f478d7300b6f0fb46"
+  },
+  {
+    "log_id": "log_20260522063815_000073",
+    "timestamp": "2026-05-22T06:38:15.238002",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "case_id": "rev_individual_high_risk_pep",
+      "checklist_id": "chk_individual_high_risk_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "a8975498a37dccc403af1472e53da514a5a71c754f5c9a8f478d7300b6f0fb46",
+    "current_hash": "442c7d784fd6faefe3f49a2b96b580491290c4ddd3b726a5156c6d09d98e4aba"
+  },
+  {
+    "log_id": "log_20260522063815_000074",
+    "timestamp": "2026-05-22T06:38:15.239317",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "checklist_id": "chk_corp_unclear_ubo",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "442c7d784fd6faefe3f49a2b96b580491290c4ddd3b726a5156c6d09d98e4aba",
+    "current_hash": "ee9caa360eee0f5a9218cbcce856a54cb1592d7a4951d5ffa7bf272a1f9f6c94"
+  },
+  {
+    "log_id": "log_20260522063815_000075",
+    "timestamp": "2026-05-22T06:38:15.240401",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "case_id": "rev_corp_unclear_ubo",
+      "checklist_id": "chk_corp_unclear_ubo",
+      "review_reason": [
+        "unclear_ubo_layers",
+        "excessive_ownership_layers"
+      ]
+    },
+    "previous_hash": "ee9caa360eee0f5a9218cbcce856a54cb1592d7a4951d5ffa7bf272a1f9f6c94",
+    "current_hash": "75a0cc48365d2747223a17fecd8f8976bb25010d94ab5b6e6786b5edc7da6b5e"
+  },
+  {
+    "log_id": "log_20260522063920_000076",
+    "timestamp": "2026-05-22T06:39:20.930126",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_low_risk",
+    "payload": {
+      "checklist_id": "chk_individual_low_risk",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "75a0cc48365d2747223a17fecd8f8976bb25010d94ab5b6e6786b5edc7da6b5e",
+    "current_hash": "8a2d1d19cbd9e548ed3572ad919cbfd7fc11479e1307fc13421850c995697cf2"
+  },
+  {
+    "log_id": "log_20260522063920_000077",
+    "timestamp": "2026-05-22T06:39:20.932576",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "checklist_id": "chk_corp_standard",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "8a2d1d19cbd9e548ed3572ad919cbfd7fc11479e1307fc13421850c995697cf2",
+    "current_hash": "0f940385141a9827378ec02b2579cd97449f1bb219aa36b782ce77487288c18c"
+  },
+  {
+    "log_id": "log_20260522063920_000078",
+    "timestamp": "2026-05-22T06:39:20.933803",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "case_id": "rev_corp_standard",
+      "checklist_id": "chk_corp_standard",
+      "review_reason": [
+        "manual_routing_required"
+      ]
+    },
+    "previous_hash": "0f940385141a9827378ec02b2579cd97449f1bb219aa36b782ce77487288c18c",
+    "current_hash": "92314df308cf0e4bca6bd0367988720eaeee41629926594f82787609b042b2f4"
+  },
+  {
+    "log_id": "log_20260522063920_000079",
+    "timestamp": "2026-05-22T06:39:20.934947",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "checklist_id": "chk_individual_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "92314df308cf0e4bca6bd0367988720eaeee41629926594f82787609b042b2f4",
+    "current_hash": "98fc1aa248036d20b595b486878ee772fcc1d0dc3c107f67fa981ff103c16a6e"
+  },
+  {
+    "log_id": "log_20260522063920_000080",
+    "timestamp": "2026-05-22T06:39:20.935981",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "case_id": "rev_individual_pep",
+      "checklist_id": "chk_individual_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "98fc1aa248036d20b595b486878ee772fcc1d0dc3c107f67fa981ff103c16a6e",
+    "current_hash": "7187ee5aeba04b30bdfd7b153e3f44ba64d1495d5d646108b941c6c5268e09f0"
+  },
+  {
+    "log_id": "log_20260522063920_000081",
+    "timestamp": "2026-05-22T06:39:20.937295",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "checklist_id": "chk_individual_high_risk_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "7187ee5aeba04b30bdfd7b153e3f44ba64d1495d5d646108b941c6c5268e09f0",
+    "current_hash": "530b52a7f06c5dfc445750ef6e7d2814e931e6ba18ec5edf498ff2efb5a4b05c"
+  },
+  {
+    "log_id": "log_20260522063920_000082",
+    "timestamp": "2026-05-22T06:39:20.938572",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "case_id": "rev_individual_high_risk_pep",
+      "checklist_id": "chk_individual_high_risk_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "530b52a7f06c5dfc445750ef6e7d2814e931e6ba18ec5edf498ff2efb5a4b05c",
+    "current_hash": "106a5c431274c421fc3f3c9649e6be65b7b4960b5da992224e456700d8d13351"
+  },
+  {
+    "log_id": "log_20260522063920_000083",
+    "timestamp": "2026-05-22T06:39:20.939748",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "checklist_id": "chk_corp_unclear_ubo",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "106a5c431274c421fc3f3c9649e6be65b7b4960b5da992224e456700d8d13351",
+    "current_hash": "d7af56eedcace16f4c0f0d187fb314b96f6659d2d557defd05065f942ced1ca0"
+  },
+  {
+    "log_id": "log_20260522063920_000084",
+    "timestamp": "2026-05-22T06:39:20.941258",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "case_id": "rev_corp_unclear_ubo",
+      "checklist_id": "chk_corp_unclear_ubo",
+      "review_reason": [
+        "unclear_ubo_layers",
+        "excessive_ownership_layers"
+      ]
+    },
+    "previous_hash": "d7af56eedcace16f4c0f0d187fb314b96f6659d2d557defd05065f942ced1ca0",
+    "current_hash": "afca6a6f8769aec804413d11b9dc239b564ea412c3f4cc00df506a7644afd012"
+  },
+  {
+    "log_id": "log_20260522063920_000085",
+    "timestamp": "2026-05-22T06:39:20.951598",
+    "event_type": "case_reviewed",
+    "operator": "Compliance_Officer_Alice",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "case_id": "rev_individual_pep",
+      "approval_status": "approved",
+      "previous_decision": "enhanced_due_diligence",
+      "new_decision": "enhanced_due_diligence",
+      "notes": "合規官 Alice 審核通過：該 PEP 實質受益人背景清楚，但因敏感身份最終核准 EDD 決策邊界。",
+      "reviewer_id": "Compliance_Officer_Alice"
+    },
+    "previous_hash": "afca6a6f8769aec804413d11b9dc239b564ea412c3f4cc00df506a7644afd012",
+    "current_hash": "38951770986797f58779dbf0b57eabbe4985b0c6088242e2e0289134eed292af"
+  },
+  {
+    "log_id": "log_20260522063922_000086",
+    "timestamp": "2026-05-22T06:39:22.061432",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_low_risk",
+    "payload": {
+      "checklist_id": "chk_individual_low_risk",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "38951770986797f58779dbf0b57eabbe4985b0c6088242e2e0289134eed292af",
+    "current_hash": "7750f4415a06b31fcf8e3b920f53554c4706ce45d9b31ea15af2789e90ee5da0"
+  },
+  {
+    "log_id": "log_20260522063922_000087",
+    "timestamp": "2026-05-22T06:39:22.067153",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "checklist_id": "chk_corp_standard",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "7750f4415a06b31fcf8e3b920f53554c4706ce45d9b31ea15af2789e90ee5da0",
+    "current_hash": "14a6978663a95a362bfcf74e16a130e74478d30c3ed8d374bbf2d4029ac42e98"
+  },
+  {
+    "log_id": "log_20260522063922_000088",
+    "timestamp": "2026-05-22T06:39:22.070951",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "checklist_id": "chk_individual_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "14a6978663a95a362bfcf74e16a130e74478d30c3ed8d374bbf2d4029ac42e98",
+    "current_hash": "6e2a7a91313463db72c306ebc8992b41b3aee4a8ce9e1e3b4d2f4e14559289ef"
+  },
+  {
+    "log_id": "log_20260522063922_000089",
+    "timestamp": "2026-05-22T06:39:22.074036",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "checklist_id": "chk_individual_high_risk_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "6e2a7a91313463db72c306ebc8992b41b3aee4a8ce9e1e3b4d2f4e14559289ef",
+    "current_hash": "652e446f64a882748563cb4ff55aa9924e4b9ef67fd8d80de6afc5a1c95632f3"
+  },
+  {
+    "log_id": "log_20260522063922_000090",
+    "timestamp": "2026-05-22T06:39:22.076451",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "checklist_id": "chk_corp_unclear_ubo",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "652e446f64a882748563cb4ff55aa9924e4b9ef67fd8d80de6afc5a1c95632f3",
+    "current_hash": "a57cdaa579b20985658bd5f8ecaf4e29ecd123da0cea441cf09099dd992f7026"
+  },
+  {
+    "log_id": "log_20260522064242_000091",
+    "timestamp": "2026-05-22T06:42:42.241471",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_low_risk",
+    "payload": {
+      "checklist_id": "chk_individual_low_risk",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "a57cdaa579b20985658bd5f8ecaf4e29ecd123da0cea441cf09099dd992f7026",
+    "current_hash": "07e777d7238cefcaf85134b3e9231158dd6be7832d1af1d0cfe660d110e94337"
+  },
+  {
+    "log_id": "log_20260522064242_000092",
+    "timestamp": "2026-05-22T06:42:42.243054",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "checklist_id": "chk_corp_standard",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "07e777d7238cefcaf85134b3e9231158dd6be7832d1af1d0cfe660d110e94337",
+    "current_hash": "073c494feee4b1b9689853869947390f1d14f8e09f47e442aed47a81fdd608f8"
+  },
+  {
+    "log_id": "log_20260522064242_000093",
+    "timestamp": "2026-05-22T06:42:42.244250",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "case_id": "rev_corp_standard",
+      "checklist_id": "chk_corp_standard",
+      "review_reason": [
+        "manual_routing_required"
+      ]
+    },
+    "previous_hash": "073c494feee4b1b9689853869947390f1d14f8e09f47e442aed47a81fdd608f8",
+    "current_hash": "0f513eb992f7fe992604a80706b256fd97009cbb175b43304e60dc48d510cec8"
+  },
+  {
+    "log_id": "log_20260522064242_000094",
+    "timestamp": "2026-05-22T06:42:42.245381",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "checklist_id": "chk_individual_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "0f513eb992f7fe992604a80706b256fd97009cbb175b43304e60dc48d510cec8",
+    "current_hash": "eaa51f90df9f588093e2cf466498bdbe160d089bcac9d9497c2598cb91342012"
+  },
+  {
+    "log_id": "log_20260522064242_000095",
+    "timestamp": "2026-05-22T06:42:42.246523",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "case_id": "rev_individual_pep",
+      "checklist_id": "chk_individual_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "eaa51f90df9f588093e2cf466498bdbe160d089bcac9d9497c2598cb91342012",
+    "current_hash": "38cac2665121f798bf3cd331a7fdd75feba9f16d671701109c2edb02970dbb14"
+  },
+  {
+    "log_id": "log_20260522064242_000096",
+    "timestamp": "2026-05-22T06:42:42.247776",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "checklist_id": "chk_individual_high_risk_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "38cac2665121f798bf3cd331a7fdd75feba9f16d671701109c2edb02970dbb14",
+    "current_hash": "0ee517e5cb07ffa4ce2f7330f56df9e4b8359670686d37068385164c75832e28"
+  },
+  {
+    "log_id": "log_20260522064242_000097",
+    "timestamp": "2026-05-22T06:42:42.251656",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "case_id": "rev_individual_high_risk_pep",
+      "checklist_id": "chk_individual_high_risk_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "0ee517e5cb07ffa4ce2f7330f56df9e4b8359670686d37068385164c75832e28",
+    "current_hash": "8cec8fec115dfd19889d4ddb2f8b9d8559b1f28e0b2e5539d1e8c2f08ba86c6a"
+  },
+  {
+    "log_id": "log_20260522064242_000098",
+    "timestamp": "2026-05-22T06:42:42.252912",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "checklist_id": "chk_corp_unclear_ubo",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "8cec8fec115dfd19889d4ddb2f8b9d8559b1f28e0b2e5539d1e8c2f08ba86c6a",
+    "current_hash": "83277955aa8fd677de951d106e689e947fd1c411eb0c80b7e6875e0de66fbd85"
+  },
+  {
+    "log_id": "log_20260522064242_000099",
+    "timestamp": "2026-05-22T06:42:42.254093",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "case_id": "rev_corp_unclear_ubo",
+      "checklist_id": "chk_corp_unclear_ubo",
+      "review_reason": [
+        "unclear_ubo_layers",
+        "excessive_ownership_layers"
+      ]
+    },
+    "previous_hash": "83277955aa8fd677de951d106e689e947fd1c411eb0c80b7e6875e0de66fbd85",
+    "current_hash": "e0fa627dddcd376b6b54955ab4c793d55adbe84cafb88baec27032b606e4831b"
+  },
+  {
+    "log_id": "log_20260522065858_000100",
+    "timestamp": "2026-05-22T06:58:58.223183",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_low_risk",
+    "payload": {
+      "checklist_id": "chk_individual_low_risk",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "e0fa627dddcd376b6b54955ab4c793d55adbe84cafb88baec27032b606e4831b",
+    "current_hash": "1980b83204aeeabd396ae96e9cb5ef23020eeb70cbbb927ae095cc1efa84acd2"
+  },
+  {
+    "log_id": "log_20260522065858_000101",
+    "timestamp": "2026-05-22T06:58:58.224979",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "checklist_id": "chk_corp_standard",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "1980b83204aeeabd396ae96e9cb5ef23020eeb70cbbb927ae095cc1efa84acd2",
+    "current_hash": "a29448e04fa99056c8d0f6e9172cb82133e4e397aeef088443977b62c6dfbc81"
+  },
+  {
+    "log_id": "log_20260522065858_000102",
+    "timestamp": "2026-05-22T06:58:58.226403",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "case_id": "rev_corp_standard",
+      "checklist_id": "chk_corp_standard",
+      "review_reason": [
+        "manual_routing_required"
+      ]
+    },
+    "previous_hash": "a29448e04fa99056c8d0f6e9172cb82133e4e397aeef088443977b62c6dfbc81",
+    "current_hash": "861a6d8c28b7dbd9952fd19b43d0b3f395c3bbd9591ec11d6446468984b96cfa"
+  },
+  {
+    "log_id": "log_20260522065858_000103",
+    "timestamp": "2026-05-22T06:58:58.227881",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "checklist_id": "chk_individual_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "861a6d8c28b7dbd9952fd19b43d0b3f395c3bbd9591ec11d6446468984b96cfa",
+    "current_hash": "8b02eb3f6a5b575fb8db15e1c6b5f4280ae45841a7b4665346b9d67354485b76"
+  },
+  {
+    "log_id": "log_20260522065858_000104",
+    "timestamp": "2026-05-22T06:58:58.229398",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "case_id": "rev_individual_pep",
+      "checklist_id": "chk_individual_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "8b02eb3f6a5b575fb8db15e1c6b5f4280ae45841a7b4665346b9d67354485b76",
+    "current_hash": "ef291d488e68258a801a83b9c1dee82c13eae3e7cd716ebe2c9417b0efdfa0de"
+  },
+  {
+    "log_id": "log_20260522065858_000105",
+    "timestamp": "2026-05-22T06:58:58.230754",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "checklist_id": "chk_individual_high_risk_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "ef291d488e68258a801a83b9c1dee82c13eae3e7cd716ebe2c9417b0efdfa0de",
+    "current_hash": "27b21c8816b2c8b53c06bc87059fa08029f349f26748e48bd3d2b4a9427cf458"
+  },
+  {
+    "log_id": "log_20260522065858_000106",
+    "timestamp": "2026-05-22T06:58:58.232038",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "case_id": "rev_individual_high_risk_pep",
+      "checklist_id": "chk_individual_high_risk_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "27b21c8816b2c8b53c06bc87059fa08029f349f26748e48bd3d2b4a9427cf458",
+    "current_hash": "e91f5eb927b75f06696361878bf1e7fc991db546a52c255df0899127819a22ad"
+  },
+  {
+    "log_id": "log_20260522065858_000107",
+    "timestamp": "2026-05-22T06:58:58.233318",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "checklist_id": "chk_corp_unclear_ubo",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "e91f5eb927b75f06696361878bf1e7fc991db546a52c255df0899127819a22ad",
+    "current_hash": "c7684d2672fb38da0469c85e01070466198db950fb5f99304294e863ee86cdf1"
+  },
+  {
+    "log_id": "log_20260522065858_000108",
+    "timestamp": "2026-05-22T06:58:58.234867",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "case_id": "rev_corp_unclear_ubo",
+      "checklist_id": "chk_corp_unclear_ubo",
+      "review_reason": [
+        "unclear_ubo_layers",
+        "excessive_ownership_layers"
+      ]
+    },
+    "previous_hash": "c7684d2672fb38da0469c85e01070466198db950fb5f99304294e863ee86cdf1",
+    "current_hash": "8947868a5b1a99e6cffa56900b18535619839db825cfb419b3cf03e1b30603ef"
+  },
+  {
+    "log_id": "log_20260522065906_000109",
+    "timestamp": "2026-05-22T06:59:06.948141",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_low_risk",
+    "payload": {
+      "checklist_id": "chk_individual_low_risk",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "8947868a5b1a99e6cffa56900b18535619839db825cfb419b3cf03e1b30603ef",
+    "current_hash": "5adb02c388319e103e00ce56cc97961cf63a8c7e580dd193d40d9fcb83fc56ec"
+  },
+  {
+    "log_id": "log_20260522065906_000110",
+    "timestamp": "2026-05-22T06:59:06.949763",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "checklist_id": "chk_corp_standard",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "5adb02c388319e103e00ce56cc97961cf63a8c7e580dd193d40d9fcb83fc56ec",
+    "current_hash": "c0baa9d24c711561f1deaeef6e26bc198d76844b25dcf6d5a1f8ed843c2ee251"
+  },
+  {
+    "log_id": "log_20260522065906_000111",
+    "timestamp": "2026-05-22T06:59:06.951148",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "case_id": "rev_corp_standard",
+      "checklist_id": "chk_corp_standard",
+      "review_reason": [
+        "manual_routing_required"
+      ]
+    },
+    "previous_hash": "c0baa9d24c711561f1deaeef6e26bc198d76844b25dcf6d5a1f8ed843c2ee251",
+    "current_hash": "3a88b1c4414dfc2ff6b5b3931192910490a29e63dd39fd66dc2fcce60c1a090f"
+  },
+  {
+    "log_id": "log_20260522065906_000112",
+    "timestamp": "2026-05-22T06:59:06.952525",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "checklist_id": "chk_individual_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "3a88b1c4414dfc2ff6b5b3931192910490a29e63dd39fd66dc2fcce60c1a090f",
+    "current_hash": "bf705de0c104ea61b9f3e1edcac5a6904f64526bfd4f28f8af240491c9d1f9c8"
+  },
+  {
+    "log_id": "log_20260522065906_000113",
+    "timestamp": "2026-05-22T06:59:06.956409",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "case_id": "rev_individual_pep",
+      "checklist_id": "chk_individual_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "bf705de0c104ea61b9f3e1edcac5a6904f64526bfd4f28f8af240491c9d1f9c8",
+    "current_hash": "07174b022d8160b8b5d68836290c789ee2fff0fbf025e1b3c59a0b7126933bc7"
+  },
+  {
+    "log_id": "log_20260522065906_000114",
+    "timestamp": "2026-05-22T06:59:06.957787",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "checklist_id": "chk_individual_high_risk_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "07174b022d8160b8b5d68836290c789ee2fff0fbf025e1b3c59a0b7126933bc7",
+    "current_hash": "c9498799e52267c1099834e53746a8dfffd91c2821926c485562759bcc11d1a2"
+  },
+  {
+    "log_id": "log_20260522065906_000115",
+    "timestamp": "2026-05-22T06:59:06.959567",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "case_id": "rev_individual_high_risk_pep",
+      "checklist_id": "chk_individual_high_risk_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "c9498799e52267c1099834e53746a8dfffd91c2821926c485562759bcc11d1a2",
+    "current_hash": "70e8c0ee898729703e92e9fe1f7270ee7ff06586e18f2ffcb28f6bd0e83e1673"
+  },
+  {
+    "log_id": "log_20260522065906_000116",
+    "timestamp": "2026-05-22T06:59:06.961013",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "checklist_id": "chk_corp_unclear_ubo",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "70e8c0ee898729703e92e9fe1f7270ee7ff06586e18f2ffcb28f6bd0e83e1673",
+    "current_hash": "db78dd4b592270bfca27f4f4259eb9d2ad960f2a1148c213c8dfe3664fe00d7e"
+  },
+  {
+    "log_id": "log_20260522065906_000117",
+    "timestamp": "2026-05-22T06:59:06.962416",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "case_id": "rev_corp_unclear_ubo",
+      "checklist_id": "chk_corp_unclear_ubo",
+      "review_reason": [
+        "unclear_ubo_layers",
+        "excessive_ownership_layers"
+      ]
+    },
+    "previous_hash": "db78dd4b592270bfca27f4f4259eb9d2ad960f2a1148c213c8dfe3664fe00d7e",
+    "current_hash": "2125198cf33913ae18bc811943d78bcebaa6658f477cec313771b6e19d37c636"
+  },
+  {
+    "log_id": "log_20260522070223_000118",
+    "timestamp": "2026-05-22T07:02:23.513984",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_low_risk",
+    "payload": {
+      "checklist_id": "chk_individual_low_risk",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "2125198cf33913ae18bc811943d78bcebaa6658f477cec313771b6e19d37c636",
+    "current_hash": "78773ae83c8009bddf873b509a305d0ed1788d7c1bca984ab0485e90237d659f"
+  },
+  {
+    "log_id": "log_20260522070223_000119",
+    "timestamp": "2026-05-22T07:02:23.518159",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "checklist_id": "chk_corp_standard",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "78773ae83c8009bddf873b509a305d0ed1788d7c1bca984ab0485e90237d659f",
+    "current_hash": "e9a350658365b427279190502791b6ca59f318c77a909b2eaa10b6776de6bfc9"
+  },
+  {
+    "log_id": "log_20260522070223_000120",
+    "timestamp": "2026-05-22T07:02:23.520718",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "case_id": "rev_corp_standard",
+      "checklist_id": "chk_corp_standard",
+      "review_reason": [
+        "manual_routing_required"
+      ]
+    },
+    "previous_hash": "e9a350658365b427279190502791b6ca59f318c77a909b2eaa10b6776de6bfc9",
+    "current_hash": "647486f7f1a2463d892ba21e11fa85bd811814331d6d89642cdbf8ebe69185bc"
+  },
+  {
+    "log_id": "log_20260522070223_000121",
+    "timestamp": "2026-05-22T07:02:23.523247",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "checklist_id": "chk_individual_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "647486f7f1a2463d892ba21e11fa85bd811814331d6d89642cdbf8ebe69185bc",
+    "current_hash": "b7da707c68d37fadd510624384d525a661c39a6ed97913688a82b4ef01ff1a3b"
+  },
+  {
+    "log_id": "log_20260522070223_000122",
+    "timestamp": "2026-05-22T07:02:23.525042",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "case_id": "rev_individual_pep",
+      "checklist_id": "chk_individual_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "b7da707c68d37fadd510624384d525a661c39a6ed97913688a82b4ef01ff1a3b",
+    "current_hash": "2ae71154dc6b403af7d57a4ee96f5e31f1c3d9207d1cf0ea426b73b0ce72a568"
+  },
+  {
+    "log_id": "log_20260522070223_000123",
+    "timestamp": "2026-05-22T07:02:23.527072",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "checklist_id": "chk_individual_high_risk_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "2ae71154dc6b403af7d57a4ee96f5e31f1c3d9207d1cf0ea426b73b0ce72a568",
+    "current_hash": "838bdf35cccf7c7b689f7bfcf1d1f2629e21d2b77039ddda36201d96552459e7"
+  },
+  {
+    "log_id": "log_20260522070223_000124",
+    "timestamp": "2026-05-22T07:02:23.530247",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "case_id": "rev_individual_high_risk_pep",
+      "checklist_id": "chk_individual_high_risk_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "838bdf35cccf7c7b689f7bfcf1d1f2629e21d2b77039ddda36201d96552459e7",
+    "current_hash": "7dfd52294ad9cc002f2e6f55d5c8540cbe2ca8bdacb5cd9bdfd662f633fe88f4"
+  },
+  {
+    "log_id": "log_20260522070223_000125",
+    "timestamp": "2026-05-22T07:02:23.532633",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "checklist_id": "chk_corp_unclear_ubo",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "7dfd52294ad9cc002f2e6f55d5c8540cbe2ca8bdacb5cd9bdfd662f633fe88f4",
+    "current_hash": "67142c20b0abae8b4f2adb17f76047220fa4b3c3379c551835f2d1b2469a309d"
+  },
+  {
+    "log_id": "log_20260522070223_000126",
+    "timestamp": "2026-05-22T07:02:23.534160",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "case_id": "rev_corp_unclear_ubo",
+      "checklist_id": "chk_corp_unclear_ubo",
+      "review_reason": [
+        "unclear_ubo_layers",
+        "excessive_ownership_layers"
+      ]
+    },
+    "previous_hash": "67142c20b0abae8b4f2adb17f76047220fa4b3c3379c551835f2d1b2469a309d",
+    "current_hash": "ca1d8116db46d9d8aa69aefee68cebb0886e103a58be90c487768491c953335c"
+  },
+  {
+    "log_id": "log_20260522070223_000127",
+    "timestamp": "2026-05-22T07:02:23.546335",
+    "event_type": "case_reviewed",
+    "operator": "Compliance_Officer_Alice",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "case_id": "rev_individual_pep",
+      "approval_status": "approved",
+      "previous_decision": "enhanced_due_diligence",
+      "new_decision": "enhanced_due_diligence",
+      "notes": "合規官 Alice 審核通過：該 PEP 實質受益人背景清楚，但因敏感身份最終核准 EDD 決策邊界。",
+      "reviewer_id": "Compliance_Officer_Alice"
+    },
+    "previous_hash": "ca1d8116db46d9d8aa69aefee68cebb0886e103a58be90c487768491c953335c",
+    "current_hash": "4cf57511e13dec487bc160beb573fcb26c1a3f451e4377b86dd5debbd75a345e"
+  },
+  {
+    "log_id": "log_20260522070224_000128",
+    "timestamp": "2026-05-22T07:02:24.382707",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_low_risk",
+    "payload": {
+      "checklist_id": "chk_individual_low_risk",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "4cf57511e13dec487bc160beb573fcb26c1a3f451e4377b86dd5debbd75a345e",
+    "current_hash": "35bc793119b30dee91a755f8bde3e78b3a380e6cee5d0f48b7537add39896474"
+  },
+  {
+    "log_id": "log_20260522070224_000129",
+    "timestamp": "2026-05-22T07:02:24.384444",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "checklist_id": "chk_corp_standard",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "35bc793119b30dee91a755f8bde3e78b3a380e6cee5d0f48b7537add39896474",
+    "current_hash": "392625770be35381eb4ac99199fd0660f09d63f7614677cafd8343342247b845"
+  },
+  {
+    "log_id": "log_20260522070224_000130",
+    "timestamp": "2026-05-22T07:02:24.386040",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "checklist_id": "chk_individual_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "392625770be35381eb4ac99199fd0660f09d63f7614677cafd8343342247b845",
+    "current_hash": "48210d31a43383be27373f5c6f46e86b643fabcfef1457bbab3703db507a434b"
+  },
+  {
+    "log_id": "log_20260522070224_000131",
+    "timestamp": "2026-05-22T07:02:24.387705",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "checklist_id": "chk_individual_high_risk_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "48210d31a43383be27373f5c6f46e86b643fabcfef1457bbab3703db507a434b",
+    "current_hash": "2eed5350fb07ee02bb54400dc9bc4d3068a86955f5fe14a6d4718fa89fd5fb29"
+  },
+  {
+    "log_id": "log_20260522070224_000132",
+    "timestamp": "2026-05-22T07:02:24.389288",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "checklist_id": "chk_corp_unclear_ubo",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "2eed5350fb07ee02bb54400dc9bc4d3068a86955f5fe14a6d4718fa89fd5fb29",
+    "current_hash": "2a0f57e1c07177221202fb4e9ba81f8b7dc971f1844e7fbd71c1542270900a6c"
+  },
+  {
+    "log_id": "log_20260522070231_000133",
+    "timestamp": "2026-05-22T07:02:31.963130",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_low_risk",
+    "payload": {
+      "checklist_id": "chk_individual_low_risk",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "2a0f57e1c07177221202fb4e9ba81f8b7dc971f1844e7fbd71c1542270900a6c",
+    "current_hash": "68995354271d73c15c76fd286cca639487a6afe2759883ec2a40206869a5bec2"
+  },
+  {
+    "log_id": "log_20260522070231_000134",
+    "timestamp": "2026-05-22T07:02:31.964908",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "checklist_id": "chk_corp_standard",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "68995354271d73c15c76fd286cca639487a6afe2759883ec2a40206869a5bec2",
+    "current_hash": "b6b0e93f540a921fcb6d90c462b2492debdf5a75ef6482fa5b139be302826b4a"
+  },
+  {
+    "log_id": "log_20260522070231_000135",
+    "timestamp": "2026-05-22T07:02:31.966532",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "case_id": "rev_corp_standard",
+      "checklist_id": "chk_corp_standard",
+      "review_reason": [
+        "manual_routing_required"
+      ]
+    },
+    "previous_hash": "b6b0e93f540a921fcb6d90c462b2492debdf5a75ef6482fa5b139be302826b4a",
+    "current_hash": "3f707f20e05dcde96f9f250b01198eff2d80613fe899c77c370a967fd7bcfb22"
+  },
+  {
+    "log_id": "log_20260522070231_000136",
+    "timestamp": "2026-05-22T07:02:31.968273",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "checklist_id": "chk_individual_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "3f707f20e05dcde96f9f250b01198eff2d80613fe899c77c370a967fd7bcfb22",
+    "current_hash": "8e80dd1158151011a28fbcb3c96e173da600b3e1e9dce179679a845ba5b225ac"
+  },
+  {
+    "log_id": "log_20260522070231_000137",
+    "timestamp": "2026-05-22T07:02:31.969914",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "case_id": "rev_individual_pep",
+      "checklist_id": "chk_individual_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "8e80dd1158151011a28fbcb3c96e173da600b3e1e9dce179679a845ba5b225ac",
+    "current_hash": "085dce07e358056f6cecd46a8fe55fa0f8c99a88856d9f0f2981831381e7c2ef"
+  },
+  {
+    "log_id": "log_20260522070231_000138",
+    "timestamp": "2026-05-22T07:02:31.971564",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "checklist_id": "chk_individual_high_risk_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "085dce07e358056f6cecd46a8fe55fa0f8c99a88856d9f0f2981831381e7c2ef",
+    "current_hash": "cc943d941d65e2392e16fe7b51130168cc0f3fbe7e38197f5787f72601a7b8d6"
+  },
+  {
+    "log_id": "log_20260522070231_000139",
+    "timestamp": "2026-05-22T07:02:31.973262",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "case_id": "rev_individual_high_risk_pep",
+      "checklist_id": "chk_individual_high_risk_pep",
+      "review_reason": [
+        "pep_exposure_detected"
+      ]
+    },
+    "previous_hash": "cc943d941d65e2392e16fe7b51130168cc0f3fbe7e38197f5787f72601a7b8d6",
+    "current_hash": "8ac1eb9f5fdfbe716bb14b4e87e0da484b22464ad8e0ba936830ae62d8b53eea"
+  },
+  {
+    "log_id": "log_20260522070231_000140",
+    "timestamp": "2026-05-22T07:02:31.975046",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "checklist_id": "chk_corp_unclear_ubo",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "8ac1eb9f5fdfbe716bb14b4e87e0da484b22464ad8e0ba936830ae62d8b53eea",
+    "current_hash": "6dea2d3056c5e474770f4c57056681fa71dfc28a4cf5f3dd162188db983ff9d7"
+  },
+  {
+    "log_id": "log_20260522070231_000141",
+    "timestamp": "2026-05-22T07:02:31.976824",
+    "event_type": "case_created",
+    "operator": "system_reasoning_engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "case_id": "rev_corp_unclear_ubo",
+      "checklist_id": "chk_corp_unclear_ubo",
+      "review_reason": [
+        "unclear_ubo_layers",
+        "excessive_ownership_layers"
+      ]
+    },
+    "previous_hash": "6dea2d3056c5e474770f4c57056681fa71dfc28a4cf5f3dd162188db983ff9d7",
+    "current_hash": "9ad0276ab3d2687ee6f6de6293775360c89a7e4e020e32a6add96ae99cd8572e"
+  },
+  {
+    "log_id": "log_20260522070231_000142",
+    "timestamp": "2026-05-22T07:02:31.985987",
+    "event_type": "case_reviewed",
+    "operator": "Compliance_Officer_Alice",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "case_id": "rev_individual_pep",
+      "approval_status": "approved",
+      "previous_decision": "enhanced_due_diligence",
+      "new_decision": "enhanced_due_diligence",
+      "notes": "合規官 Alice 審核通過：該 PEP 實質受益人背景清楚，但因敏感身份最終核准 EDD 決策邊界。",
+      "reviewer_id": "Compliance_Officer_Alice"
+    },
+    "previous_hash": "9ad0276ab3d2687ee6f6de6293775360c89a7e4e020e32a6add96ae99cd8572e",
+    "current_hash": "e6b56aaa108ce99738061a208d716a14d4d2c6953b786d4b21e647d0974b2168"
+  },
+  {
+    "log_id": "log_20260522070232_000143",
+    "timestamp": "2026-05-22T07:02:32.823651",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_low_risk",
+    "payload": {
+      "checklist_id": "chk_individual_low_risk",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "e6b56aaa108ce99738061a208d716a14d4d2c6953b786d4b21e647d0974b2168",
+    "current_hash": "cd7d5a921c04f460c3b210c70ca6073bf34b1e15169881d7df78f10fc07fc53e"
+  },
+  {
+    "log_id": "log_20260522070232_000144",
+    "timestamp": "2026-05-22T07:02:32.825540",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_standard",
+    "payload": {
+      "checklist_id": "chk_corp_standard",
+      "decision": "standard_cdd",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "cd7d5a921c04f460c3b210c70ca6073bf34b1e15169881d7df78f10fc07fc53e",
+    "current_hash": "4906bf743120c382aeb80fe21669ad50d845a2a5b2eb9bbe9f52e573b562646e"
+  },
+  {
+    "log_id": "log_20260522070232_000145",
+    "timestamp": "2026-05-22T07:02:32.827234",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_pep",
+    "payload": {
+      "checklist_id": "chk_individual_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "4906bf743120c382aeb80fe21669ad50d845a2a5b2eb9bbe9f52e573b562646e",
+    "current_hash": "6dbf9944f9b041afec789d35d815b933b3796bc28298482a2f92cbf3b7dde3aa"
+  },
+  {
+    "log_id": "log_20260522070232_000146",
+    "timestamp": "2026-05-22T07:02:32.829012",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_individual_high_risk_pep",
+    "payload": {
+      "checklist_id": "chk_individual_high_risk_pep",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "6dbf9944f9b041afec789d35d815b933b3796bc28298482a2f92cbf3b7dde3aa",
+    "current_hash": "d77be0caa927a69a076f63d059877b67cbde27f7d9c0483a1123c588e60d2345"
+  },
+  {
+    "log_id": "log_20260522070232_000147",
+    "timestamp": "2026-05-22T07:02:32.830682",
+    "event_type": "reasoning_triggered",
+    "operator": "CDD_Reasoning_Engine",
+    "customer_id": "cust_corp_unclear_ubo",
+    "payload": {
+      "checklist_id": "chk_corp_unclear_ubo",
+      "decision": "enhanced_due_diligence",
+      "ingestion_hash": "hash_ingest_pep_mas626",
+      "graph_version": "g_v1.0.0",
+      "rule_version": "r_v2.1.0"
+    },
+    "previous_hash": "d77be0caa927a69a076f63d059877b67cbde27f7d9c0483a1123c588e60d2345",
+    "current_hash": "3c831a38fc8809880e4776321938dc4372cfeeeb9b3e58ba84f519495f0a4920"
   }
 ]

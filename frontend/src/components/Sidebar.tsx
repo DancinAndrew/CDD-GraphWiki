@@ -4,6 +4,7 @@ import {
   ShieldAlert, 
   History, 
   Network,
+  FileUp,
   ShieldAlert as ShieldIcon
 } from 'lucide-react';
 
@@ -25,6 +26,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'review', label: '案件審查隊列', icon: ShieldAlert, badge: pendingCount > 0 ? pendingCount : undefined },
     { id: 'timeline', label: '防篡改稽核', icon: History, statusDot: true },
     { id: 'graph', label: '法規可視化圖譜', icon: Network },
+    { id: 'ingestion', label: '法規自主導入', icon: FileUp },
   ];
 
   return (

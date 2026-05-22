@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  neo4j:
+    image: neo4j:5.18-community
+    container_name: cdd-graphwiki-neo4j
+    ports:
+      - "7474:7474"   # Neo4j Browser UI
+      - "7687:7687"   # Bolt Protocol for Python backend
+    environment:
+      - NEO4J_AUTH=neo4j/testpassword123
+      - NEO4J_PLUGINS=["apoc"]  # 啟用 APOC 高級圖演算法插件
+    volumes:
+      - neo4j_data:/data
+      - neo4j_import:/import
+      - neo4j_plugins:/plugins
+
   backend:
     build:
       context: .
@@ -16,6 +30,11 @@ services:
     environment:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=testpassword123
+    depends_on:
+      - neo4j
     command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
@@ -30,3 +49,8 @@ services:
     depends_on:
       - backend
     command: npm run dev -- --host 0.0.0.0 --port 3000
+
+volumes:
+  neo4j_data:
+  neo4j_import:
+  neo4j_plugins:

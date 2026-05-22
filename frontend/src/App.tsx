@@ -4,6 +4,7 @@ import { DashboardHome } from './pages/DashboardHome';
 import { ReviewQueue } from './pages/ReviewQueue';
 import { AuditTimeline } from './pages/AuditTimeline';
 import { InteractiveGraph } from './components/InteractiveGraph';
+import { IngestionConsole } from './components/IngestionConsole';
 
 function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
@@ -71,6 +72,8 @@ function App() {
         );
       case 'graph':
         return <InteractiveGraph />;
+      case 'ingestion':
+        return <IngestionConsole onNavigate={setActiveTab} />;
       default:
         return (
           <DashboardHome 

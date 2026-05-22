@@ -146,35 +146,61 @@ export const InteractiveGraph: React.FC = () => {
         .on('end', dragended)
       );
 
-    // 節點配色系統 (和 CSS 設計相容)
+    // 歸一化節點類型 (相容後端強型別與大小寫)
+    const normalizeType = (type: string) => {
+      if (!type) return '';
+      const t = type.toLowerCase();
+      if (t.includes('document')) return 'document';
+      if (t.includes('clause')) return 'clause';
+      if (t.includes('obligation')) return 'obligation';
+      if (t.includes('conflict')) return 'conflict';
+      if (t.includes('customer')) return 'customer';
+      if (t.includes('checklist')) return 'checklist';
+      return t;
+    };
+
+    // 節點配色系統 (和 CSS 設計相容，採用高相容性十六進位色碼)
     const getNodeColor = (type: string) => {
-      switch (type) {
-        case 'document': return '#4facfe'; // 法規來源 (藍)
-        case 'clause': return '#00f2fe';    // 條款 (青)
-        case 'obligation': return '#a855f7';  // 義務 (紫)
-        case 'conflict': return 'var(--danger)';   // 衝突 (紅)
-        case 'customer': return 'var(--warning)';  // 客戶 (黃)
-        case 'checklist': return 'var(--success)'; // 決策推理點 (綠)
-        default: return '#8b9bb4';
+      const normalized = normalizeType(type);
+      switch (normalized) {
+        case 'document': return '#4facfe';   // 法規文件 (藍)
+        case 'clause': return '#00f2fe';     // 法規條款 (青)
+        case 'obligation': return '#a855f7'; // 合規義務 (紫)
+        case 'conflict': return '#ff1744';   // 義務衝突 (紅)
+        case 'customer': return '#ffb300';   // 客戶個案 (黃)
+        case 'checklist': return '#00e676';  // 推理決策 (綠)
+        default: return '#8b9bb4';           // 預設 (灰)
       }
     };
 
     // 繪製節點圓形與發光
     node.append('circle')
-      .attr('r', d => d.node_type === 'document' || d.node_type === 'customer' ? 14 : 10)
+      .attr('r', d => {
+        const norm = normalizeType(d.node_type);
+        return norm === 'document' || norm === 'customer' ? 14 : 10;
+      })
       .attr('fill', d => getNodeColor(d.node_type))
       .attr('stroke', 'rgba(255, 255, 255, 0.15)')
       .attr('stroke-width', 1.5)
       .style('cursor', 'pointer')
-      .style('filter', d => d.node_type === 'conflict' || d.node_type === 'checklist' ? 'url(#glow)' : 'none');
+      .style('filter', d => {
+        const norm = normalizeType(d.node_type);
+        return norm === 'conflict' || norm === 'checklist' ? 'url(#glow)' : 'none';
+      });
 
     // 繪製節點文字
     node.append('text')
-      .attr('dy', d => d.node_type === 'document' || d.node_type === 'customer' ? 22 : 18)
+      .attr('dy', d => {
+        const norm = normalizeType(d.node_type);
+        return norm === 'document' || norm === 'customer' ? 22 : 18;
+      })
       .attr('text-anchor', 'middle')
       .attr('fill', '#e2e8f0')
       .attr('font-size', '8px')
-      .attr('font-weight', d => d.node_type === 'document' || d.node_type === 'customer' ? 'bold' : 'normal')
+      .attr('font-weight', d => {
+        const norm = normalizeType(d.node_type);
+        return norm === 'document' || norm === 'customer' ? 'bold' : 'normal';
+      })
       .style('pointer-events', 'none')
       .text(d => d.label.length > 12 ? `${d.label.slice(0, 10)}...` : d.label);
 
@@ -311,9 +337,9 @@ export const InteractiveGraph: React.FC = () => {
                     { type: 'document', label: '法規文件', color: '#4facfe' },
                     { type: 'clause', label: '法規條款', color: '#00f2fe' },
                     { type: 'obligation', label: '合規義務', color: '#a855f7' },
-                    { type: 'conflict', label: '義務衝突', color: 'var(--danger)' },
-                    { type: 'customer', label: '客戶個案', color: 'var(--warning)' },
-                    { type: 'checklist', label: '推理決策', color: 'var(--success)' }
+                    { type: 'conflict', label: '義務衝突', color: '#ff1744' },
+                    { type: 'customer', label: '客戶個案', color: '#ffb300' },
+                    { type: 'checklist', label: '推理決策', color: '#00e676' }
                   ].map(item => (
                     <div key={item.type} style={styles.legendItem}>
                       <span style={{ ...styles.legendDot, backgroundColor: item.color }} />

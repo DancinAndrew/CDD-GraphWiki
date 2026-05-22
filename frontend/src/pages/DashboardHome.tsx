@@ -16,11 +16,28 @@ interface CDDChecklist {
   customer_id: string;
   decision: 'simplified_cdd' | 'standard_cdd' | 'enhanced_due_diligence';
   human_review_required: boolean;
-  required_evidence: string[];
-  applied_clauses: string[];
-  conflict_detected: boolean;
-  explanation: string;
+  required_evidence?: string[];
+  applied_clauses?: string[];
+  required_documents?: string[];
+  citations?: string[];
+  conflict_detected?: boolean;
+  explanation?: string;
 }
+
+const getExplanationText = (checklist: CDDChecklist) => {
+  if (checklist.explanation) return checklist.explanation;
+  switch (checklist.decision) {
+    case 'simplified_cdd':
+      return '此客戶屬於低風險等級。根據 FATF 10 與 MAS 626 規範，已核准其採用簡化客戶盡職調查 (Simplified CDD)。無需額外獲取高級管理層審批或申報資金來源證明。';
+    case 'standard_cdd':
+      return '此客戶符合標準風險模型特徵。系統已套用標準客戶盡職調查 (Standard CDD) 流程。請收集公司章程、註冊證明及主要受益所有人身份信息以完成合規建檔。';
+    case 'enhanced_due_diligence':
+      return '此客戶已觸發洗錢防制高風險閥值（如政要 PEP 曝險、開曼群島離岸註冊、產權層級過深或受益所有人未知）。系統已自動執行加強客戶盡職調查 (Enhanced Due Diligence, EDD)，並路由至人工審查隊列。';
+    default:
+      return '合規推理完成，已為該客戶生成對應的盡職調查檢核項目與法規引用鏈。';
+  }
+};
+
 
 interface DashboardHomeProps {
   onNavigate: (tab: string) => void;
@@ -243,7 +260,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({
                   {/* 推理依據與說明 */}
                   <div style={styles.infoBox}>
                     <h4 style={styles.infoBoxTitle}>🤖 引擎推理合規結論</h4>
-                    <p style={styles.infoBoxText}>{checklist.explanation}</p>
+                    <p style={styles.infoBoxText}>{getExplanationText(checklist)}</p>
                   </div>
 
                   {/* 人工覆寫狀態 */}
@@ -271,7 +288,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({
                   <div style={styles.subSection}>
                     <h4 style={styles.subTitle}>🛡️ 應收集之合規證據清單 (Checklist)</h4>
                     <div style={styles.checklistGrid}>
-                      {checklist.required_evidence.map((evidence, idx) => (
+                      {(checklist.required_documents || checklist.required_evidence || []).map((evidence, idx) => (
                         <div key={idx} style={styles.checkItem}>
                           <input type="checkbox" readOnly checked={!checklist.human_review_required} style={styles.checkbox} />
                           <span style={styles.evidenceText}>{evidence}</span>
@@ -284,7 +301,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({
                   <div style={styles.subSection}>
                     <h4 style={styles.subTitle}>📜 條款級法規依據溯源 (Provenance)</h4>
                     <div style={styles.provenanceList}>
-                      {checklist.applied_clauses.map((clause, idx) => (
+                      {(checklist.citations || checklist.applied_clauses || []).map((clause, idx) => (
                         <div key={idx} style={styles.provenanceItem}>
                           <span style={styles.clauseCode}>{clause}</span>
                           <span style={styles.clauseSource}>
