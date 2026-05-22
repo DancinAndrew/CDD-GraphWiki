@@ -1,0 +1,47 @@
+{
+  "description": "描述決策錯誤的根源診斷結果。",
+  "properties": {
+    "checklist_id": {
+      "description": "The ID of the generated checklist being evaluated",
+      "title": "Checklist Id",
+      "type": "string"
+    },
+    "has_error": {
+      "description": "True if there is a mismatch with the gold checklist",
+      "title": "Has Error",
+      "type": "boolean"
+    },
+    "error_source": {
+      "anyOf": [
+        {
+          "enum": [
+            "retrieval",
+            "extraction",
+            "graph_modeling",
+            "conflict_handling",
+            "reasoning"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Pinpointed root cause of the error",
+      "title": "Error Source"
+    },
+    "diagnostic_details": {
+      "description": "Detailed diagnostic reasoning narrative",
+      "title": "Diagnostic Details",
+      "type": "string"
+    }
+  },
+  "required": [
+    "checklist_id",
+    "has_error",
+    "diagnostic_details"
+  ],
+  "title": "DiagnosticReport",
+  "type": "object"
+}

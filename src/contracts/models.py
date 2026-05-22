@@ -204,4 +204,36 @@ class RegulatoryGraph(BaseModel):
     edges: List[GraphEdge] = Field(default_factory=list, description="Collection of all relationship edges")
 
 
+class EvaluationMetrics(BaseModel):
+    """
+    記錄單項評估維度的量化指標。
+    """
+    precision: float = Field(..., description="Precision score")
+    recall: float = Field(..., description="Recall score")
+    f1_score: float = Field(..., description="F1-score")
+    accuracy: float = Field(..., description="Accuracy score")
+
+
+class DiagnosticReport(BaseModel):
+    """
+    描述決策錯誤的根源診斷結果。
+    """
+    checklist_id: str = Field(..., description="The ID of the generated checklist being evaluated")
+    has_error: bool = Field(..., description="True if there is a mismatch with the gold checklist")
+    error_source: Optional[Literal["retrieval", "extraction", "graph_modeling", "conflict_handling", "reasoning"]] = Field(
+        None, description="Pinpointed root cause of the error"
+    )
+    diagnostic_details: str = Field(..., description="Detailed diagnostic reasoning narrative")
+
+
+class ComparisonReport(BaseModel):
+    """
+    匯總系統與 Baseline 評估對比結果。
+    """
+    cdd_wiki_metrics: Dict[str, EvaluationMetrics] = Field(..., description="Metrics for CDD-GraphWiki")
+    baseline_metrics: Dict[str, EvaluationMetrics] = Field(..., description="Metrics for Vector-RAG Baseline")
+    diagnostics: List[DiagnosticReport] = Field(default_factory=list, description="Detailed diagnostic tree reports")
+
+
+
 

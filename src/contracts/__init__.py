@@ -10,7 +10,10 @@ from .models import (
     ExplanationPath,
     GraphNode,
     GraphEdge,
-    RegulatoryGraph
+    RegulatoryGraph,
+    EvaluationMetrics,
+    DiagnosticReport,
+    ComparisonReport
 )
 
 __all__ = [
@@ -25,7 +28,11 @@ __all__ = [
     "ExplanationPath",
     "GraphNode",
     "GraphEdge",
-    "RegulatoryGraph"
+    "RegulatoryGraph",
+    "EvaluationMetrics",
+    "DiagnosticReport",
+    "ComparisonReport"
 ]
+
 
 

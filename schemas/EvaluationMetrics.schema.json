@@ -1,0 +1,33 @@
+{
+  "description": "記錄單項評估維度的量化指標。",
+  "properties": {
+    "precision": {
+      "description": "Precision score",
+      "title": "Precision",
+      "type": "number"
+    },
+    "recall": {
+      "description": "Recall score",
+      "title": "Recall",
+      "type": "number"
+    },
+    "f1_score": {
+      "description": "F1-score",
+      "title": "F1 Score",
+      "type": "number"
+    },
+    "accuracy": {
+      "description": "Accuracy score",
+      "title": "Accuracy",
+      "type": "number"
+    }
+  },
+  "required": [
+    "precision",
+    "recall",
+    "f1_score",
+    "accuracy"
+  ],
+  "title": "EvaluationMetrics",
+  "type": "object"
+}

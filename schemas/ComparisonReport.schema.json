@@ -1,0 +1,117 @@
+{
+  "$defs": {
+    "DiagnosticReport": {
+      "description": "描述決策錯誤的根源診斷結果。",
+      "properties": {
+        "checklist_id": {
+          "description": "The ID of the generated checklist being evaluated",
+          "title": "Checklist Id",
+          "type": "string"
+        },
+        "has_error": {
+          "description": "True if there is a mismatch with the gold checklist",
+          "title": "Has Error",
+          "type": "boolean"
+        },
+        "error_source": {
+          "anyOf": [
+            {
+              "enum": [
+                "retrieval",
+                "extraction",
+                "graph_modeling",
+                "conflict_handling",
+                "reasoning"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pinpointed root cause of the error",
+          "title": "Error Source"
+        },
+        "diagnostic_details": {
+          "description": "Detailed diagnostic reasoning narrative",
+          "title": "Diagnostic Details",
+          "type": "string"
+        }
+      },
+      "required": [
+        "checklist_id",
+        "has_error",
+        "diagnostic_details"
+      ],
+      "title": "DiagnosticReport",
+      "type": "object"
+    },
+    "EvaluationMetrics": {
+      "description": "記錄單項評估維度的量化指標。",
+      "properties": {
+        "precision": {
+          "description": "Precision score",
+          "title": "Precision",
+          "type": "number"
+        },
+        "recall": {
+          "description": "Recall score",
+          "title": "Recall",
+          "type": "number"
+        },
+        "f1_score": {
+          "description": "F1-score",
+          "title": "F1 Score",
+          "type": "number"
+        },
+        "accuracy": {
+          "description": "Accuracy score",
+          "title": "Accuracy",
+          "type": "number"
+        }
+      },
+      "required": [
+        "precision",
+        "recall",
+        "f1_score",
+        "accuracy"
+      ],
+      "title": "EvaluationMetrics",
+      "type": "object"
+    }
+  },
+  "description": "匯總系統與 Baseline 評估對比結果。",
+  "properties": {
+    "cdd_wiki_metrics": {
+      "additionalProperties": {
+        "$ref": "#/$defs/EvaluationMetrics"
+      },
+      "description": "Metrics for CDD-GraphWiki",
+      "title": "Cdd Wiki Metrics",
+      "type": "object"
+    },
+    "baseline_metrics": {
+      "additionalProperties": {
+        "$ref": "#/$defs/EvaluationMetrics"
+      },
+      "description": "Metrics for Vector-RAG Baseline",
+      "title": "Baseline Metrics",
+      "type": "object"
+    },
+    "diagnostics": {
+      "description": "Detailed diagnostic tree reports",
+      "items": {
+        "$ref": "#/$defs/DiagnosticReport"
+      },
+      "title": "Diagnostics",
+      "type": "array"
+    }
+  },
+  "required": [
+    "cdd_wiki_metrics",
+    "baseline_metrics"
+  ],
+  "title": "ComparisonReport",
+  "type": "object"
+}
