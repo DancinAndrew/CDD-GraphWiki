@@ -1,5 +1,6 @@
 from typing import List, Optional, Dict, Any, Literal
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 
 class SourceDocument(BaseModel):
@@ -158,7 +159,8 @@ class GraphNode(BaseModel):
         "Conflict", 
         "CDDChecklist",
         "EvidenceRequirement",
-        "RiskTrigger"
+        "RiskTrigger",
+        "ReviewCase"
     ] = Field(..., description="Node classification type")
     label: str = Field(..., description="Human-readable node title/label")
     properties: Dict[str, Any] = Field(
@@ -233,6 +235,48 @@ class ComparisonReport(BaseModel):
     cdd_wiki_metrics: Dict[str, EvaluationMetrics] = Field(..., description="Metrics for CDD-GraphWiki")
     baseline_metrics: Dict[str, EvaluationMetrics] = Field(..., description="Metrics for Vector-RAG Baseline")
     diagnostics: List[DiagnosticReport] = Field(default_factory=list, description="Detailed diagnostic tree reports")
+
+
+class ReviewCase(BaseModel):
+    """
+    人工合規審查案件。
+    用於管理需要人工介入審核的合規案件生命週期。
+    """
+    case_id: str = Field(..., description="人工審查案件唯一 ID，格式為 rev_cust_xxx")
+    customer_id: str = Field(..., description="關聯的客戶 ID")
+    checklist_id: str = Field(..., description="關聯的推理 CDDChecklist ID")
+    review_reason: List[str] = Field(..., description="觸發人工審查的具體原因列表")
+    approval_status: Literal["pending_review", "approved", "rejected", "needs_evidence"] = Field(
+        "pending_review", description="案件的合規審批狀態"
+    )
+    reviewer_decision: Optional[Literal["simplified_cdd", "standard_cdd", "enhanced_due_diligence"]] = Field(
+        None, description="人工最終決策等級，若已批准則會覆寫原機器決策"
+    )
+    reviewer_notes: Optional[str] = Field(None, description="合規審批筆記與說明")
+    reviewed_by: Optional[str] = Field(None, description="合規審批人 ID 或簽名")
+    timestamp: datetime = Field(default_factory=datetime.utcnow, description="案件建立或變更時間")
+
+
+class AuditLogEntry(BaseModel):
+    """
+    合規決策與審查之鏈式防篡改審計日誌項目。
+    每一條日誌項目都包含了 previous_hash 和 current_hash，構建防篡改的鏈式結構。
+    """
+    log_id: str = Field(..., description="日誌唯一 ID，格式為 log_xxx")
+    timestamp: datetime = Field(default_factory=datetime.utcnow, description="日誌時間戳")
+    event_type: Literal[
+        "reasoning_triggered", 
+        "conflict_detected", 
+        "case_created", 
+        "case_reviewed", 
+        "tamper_check_failed"
+    ] = Field(..., description="事件類型")
+    operator: str = Field(..., description="執行操作的系統模組或人工 ID")
+    customer_id: str = Field(..., description="關聯的客戶 ID")
+    payload: Dict[str, Any] = Field(..., description="事件關聯的關鍵資料負載")
+    previous_hash: str = Field(..., description="上一條審計日誌的雜湊值，用於構建 Hash Chain")
+    current_hash: str = Field(..., description="當前日誌項的 SHA-256 鏈式雜湊值，保障防篡改特性")
+
 
 
 

@@ -1,0 +1,98 @@
+{
+  "description": "人工合規審查案件。\n用於管理需要人工介入審核的合規案件生命週期。",
+  "properties": {
+    "case_id": {
+      "description": "人工審查案件唯一 ID，格式為 rev_cust_xxx",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "customer_id": {
+      "description": "關聯的客戶 ID",
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "checklist_id": {
+      "description": "關聯的推理 CDDChecklist ID",
+      "title": "Checklist Id",
+      "type": "string"
+    },
+    "review_reason": {
+      "description": "觸發人工審查的具體原因列表",
+      "items": {
+        "type": "string"
+      },
+      "title": "Review Reason",
+      "type": "array"
+    },
+    "approval_status": {
+      "default": "pending_review",
+      "description": "案件的合規審批狀態",
+      "enum": [
+        "pending_review",
+        "approved",
+        "rejected",
+        "needs_evidence"
+      ],
+      "title": "Approval Status",
+      "type": "string"
+    },
+    "reviewer_decision": {
+      "anyOf": [
+        {
+          "enum": [
+            "simplified_cdd",
+            "standard_cdd",
+            "enhanced_due_diligence"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "人工最終決策等級，若已批准則會覆寫原機器決策",
+      "title": "Reviewer Decision"
+    },
+    "reviewer_notes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "合規審批筆記與說明",
+      "title": "Reviewer Notes"
+    },
+    "reviewed_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "合規審批人 ID 或簽名",
+      "title": "Reviewed By"
+    },
+    "timestamp": {
+      "description": "案件建立或變更時間",
+      "format": "date-time",
+      "title": "Timestamp",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "customer_id",
+    "checklist_id",
+    "review_reason"
+  ],
+  "title": "ReviewCase",
+  "type": "object"
+}

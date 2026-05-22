@@ -1,0 +1,65 @@
+{
+  "description": "合規決策與審查之鏈式防篡改審計日誌項目。\n每一條日誌項目都包含了 previous_hash 和 current_hash，構建防篡改的鏈式結構。",
+  "properties": {
+    "log_id": {
+      "description": "日誌唯一 ID，格式為 log_xxx",
+      "title": "Log Id",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "日誌時間戳",
+      "format": "date-time",
+      "title": "Timestamp",
+      "type": "string"
+    },
+    "event_type": {
+      "description": "事件類型",
+      "enum": [
+        "reasoning_triggered",
+        "conflict_detected",
+        "case_created",
+        "case_reviewed",
+        "tamper_check_failed"
+      ],
+      "title": "Event Type",
+      "type": "string"
+    },
+    "operator": {
+      "description": "執行操作的系統模組或人工 ID",
+      "title": "Operator",
+      "type": "string"
+    },
+    "customer_id": {
+      "description": "關聯的客戶 ID",
+      "title": "Customer Id",
+      "type": "string"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "description": "事件關聯的關鍵資料負載",
+      "title": "Payload",
+      "type": "object"
+    },
+    "previous_hash": {
+      "description": "上一條審計日誌的雜湊值，用於構建 Hash Chain",
+      "title": "Previous Hash",
+      "type": "string"
+    },
+    "current_hash": {
+      "description": "當前日誌項的 SHA-256 鏈式雜湊值，保障防篡改特性",
+      "title": "Current Hash",
+      "type": "string"
+    }
+  },
+  "required": [
+    "log_id",
+    "event_type",
+    "operator",
+    "customer_id",
+    "payload",
+    "previous_hash",
+    "current_hash"
+  ],
+  "title": "AuditLogEntry",
+  "type": "object"
+}

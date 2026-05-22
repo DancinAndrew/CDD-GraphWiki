@@ -79,7 +79,8 @@
             "Conflict",
             "CDDChecklist",
             "EvidenceRequirement",
-            "RiskTrigger"
+            "RiskTrigger",
+            "ReviewCase"
           ],
           "title": "Node Type",
           "type": "string"

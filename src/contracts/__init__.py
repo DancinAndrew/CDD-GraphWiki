@@ -13,7 +13,9 @@ from .models import (
     RegulatoryGraph,
     EvaluationMetrics,
     DiagnosticReport,
-    ComparisonReport
+    ComparisonReport,
+    ReviewCase,
+    AuditLogEntry
 )
 
 __all__ = [
@@ -31,7 +33,9 @@ __all__ = [
     "RegulatoryGraph",
     "EvaluationMetrics",
     "DiagnosticReport",
-    "ComparisonReport"
+    "ComparisonReport",
+    "ReviewCase",
+    "AuditLogEntry"
 ]
 
 
