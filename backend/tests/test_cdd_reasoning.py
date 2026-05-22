@@ -5,8 +5,9 @@ from src.contracts.models import CustomerContext, Obligation, Conflict, CDDCheck
 from src.decision.engine import CDDChecklistEngine, ChecklistEvaluator
 
 # 定義黃金數據集與產出數據集目錄路徑
-GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data/gold"))
-PROCESSED_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data/processed"))
+GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/gold"))
+PROCESSED_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/processed"))
+
 
 
 def load_yaml(filename: str, dir_path: str = GOLD_DIR) -> List[Dict[str, Any]]:

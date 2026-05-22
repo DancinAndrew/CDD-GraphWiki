@@ -20,8 +20,9 @@ from contracts.models import (
     RegulatoryGraph
 )
 
-EXAMPLES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'schemas', 'examples'))
-SCHEMAS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'schemas'))
+EXAMPLES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'schemas', 'examples'))
+SCHEMAS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'schemas'))
+
 
 
 def load_yaml(filename):

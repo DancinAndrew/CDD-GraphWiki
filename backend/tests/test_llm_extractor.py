@@ -17,6 +17,8 @@ def test_llm_client_fallback_mode():
     # 強制清空 API Key 環境變數以模擬離線/CI 測試環境
     if "GEMINI_API_KEY" in os.environ:
         del os.environ["GEMINI_API_KEY"]
+    if "NVIDIA_API_KEY" in os.environ:
+        del os.environ["NVIDIA_API_KEY"]
         
     client = LLMClient(api_key=None)
     assert client.is_mock is True, "LLMClient 應在無金鑰時自動Fallback至 Mock 模式"

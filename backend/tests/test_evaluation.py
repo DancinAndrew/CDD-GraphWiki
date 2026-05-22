@@ -15,8 +15,9 @@ from src.decision.engine import CDDChecklistEngine
 from src.evaluation.baseline import VectorRAGBaseline
 from src.evaluation.harness import EvaluationHarness
 
-GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data/gold"))
-PROCESSED_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data/processed"))
+GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/gold"))
+PROCESSED_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/processed"))
+
 
 
 def load_yaml(filename: str, dir_path: str = GOLD_DIR) -> List[Dict[str, Any]]:

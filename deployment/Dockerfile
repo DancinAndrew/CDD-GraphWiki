@@ -8,11 +8,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # 複製依賴配置並安裝
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 複製專案其餘檔案
-COPY . .
+COPY backend/src /app/src
 
 # 暴露 FastAPI 連接埠
 EXPOSE 8000

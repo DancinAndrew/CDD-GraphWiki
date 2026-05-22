@@ -17,16 +17,15 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: deployment/Dockerfile
     ports:
       - "8000:8000"
     volumes:
-      - ./src:/app/src
-      - ./data:/app/data
-      - ./tests:/app/tests
-      - ./demo.py:/app/demo.py
-      - ./requirements.txt:/app/requirements.txt
+      - ../backend/src:/app/src
+      - ../data:/app/data
+      - ../backend/tests:/app/tests
+      - ../backend/requirements.txt:/app/requirements.txt
     environment:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
@@ -39,12 +38,12 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ../frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app
+      - ../frontend:/app
       - /app/node_modules
     depends_on:
       - backend

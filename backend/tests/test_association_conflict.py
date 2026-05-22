@@ -6,8 +6,9 @@ from src.association.concept_mapper import ConceptLoader, ConceptMapper
 from src.association.conflict_detector import ConflictDetector
 
 # 定義測試路徑
-GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data/gold"))
-PROCESSED_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data/processed"))
+GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/gold"))
+PROCESSED_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/processed"))
+
 
 
 def test_concept_loader():

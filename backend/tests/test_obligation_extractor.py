@@ -10,7 +10,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from src.contracts.models import Clause, Obligation
 from src.extraction.extractor import RuleBasedObligationExtractor, ObligationExtractionPipeline
 
-SCHEMAS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'schemas'))
+SCHEMAS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'schemas'))
+
 
 
 def load_json_schema(filename):

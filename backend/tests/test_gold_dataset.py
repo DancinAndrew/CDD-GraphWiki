@@ -11,7 +11,8 @@ from src.contracts.models import (
 )
 
 # 定義黃金數據集目錄路徑
-GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data/gold"))
+GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/gold"))
+
 
 
 def load_yaml(filename: str) -> List[Dict[str, Any]]:

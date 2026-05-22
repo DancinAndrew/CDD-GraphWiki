@@ -8,6 +8,7 @@
 
 > [!IMPORTANT]
 > - **必須完全使用繁體中文 (Traditional Chinese)** 進行所有回覆、說明、系統規劃文件 (如 Proposal, Design, Tasks, Walkthrough 等) 的撰寫。
+> - **變更計畫與實作計畫的對應 OpenSpec 四個檔案（`proposal.md`, `design.md`, `tasks.md`, `spec.md`）之實質內容與描述，必須完全使用繁體中文撰寫，嚴禁使用英文。** 僅 OpenSpec 解析器所必需之強格式前綴與識別標題（例如：`## 1. Group Name`、`### Requirement: Name`、`#### Scenario: Name`、`GIVEN` / `WHEN` / `THEN` 關鍵字等）可保持英文格式，以確保解析器能正確識別，但所有任務細節、規格描述與場景步驟內文均應為中文。
 > - 代碼註解與系統提示訊息也應優先使用繁體中文。
 > - 技術術語、API 欄位名稱、變數名、方程式等，可保持其原始英文形式，以確保語意精確。
 
@@ -15,11 +16,11 @@
 
 ## 2. 標準化開發生命週期 (SOP)
 
-非 trivially simple 的變更（如中大型功能、API 合約修改、核心實作等），**必須 (MUST)** 嚴格遵循以下五個階段的開發流程：
+非 trivially simple 的變更（如中大型功能、API 合約修改、核心實作等），**必須 (MUST)** 嚴格遵循以下五個階段 of 開發流程：
 
 ### 2.1 階段一：調研與文件閱讀 (Research)
 在動手寫任何代碼或規劃前，必須：
-1. 全面閱讀相關背景文件，包含專案根目錄的 [SPEC.md](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/SPEC.md)、[HANDOVER.md](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/HANDOVER.md)。
+1. 全面閱讀相關背景文件，包含專案的 [SPEC.md](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/SPEC.md)。
 2. 閱讀 `docs/adr/` 目錄下的架構決策紀錄 (ADRs)，理解系統架構的設計哲學（例如 [ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的混合元模型策略）。
 3. 檢查現有的程式碼與已有的 OpenSpec changes，避免重複造輪子。
 
@@ -89,3 +90,35 @@
 - **當前階段**：**Phase 2: Create Manual Gold Dataset (手動黃金數據集建立)**
 - **活動變更**：`create-manual-gold-dataset`
 - **架構指導**：[ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md)
+
+---
+
+## 4. CDD-GraphWiki 專案專屬約束與運作規則
+
+本專案採用 Python 優先的架構，結合 Everything Claude Code (ECC) 的敏捷與安全技能，用於 spec-first 的 AML / CDD 合規知識編譯與推理。
+
+### 4.1 本地 ECC 參考資源位置
+- 核心技能：`.agents/skills/`
+- 通用規則：`.agents/rules/common/`
+- Python 專屬規則：`.agents/rules/python/`
+- Codex 角色與配置：`.codex/`
+
+### 4.2 專案硬約束與合規限制
+1. **防範通用 RAG 化**：**嚴禁**將本專案開發成通用的「上傳 PDF 與機器人聊天」的 RAG 應用。系統必須優先將合規條款編譯為結構化、機器可推理的合規對象。
+2. **條款級溯源 (Clause-level Provenance)**：系統中衍生的每一項合規規則、決策邏輯、Checklist 項目，**必須**精確標記並溯源至 FATF Rec 10、MAS 626 或內部 Policy 的具體條款與 Clause 編號。
+3. **精簡 MVP 語料庫**：在核心數據合約與推理邏輯穩定前，MVP 語料庫必須保持精簡，僅包含：
+   - FATF Recommendation 10
+   - MAS Notice 626 CDD / EDD 相關條款
+   - 一份 Mock 內部 AML / KYC 政策
+4. **人工審查邊界**：所有涉及法律法規詮釋、風險閾值判定、規則衝突調處、所需證據定義或升級審查之決策，**必須**留有人工審查 (Human Review) 接口，未經人工明確核准前，不可完全自動化。
+
+### 4.3 核心運作規則與行為護欄
+1. **最小化第三方依賴**：在引入任何第三方套件（如 Pydantic、jsonschema 等）、啟用額外 MCP 服務或 package-manager 之前，**必須**取得使用者的明確同意。
+2. **對齊先於重大變更**：若對架構設計或法規語意有複數種解讀方式，**必須**主動向使用者提出假設與權衡，嚴禁在未取得共識前自行推測實作。對於重大決策，主動觸發 `/grill-me` 深度面試進行共識對齊，並歸檔於 `design.md`。
+3. **精準手術式修改 (Surgical Edits)**：僅修改與需求直接相關的程式碼，不隨意進行無關的大範圍重構，保持程式碼風格一致。完成工作後，清理自己造成的無用 imports 與變數。
+4. **Python 編程與防禦性標準**：
+   - 遵循 PEP 8 標準，並在公共 API 與關鍵內部邊界加上型別標記 (Type Hints)。
+   - 在系統輸入與模組邊界進行強型別 Schema 校驗（如使用 Pydantic），並對異常輸入拋出明確的自定義異常。
+   - 嚴防 SQL / 圖數據庫查詢注入，**必須**使用參數化查詢 (Parameterized Queries)，嚴禁使用字串拼接。
+   - 敏感數據脫敏：嚴禁在日誌中記錄個人隱私資料 (PII) 或密鑰。
+

@@ -9,9 +9,9 @@ context: |
   - Produce evidence-backed CDD / EDD checklist output from structured customer context.
 
   Current state:
-  - The repository currently contains planning and research documents.
-  - No runtime application, dependency setup, source parser, graph engine, UI, or tests have been added.
-  - SPEC.md, OpenSpec change artifacts, and ADRs are the controlling planning layer.
+  - The repository now contains initial backend Python source codes under restructuring, alongside planning and research documents.
+  - No frontend runtime, or persistent database runtime has been fully set up yet.
+  - docs/SPEC.md, OpenSpec change artifacts, and ADRs are the controlling planning layer.
 
   Hard constraints:
   - Do not start with a generic RAG chatbot.
@@ -21,7 +21,7 @@ context: |
   - Route legal, regulatory, threshold, conflict, or required-evidence decisions through human review.
 
   Development workflow:
-  - Discuss and update SPEC.md for broad product scope.
+  - Discuss and update docs/SPEC.md for broad product scope.
   - Capture requirement changes in OpenSpec under openspec/changes/.
   - Capture architectural rationale in docs/adr/.
   - Implement only after specs and tasks are clear enough to verify.

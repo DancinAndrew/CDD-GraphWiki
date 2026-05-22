@@ -13,7 +13,8 @@ from src.contracts.models import (
 from src.decision.provenance import ProvenanceEngine
 
 # 定義目錄路徑
-GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data/gold"))
+GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/gold"))
+
 
 
 def load_yaml(filename: str, dir_path: str = GOLD_DIR) -> List[Dict[str, Any]]:
