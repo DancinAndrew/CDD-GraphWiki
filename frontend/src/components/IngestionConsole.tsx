@@ -127,7 +127,7 @@ export const IngestionConsole: React.FC<IngestionConsoleProps> = ({ onNavigate }
       alert("請先選擇或拖入一個 PDF 檔案！");
       return;
     }
-    if (!title.strip && !title) {
+    if (!title.trim()) {
       alert("請輸入法規標題！");
       return;
     }
