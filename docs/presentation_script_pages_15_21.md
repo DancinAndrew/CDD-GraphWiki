@@ -8,6 +8,45 @@
 
 這一段不是介紹一般聊天機器人，而是介紹 CDD-GraphWiki。它的定位是 AML / CDD 法規知識編譯與合規推理系統，不是把 PDF 丟進向量資料庫後讓模型自由回答。論文 methodology 也把它定義成「機器可推理、人類可閱讀」的系統，所以我會用這個角度講第 15 到 21 頁。
 
+## 名詞簡寫速查
+
+這段是報告者自用，不一定要逐字念。遇到縮寫卡住時，可以用「中文意思 + 一句白話」快速帶過。
+
+| 簡寫 / 名詞 | 中文意思 | 報告時可以怎麼理解 |
+| --- | --- | --- |
+| AML | Anti-Money Laundering，反洗錢 | 金融機構用來防止洗錢、資恐與可疑資金流動的一整套合規制度。 |
+| CDD | Customer Due Diligence，客戶盡職調查 | 開戶或建立業務關係前，確認客戶身份、風險、實質受益人和需要文件。 |
+| EDD | Enhanced Due Diligence，加強型盡職調查 | 客戶風險比較高時，比一般 CDD 要求更多文件、更多審查和人工核准。 |
+| KYC | Know Your Customer，認識你的客戶 | 金融機構確認客戶身份與風險的實務流程；CDD 可以理解成 KYC 裡的核心合規步驟。 |
+| FATF | Financial Action Task Force，防制洗錢金融行動工作組 | 國際反洗錢標準制定組織；這份 demo 用到 FATF Recommendation 10。 |
+| MAS Notice 626 | 新加坡金融管理局 MAS 的反洗錢通知 | 新加坡銀行業 AML / CDD / EDD 的重要監管文件，是 demo 的主要法規來源之一。 |
+| RAG | Retrieval-Augmented Generation，檢索增強生成 | 先找資料再讓模型回答；我們要強調本專案不是一般 PDF RAG chatbot。 |
+| LLM | Large Language Model，大型語言模型 | 例如 Llama、DeepSeek、Gemini；在這個系統裡主要用於切片與義務抽取，不直接做最後合規判斷。 |
+| PDF ingestion | PDF 導入流程 | 把新法規 PDF 放進系統，抽文字、切條文、抽義務，再更新 YAML / 圖譜 / checklist。 |
+| Parser | 解析器 | 把 PDF 或 Markdown 轉成系統能處理的條文資料，不只是單純讀文字。 |
+| Clause | 條文片段 | 法規中可被引用、抽取和審查的最小穩定單位。 |
+| Provenance | 來源溯源 | 每個 checklist 或 obligation 都能追回原始法規條文，避免模型憑空回答。 |
+| Citation | 引用依據 | 指向 MAS、FATF 或內部政策的具體條文，讓合規官可以核對。 |
+| Obligation | 合規義務 | 從條文抽出的「誰在什麼情境下必須做什麼、需要什麼證據」。 |
+| CustomerContext | 客戶情境資料結構 | 客戶不是自由文字 prompt，而是包含客戶類型、司法管轄區、UBO、PEP 等欄位的結構化資料。 |
+| UBO | Ultimate Beneficial Owner，最終實質受益人 | 穿透公司股權後，真正擁有或控制公司的人；UBO 不明通常會提高風險。 |
+| PEP | Politically Exposed Person，政治公眾人物 | 因職位或關係有較高貪腐、洗錢風險的人；通常會觸發 EDD 或人工審查。 |
+| HITL | Human-in-the-loop，人機協作 / 人工覆核 | AI 先整理風險和建議，但高風險決策要交給合規官做最後判斷。 |
+| Audit Trail | 審計軌跡 | 記錄系統初審、案件路由、人工覆寫等事件，方便事後稽核。 |
+| Hash chain | 雜湊鏈 / 防篡改鏈 | 每筆 audit log 都連到上一筆 hash；中間被改過，後面整條鏈就會驗證失敗。 |
+| SHA-256 | 一種雜湊演算法 | 用來把 audit log 算成固定長度指紋，支撐防篡改檢查。 |
+| Evaluation Harness | 評估框架 | 用測試把錯誤拆成 retrieval、extraction、reasoning、citation 等類型，不只看模型回答好不好看。 |
+| Dashboard | 工作台 | 前端 demo 介面，包含總覽、人工審查、audit timeline、圖譜、PDF 導入和使用手冊。 |
+| API | Application Programming Interface，應用程式介面 | 前端向後端拿資料或送審查決策的接口，例如 `/api/v1/cases`。 |
+| Pydantic | Python 資料驗證工具 | 用來限制 API 輸入和資料合約，避免送進不合法欄位。 |
+| YAML | 一種結構化資料格式 | repo 用 YAML 保存法規條文、義務、客戶情境、checklist 等 demo 資料。 |
+| Neo4j | 圖資料庫 | 用節點和邊保存條文、義務、客戶、股權穿透等多跳關係。 |
+| D3 | 前端視覺化函式庫 | 用來把法規與決策圖譜畫成互動式節點關係圖。 |
+| NVIDIA NIM | NVIDIA 的模型 API / 推論平台 | 後端支援用 NIM 呼叫 Llama 3.3 做切片、DeepSeek R1 做義務抽取，也保留 Gemini 和 mock fallback。 |
+| Gemini / mock fallback | 備援模型 / 離線假資料模式 | 沒有 NIM key 或 API 失敗時，系統可以改用 Gemini；再不行就用 mock，確保 demo 和測試不中斷。 |
+| NRIC | National Registration Identity Card | 新加坡身份證件；低風險個人 CDD 案例中要求的身份文件之一。 |
+| SoF / SoW | Source of Funds / Source of Wealth，資金來源 / 財富來源 | EDD 常要求說明錢從哪裡來、財富怎麼累積。 |
+
 ## 第 15 頁：解決方案與防禦技術
 
 第 15 頁是章節轉場。前面我們講金融業導入 AI 的風險，包括黑箱、幻覺、資料偏差和監理要求；從這頁開始，我們要回答：如果 AI 真的要進入高風險合規流程，系統架構要怎麼設計，才不會變成不可追溯的聊天系統？
