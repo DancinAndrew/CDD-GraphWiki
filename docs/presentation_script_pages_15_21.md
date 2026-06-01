@@ -1,6 +1,6 @@
 # 第 15-21 頁報告逐字稿
 
-用途：明天報告 PDF 第 15-21 頁，時間抓 6-8 分鐘。  
+用途：明天報告 PDF 第 15-21 頁，並包含新增架構圖與未來開發方向補充頁；時間可抓 8-10 分鐘。
 語氣：繁中口語、課堂報告用。  
 保守界線：這份稿只講 PDF 畫面與 repo 中已實作或已規格化的功能，不把 demo 說成正式上線的金融生產系統。
 
@@ -21,7 +21,19 @@
 | FATF | Financial Action Task Force，防制洗錢金融行動工作組 | 國際反洗錢標準制定組織；這份 demo 用到 FATF Recommendation 10。 |
 | MAS Notice 626 | 新加坡金融管理局 MAS 的反洗錢通知 | 新加坡銀行業 AML / CDD / EDD 的重要監管文件，是 demo 的主要法規來源之一。 |
 | RAG | Retrieval-Augmented Generation，檢索增強生成 | 先找資料再讓模型回答；我們要強調本專案不是一般 PDF RAG chatbot。 |
+| BM25 | 一種關鍵字檢索演算法 | 可以理解成比較傳統的「關鍵字相關度搜尋」，常拿來和向量檢索混合。 |
+| Dense retrieval | 向量語意檢索 | 把文字轉成 embedding 向量，用語意相近程度找資料，不只看關鍵字有沒有一樣。 |
+| GraphRAG | 圖譜輔助的 RAG | 檢索時不只找文字，也利用知識圖譜的節點和邊，把相關條文、義務、概念串起來。 |
+| Minimal snippet | 最小必要引用片段 | 法律 RAG 評估裡，希望系統找到剛好足夠回答問題的短片段，而不是整大段 chunk。 |
+| Character-span | 字元範圍 | 用精確的起訖字元標出引用位置，讓 citation 可以回到原文片段。 |
 | LLM | Large Language Model，大型語言模型 | 例如 Llama、DeepSeek、Gemini；在這個系統裡主要用於切片與義務抽取，不直接做最後合規判斷。 |
+| NLI | Natural Language Inference，自然語言推論 | 判斷兩段文字是支持、矛盾，還是無關；未來可用在法規衝突偵測。 |
+| SPO triplets | Subject-Predicate-Object 三元組 | 把法規關係拆成「主體-關係-客體」，例如「金融機構-必須驗證-實質受益人」。 |
+| Entity resolution | 實體解析 / 實體合併 | 把 UBO、Beneficial Owner、Controlling Party 這類可能指同一概念的詞彙對齊。 |
+| IAA | Inter-Annotator Agreement，標註者一致率 | 多個人標金標資料時的一致程度；未來要讓 evaluation 更可信時會需要。 |
+| Cypher | Neo4j 的圖查詢語言 | 類似 SQL 對資料庫查詢，但 Cypher 是用來查圖資料庫裡的節點與路徑。 |
+| MVP | Minimum Viable Product，最小可行產品 | 可以展示核心價值的最小版本；報告時要把目前系統說成 demo / MVP，不要說成正式上線系統。 |
+| Proof-of-concept | 概念驗證 | 證明方法可行的原型，不等於完整產品或生產級系統。 |
 | PDF ingestion | PDF 導入流程 | 把新法規 PDF 放進系統，抽文字、切條文、抽義務，再更新 YAML / 圖譜 / checklist。 |
 | Parser | 解析器 | 把 PDF 或 Markdown 轉成系統能處理的條文資料，不只是單純讀文字。 |
 | Clause | 條文片段 | 法規中可被引用、抽取和審查的最小穩定單位。 |
@@ -207,15 +219,47 @@
 | Frontend | `frontend/src/components/UserGuide.tsx:39-129` 定義 dashboard、review queue、audit timeline、regulatory graph、ingestion console 五個模組的用途與技術說明。 |
 | Frontend | `frontend/src/App.tsx:49-80` 將 dashboard、review、timeline、graph、ingestion、guide 對應到不同前端頁面。 |
 
+## 第 21A 頁：未來開發方向
+
+這一頁我會放在 demo 結束後，當作最後一張補充說明。剛剛第 16 到 21 頁展示的是目前已經跑通的 demo chain：從資料合約、Parser、義務抽取、知識圖譜、衝突 prototype、CDD 推理、人工審查、hash-chain audit，到 Dashboard、NVIDIA NIM fallback 和 Evaluation baseline。
+
+但這裡要講得保守一點：目前 repo 比較像 proof-of-concept，也就是可以展示核心概念的 demo，不是完整 production-grade 法律判斷系統。所以這張未來開發方向主要回答一個問題：如果要從課堂 demo 往更嚴謹的 research-grade 或 production-grade 合規平台前進，還缺哪些能力？
+
+第一個方向是 Evidence-grade Retrieval，也就是證據等級的檢索。現在 repo 裡有 evaluation harness，也有一個 vector RAG baseline simulator，可以把錯誤拆成 retrieval、extraction、reasoning 和 citation 這幾類；但它還不是完整的法律檢索系統。未來要補的是 hybrid BM25、dense retrieval 和 GraphRAG，並且做到 character-span minimal snippets。白話說，就是不要只說「我有引用 MAS Notice 626」，而是要精準指到最小必要文字片段，還要記錄檢索失敗的原因。
+
+第二個方向是 True Graph Alignment。現在系統已經有法規圖譜，也能把 source document、clause、obligation、customer context、checklist 串成節點和邊；CDD engine 也能根據五個金標客戶情境產生 checklist。不過目前推理主要還是 deterministic branch logic，也就是針對客戶欄位做規則分支，還不是 GraphCompliance 論文講的完整 policy graph 對 context graph。未來要補的是更一般化的客戶風險圖、Context Graph，還有用 Cypher 查 UBO、PEP、制裁或高風險司法管轄區的多跳關係。
+
+第三個方向是 Conflict & Gap Adjudication。現在 repo 的 conflict detector 可以處理幾種明確規則型衝突，例如 UBO 持股門檻 25% 和 10% 的差異、PEP onboarding 的政策差異、偶發交易金額門檻差異。但它還沒有做到 LegalWiz 那種 NLI 加 LLM 的 hybrid contradiction scoring，也還沒有完整的六類 conflict taxonomy。未來比較完整的做法，是先用檢索和 NLI 找出疑似衝突，再把 retrieval-verifiable 的衝突交給系統輔助判斷，把 retrieval-resistant 或需要法律解釋的衝突交給人工審查。
+
+第四個方向是 Scale & Governance。現在的來源 corpus 是 MVP 等級，主要用 FATF、MAS 和 mock internal policy 做 demo；concept dedupe 也主要靠 fallback alias，把 UBO、Beneficial Owner、Controlling Party 這些詞對齊。未來如果要更接近真實金融機構，就要擴大到 FATF、MAS、FCA、HKMA 和多版本內規，加入 entity resolution、SPO triplets、標註者一致率 IAA、角色權限，以及法規更新後的人審發布流程。
+
+所以這頁的收斂句可以這樣說：目前我們已經證明 AML / CDD 合規可以從「聊天式回答」改成「知識編譯、圖譜推理、人工覆核、審計留痕」的 demo。未來要做的，不是把畫面做得更像產品而已，而是把檢索證據、圖對齊、衝突裁決和治理規模化補起來，讓它從課堂原型往真正可驗證的合規平台前進。
+
+### 來源證據
+
+| 類型 | 來源 |
+| --- | --- |
+| 投影片 | `docs/future_development_direction.pptx` 是一頁未來開發方向 PPT；`docs/assets/future_development_direction_preview.png` 是預覽圖。 |
+| Roadmap | `docs/system-build-roadmap.md:5-20` 定義系統核心流程：原始法規、條文切分、義務抽取、wiki、regulatory knowledge graph、gap tracking、CDD / EDD checklist、human review。 |
+| Roadmap | `docs/system-build-roadmap.md:311-324` 把 ComplianceNLP、GraphCompliance、AI Application in AML、LegalWiz、LegalBench-RAG、Legal RAG Bench 等論文對應到系統部件。 |
+| Roadmap | `docs/system-build-roadmap.md:528-678` 定義 Phase 1-9 的 build path，其中多個項目仍是未來可深化方向，例如 retrieval tests、conflict detection tests、citation faithfulness checks。 |
+| Paper matrix | `docs/papers_notes/index.md:7-52` 把系統拆成 knowledge compilation、regulatory KG、contradiction / supersession、CDD decision layer 四層。 |
+| Paper matrix | `docs/papers_notes/index.md:56-129` 將 10 個開發階段映射到 LegalBench-RAG、RAGulating Compliance、GraphCompliance、LegalWiz、Legal RAG Bench 等論文方法。 |
+| Current implementation | `backend/src/evaluation/harness.py:16-23` 說明目前 evaluation harness 的目標；`backend/src/evaluation/baseline.py:5-13` 說明目前 vector RAG baseline 是模擬器。 |
+| Current implementation | `backend/src/decision/engine.py:32-159` 顯示目前 CDD engine 主要以 customer features 做決策分支；`backend/src/graph/builder.py:18-35` 顯示目前已有將合規物件編成 graph 的 builder。 |
+| Current implementation | `backend/src/association/conflict_detector.py:5-15` 說明目前是合規衝突自動偵測引擎原型；`backend/src/association/conflict_detector.py:18-102` 顯示目前處理的是幾種規則型衝突。 |
+| Current implementation | `backend/src/association/concept_mapper.py:6-13` 顯示概念對齊目前依賴 fallback aliases；`backend/src/association/concept_mapper.py:88-146` 顯示目前是 normalization 與別名匹配，不是完整 entity resolution。 |
+
 ## 口頭收尾
 
-所以第 15 到 21 頁整體要表達的是：我們的解決方案不是單點模型，而是一條合規資料鏈。法規 PDF 變成 clause、obligation 和 graph；客戶資料變成 customer context 和 CDD / EDD checklist；高風險案件進人工審查；所有推理與覆寫都進 hash-chain audit log。目的就是降低幻覺與黑箱風險，保留來源可追溯、人工可覆核、稽核可驗證的治理能力。
+所以第 15 到 21 頁，加上架構圖和未來開發方向，整體要表達的是：我們的解決方案不是單點模型，而是一條合規資料鏈。法規 PDF 變成 clause、obligation 和 graph；客戶資料變成 customer context 和 CDD / EDD checklist；高風險案件進人工審查；所有推理與覆寫都進 hash-chain audit log。目的就是降低幻覺與黑箱風險，保留來源可追溯、人工可覆核、稽核可驗證的治理能力。
 
-如果時間不夠，優先講三句話：
+如果時間不夠，優先講四句話：
 
 1. CDD-GraphWiki 不是 PDF RAG chatbot，而是 AML / CDD 知識編譯與合規推理系統。
 2. 它用結構化資料合約和圖譜，把法規條文、客戶情境、CDD / EDD checklist 串成可追溯決策鏈。
 3. 它用 HITL 人工審查和 SHA-256 hash-chain audit log，把高風險 AI 輸出放回可治理、可覆核、可稽核的流程中。
+4. 未來工作不是單純加更多 UI，而是補強 evidence-grade retrieval、graph alignment、conflict adjudication 和 governance scaling。
 
 ## 總來源索引
 
@@ -230,3 +274,7 @@
 | 法規與決策以圖譜展示 | `backend/src/graph/builder.py:53-237`, `frontend/src/components/InteractiveGraph.tsx:107-280` |
 | PDF ingestion 經過 parsing、clause chunking、obligation extraction、YAML merge、Neo4j sync、checklist 熱更新 | `backend/src/api/main.py:466-623`, `backend/src/ingestion/pdf_parser.py:9-72`, `backend/src/extraction/llm_extractor.py:15-168` |
 | LLM provider 保守說法 | `backend/src/extraction/llm_client.py:48-82`, `backend/src/extraction/llm_client.py:94-212` |
+| 未來方向一：evidence-grade retrieval 尚需深化 | `docs/papers_notes/index.md:85-89`, `docs/papers_notes/index.md:123-129`, `backend/src/evaluation/harness.py:23-60`, `backend/src/evaluation/baseline.py:5-13` |
+| 未來方向二：完整 policy graph / context graph alignment 尚需深化 | `docs/system-build-roadmap.md:350-367`, `docs/papers_notes/index.md:37-42`, `backend/src/decision/engine.py:32-159`, `backend/src/graph/builder.py:18-35` |
+| 未來方向三：NLI + LLM hybrid conflict scoring 尚需深化 | `docs/papers_notes/index.md:111-115`, `docs/papers_notes/index.md:31-34`, `backend/src/association/conflict_detector.py:5-15`, `backend/src/association/conflict_detector.py:18-102` |
+| 未來方向四：corpus scale、entity resolution、SPO triplets 與治理流程尚需深化 | `docs/system-build-roadmap.md:49-55`, `docs/papers_notes/index.md:99-109`, `backend/src/association/concept_mapper.py:6-13`, `backend/src/association/concept_mapper.py:88-146` |
