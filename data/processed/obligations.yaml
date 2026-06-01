@@ -15,21 +15,22 @@
   review_status: approved
 - obligation_id: ob_verify_customer_identity
   source_clause_ids:
-  - fatf_rec10_cdd_measures_10_2_core_requirements_a
-  jurisdiction: Global
-  actor: financial_institution
-  action: identify_and_verify
+  - mas626_cdd_mock_001
+  jurisdiction: Singapore
+  actor: bank
+  action: verify
   object: customer_identity
-  applies_to: {}
-  conditions:
-  - cdd_triggered
+  applies_to:
+    customer_type: any
+  conditions: []
   exceptions: []
   required_evidence:
   - reliable_independent_source_documents
   review_flags:
-  - unverifiable_identity_documents
-  confidence: 0.94
-  review_status: approved
+  - unreliable_documents
+  - inconsistent_identity_information
+  confidence: 0.98
+  review_status: pending_human_review
 - obligation_id: ob_identify_ubo_25
   source_clause_ids:
   - fatf_rec10_cdd_measures_10_2_core_requirements_b
@@ -188,3 +189,59 @@
   - pep_without_head_compliance_signoff
   confidence: 0.99
   review_status: approved
+- obligation_id: ob_identify_customer
+  source_clause_ids:
+  - mas626_cdd_mock_001
+  jurisdiction: Singapore
+  actor: bank
+  action: identify
+  object: customer
+  applies_to:
+    customer_type: any
+  conditions: []
+  exceptions: []
+  required_evidence: []
+  review_flags: []
+  confidence: 0.95
+  review_status: pending_human_review
+- obligation_id: ob_identify_beneficial_owner
+  source_clause_ids:
+  - mas626_cdd_mock_002
+  jurisdiction: Singapore
+  actor: bank
+  action: identify
+  object: beneficial_owner
+  applies_to:
+    customer_type: legal_person
+  conditions:
+  - establishment of business relationship
+  - occasional transaction exceeding threshold
+  exceptions: []
+  required_evidence:
+  - ubo_declaration
+  - constitutional_documents
+  review_flags:
+  - complex_ownership_structure
+  confidence: 0.95
+  review_status: pending_human_review
+- obligation_id: ob_verify_beneficial_owner_identity
+  source_clause_ids:
+  - mas626_cdd_mock_002
+  jurisdiction: Singapore
+  actor: bank
+  action: verify_identity
+  object: beneficial_owner
+  applies_to:
+    customer_type: legal_person
+  conditions:
+  - beneficial owner identified
+  - reasonable measures triggered
+  exceptions: []
+  required_evidence:
+  - identity_document
+  - ubo_verification_report
+  review_flags:
+  - discrepancy_in_ubo_info
+  - high_risk_jurisdiction
+  confidence: 0.95
+  review_status: pending_human_review

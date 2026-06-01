@@ -446,3 +446,23 @@
     days.
   citations:
   - mock_internal_policy_s_1_customer_onboarding_standards_1_3_high_risk_reviews_and_escalations_b
+- clause_id: mas626_cdd_mock_001
+  source_document_id: mas_mas_notice_626_2026edition
+  section_ref: Section 6.1 (a)
+  parent_clause_id: null
+  raw_text: A bank shall identify the customer and verify the customer's identity
+    using reliable, independent source documents.
+  normalized_text: a bank shall identify the customer and verify the customer's identity
+    using reliable, independent source documents
+  citations:
+  - MAS Notice 626 Section 6.1(a)
+- clause_id: mas626_cdd_mock_002
+  source_document_id: mas_mas_notice_626_2026edition
+  section_ref: Section 6.2 (b)
+  parent_clause_id: mas626_cdd_mock_001
+  raw_text: The bank shall identify the beneficial owner and take reasonable measures
+    to verify the identity of the beneficial owner.
+  normalized_text: the bank shall identify the beneficial owner and take reasonable
+    measures to verify the identity of the beneficial owner
+  citations:
+  - MAS Notice 626 Section 6.2(b)

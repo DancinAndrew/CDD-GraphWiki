@@ -29,3 +29,13 @@
   source_url: null
   local_path: data/sources/mock_internal_policy.md
   content_hash: 19bdcda2bf2d9380f569fa289a8b39f0
+- source_document_id: mas_mas_notice_626_2026edition
+  title: MAS Notice 626
+  issuer: MAS
+  jurisdiction: Singapore
+  version: 2026 Edition
+  effective_date: null
+  retrieval_date: '2026-05-31'
+  source_url: null
+  local_path: data/processed/sources/mas_mas_notice_626_2026edition.pdf
+  content_hash: 171b182944b83f501355abb5eba45d43

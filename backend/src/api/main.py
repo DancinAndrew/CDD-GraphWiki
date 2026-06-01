@@ -457,6 +457,9 @@ def get_circular_loops():
 
 import re
 
+from src.ingestion.pdf_parser import PDFTextParser
+from src.extraction.llm_extractor import LLMExtractorPipeline
+
 # 用於在記憶體中維護非同步 Ingestion 任務的狀態與日誌
 _ingestion_tasks: Dict[str, Dict[str, Any]] = {}
 

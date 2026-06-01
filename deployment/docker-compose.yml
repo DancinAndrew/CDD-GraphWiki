@@ -26,6 +26,8 @@ services:
       - ../data:/app/data
       - ../backend/tests:/app/tests
       - ../backend/requirements.txt:/app/requirements.txt
+    env_file:
+      - ../.env
     environment:
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
