@@ -23,6 +23,29 @@
 | Repo | `README.md:3-8` 說明本專案不是一般 RAG chatbot，而是 wiki concept pages、regulatory knowledge graph、CDD / EDD checklist、human review log。 |
 | Repo | `docs/SPEC.md:10-12` 定義 product thesis，明確排除 generic upload PDFs and chat RAG app。 |
 
+## 第 15A 頁：系統建構架構圖
+
+這一頁我會放在 demo 前面，先給大家一張鳥瞰圖。剛剛第 15 頁講的是解決方案方向，這一頁則把整個系統是怎麼做出來的，用 Phase 1 到 Phase 10 串起來。
+
+最左邊是 Foundation。這代表我們不是先做 UI，而是先做資料合約、Parser 和義務抽取。也就是先定義 `SourceDocument`、`Clause`、`Obligation`、`CustomerContext`、`Conflict`、`CDDChecklist` 這些結構，再把 PDF 或 Markdown 法規切成 stable clause records，最後抽出 actor、action、condition、evidence 和 review flags。
+
+中間是 Reasoning Core。這一層把前面的 clause 和 obligation 編成知識圖譜，加入衝突檢測，最後接到 CDD 推理引擎。重點是客戶資料不是 prompt，而是 `CustomerContext`；系統用它去對齊法規義務，產出 CDD 或 EDD checklist。
+
+右邊是 Governance & Product。高風險或模糊案件會進 HITL 人工審查，所有推理和覆寫都寫進 SHA-256 hash-chain audit log；Evaluation Harness 用來拆開檢查 retrieval、extraction、reasoning 和 citation；Compliance Dashboard 則是後面 demo 會看到的工作台、審查、日誌、圖譜、導入與使用手冊。最後 NVIDIA NIM 整合是在 ingestion 階段使用 Llama 3.3 做智慧切片、DeepSeek R1 做義務抽取，同時保留 Gemini 和 mock fallback。
+
+所以這張圖要表達的是：CDD-GraphWiki 不是單一模型，也不是 generic PDF RAG chatbot，而是一條從法規文件、結構化資料、圖譜推理，到人工覆核與審計治理的系統鏈。接下來第 16 到 21 頁的 demo，就是把這張圖右半邊的 Dashboard、HITL、Audit、Graph、Ingestion 和 Guide 展示出來。
+
+### 來源證據
+
+| 類型 | 來源 |
+| --- | --- |
+| 圖檔 | `docs/assets/phase_1_10_architecture.png` 是可直接插入簡報的架構圖；`docs/assets/phase_1_10_architecture.svg` 是可編輯版本。 |
+| README | `README.md:42-44` 說明報告用的 Phase 1-10 完成項目：資料合約、Parser、義務抽取、知識圖譜、衝突檢測、CDD 推理引擎、人工審查、Evaluation Harness、Compliance Dashboard、NVIDIA NIM 整合。 |
+| Roadmap | `docs/system-build-roadmap.md:528-678` 定義 Data Contracts、Parser、Obligation Extraction、Regulatory Graph、Conflict、CDD Engine、Evaluation Harness 等 build path。 |
+| 論文來源 | `docs/system-build-roadmap.md:311-324`、`docs/system-build-roadmap.md:326-508`、`docs/papers_notes/index.md:56-129` 說明這些架構不是單一論文，而是多篇論文對不同系統部件的映射。 |
+| Dashboard | `openspec/changes/archive/2026-05-22-create-compliance-dashboard/design.md:7-34` 描述 FastAPI + React Dashboard、人工審查、D3 圖譜與 audit timeline。 |
+| NVIDIA NIM | `openspec/changes/archive/2026-05-22-nvidia-nim-integration/design.md:17-20` 說明 Llama 3.3 chunker、DeepSeek R1 extractor 與環境變數覆寫；`backend/src/extraction/llm_client.py:48-82` 說明 NIM、Gemini、mock fallback。 |
+
 ## 第 16 頁：智能合規工作台
 
 第 16 頁是智能合規工作台。畫面左邊是 5 個典型客戶情境，右邊是某個客戶的 checklist 推理結果。這裡的重點是：輸入不是任意自然語言，而是結構化的 `CustomerContext`，包含客戶類型、司法管轄區、股權層級、UBO 狀態、PEP 曝險、資金來源和財富來源證據。

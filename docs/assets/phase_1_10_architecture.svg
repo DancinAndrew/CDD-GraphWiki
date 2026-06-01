@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="1152" viewBox="0 0 2048 1152">
+<defs><filter id="soft"><feGaussianBlur stdDeviation="0.35"/></filter><marker id="arrowCyan" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M2,2 L10,6 L2,10 Z" fill="#5fe1ff"/></marker><marker id="arrowGold" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth"><path d="M2,2 L10,6 L2,10 Z" fill="#f5be55"/></marker></defs>
+<image href="architecture_background_page15.png" x="0" y="0" width="2048" height="1152" preserveAspectRatio="xMidYMid slice" filter="url(#soft)"/>
+<rect x="0" y="0" width="2048" height="1152" fill="#050e1c" opacity="0.67"/>
+<rect x="78" y="225" width="1892" height="765" rx="34" fill="#041222" opacity="0.82" stroke="#60dbff" stroke-opacity="0.32" stroke-width="3"/>
+<text x="118" y="160" font-size="78" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">架構圖</text>
+<text x="1952" y="145" font-size="30" fill="#b4cfe1" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="500" text-anchor="end">CDD-GraphWiki：從法規文件到可審計 CDD/EDD 決策</text>
+<rect x="110" y="260" width="560" height="660" rx="28" fill="#051d31" opacity="0.70" stroke="#3dd5ff" stroke-opacity="0.55" stroke-width="3"/>
+<text x="138" y="310" font-size="32" fill="#3dd5ff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">Foundation</text>
+<text x="138" y="350" font-size="21" fill="#b4cfe1" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="500" text-anchor="start">從來源到資料合約</text>
+<rect x="138" y="350" width="504" height="132" rx="20" fill="#07253e" opacity="0.88" stroke="#3dd5ff" stroke-opacity="0.78" stroke-width="3"/>
+<rect x="158" y="375" width="68" height="50" rx="16" fill="#3dd5ff" fill-opacity="0.20" stroke="#3dd5ff" stroke-opacity="0.82" stroke-width="2"/>
+<text x="171" y="409" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">P1</text>
+<text x="244" y="392" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">Data Contracts</text>
+<text x="244" y="428" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">SourceDocument / Clause</text>
+<text x="244" y="453" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">Obligation / CustomerContext</text>
+<text x="244" y="478" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">Conflict / CDDChecklist</text>
+<rect x="138" y="516" width="504" height="132" rx="20" fill="#07253e" opacity="0.88" stroke="#3dd5ff" stroke-opacity="0.78" stroke-width="3"/>
+<rect x="158" y="541" width="68" height="50" rx="16" fill="#3dd5ff" fill-opacity="0.20" stroke="#3dd5ff" stroke-opacity="0.82" stroke-width="2"/>
+<text x="171" y="575" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">P2</text>
+<text x="244" y="558" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">Parser / Segmentation</text>
+<text x="244" y="594" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">PDF / Markdown -&gt; stable</text>
+<text x="244" y="619" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">clause records + provenance</text>
+<rect x="138" y="682" width="504" height="132" rx="20" fill="#07253e" opacity="0.88" stroke="#3dd5ff" stroke-opacity="0.78" stroke-width="3"/>
+<rect x="158" y="707" width="68" height="50" rx="16" fill="#3dd5ff" fill-opacity="0.20" stroke="#3dd5ff" stroke-opacity="0.82" stroke-width="2"/>
+<text x="171" y="741" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">P3</text>
+<text x="244" y="724" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">Obligation Extraction</text>
+<text x="244" y="760" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">actor / action / condition</text>
+<text x="244" y="785" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">evidence / review flags</text>
+<line x1="390.0" y1="492" x2="390.0" y2="506" stroke="#3dd5ff" stroke-opacity="0.65" stroke-width="4" marker-end="url(#arrowCyan)"/>
+<line x1="390.0" y1="658" x2="390.0" y2="672" stroke="#3dd5ff" stroke-opacity="0.65" stroke-width="4" marker-end="url(#arrowCyan)"/>
+<rect x="735" y="260" width="560" height="660" rx="28" fill="#051d31" opacity="0.70" stroke="#99acff" stroke-opacity="0.55" stroke-width="3"/>
+<text x="763" y="310" font-size="32" fill="#99acff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">Reasoning Core</text>
+<text x="763" y="350" font-size="21" fill="#b4cfe1" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="500" text-anchor="start">從條文到可推理圖譜</text>
+<rect x="763" y="350" width="504" height="132" rx="20" fill="#07253e" opacity="0.88" stroke="#99acff" stroke-opacity="0.78" stroke-width="3"/>
+<rect x="783" y="375" width="68" height="50" rx="16" fill="#99acff" fill-opacity="0.20" stroke="#99acff" stroke-opacity="0.82" stroke-width="2"/>
+<text x="796" y="409" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">P4</text>
+<text x="869" y="392" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">Knowledge Graph</text>
+<text x="869" y="428" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">typed nodes + edges</text>
+<text x="869" y="453" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">Neo4j / D3 visualization</text>
+<rect x="763" y="516" width="504" height="132" rx="20" fill="#07253e" opacity="0.88" stroke="#99acff" stroke-opacity="0.78" stroke-width="3"/>
+<rect x="783" y="541" width="68" height="50" rx="16" fill="#99acff" fill-opacity="0.20" stroke="#99acff" stroke-opacity="0.82" stroke-width="2"/>
+<text x="796" y="575" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">P5</text>
+<text x="869" y="558" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">Conflict Detection</text>
+<text x="869" y="594" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">conflicts / supersession</text>
+<text x="869" y="619" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">stricter-than relationships</text>
+<rect x="763" y="682" width="504" height="132" rx="20" fill="#07253e" opacity="0.88" stroke="#99acff" stroke-opacity="0.78" stroke-width="3"/>
+<rect x="783" y="707" width="68" height="50" rx="16" fill="#99acff" fill-opacity="0.20" stroke="#99acff" stroke-opacity="0.82" stroke-width="2"/>
+<text x="796" y="741" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">P6</text>
+<text x="869" y="724" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">CDD Engine</text>
+<text x="869" y="760" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">CustomerContext -&gt;</text>
+<text x="869" y="785" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">CDD / EDD checklist</text>
+<line x1="1015.0" y1="492" x2="1015.0" y2="506" stroke="#99acff" stroke-opacity="0.65" stroke-width="4" marker-end="url(#arrowCyan)"/>
+<line x1="1015.0" y1="658" x2="1015.0" y2="672" stroke="#99acff" stroke-opacity="0.65" stroke-width="4" marker-end="url(#arrowCyan)"/>
+<rect x="1360" y="260" width="560" height="660" rx="28" fill="#051d31" opacity="0.70" stroke="#f5be55" stroke-opacity="0.55" stroke-width="3"/>
+<text x="1388" y="310" font-size="32" fill="#f5be55" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">Governance &amp; Product</text>
+<text x="1388" y="350" font-size="21" fill="#b4cfe1" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="500" text-anchor="start">從推理到 demo 工作台</text>
+<rect x="1388" y="350" width="504" height="110" rx="20" fill="#2a2316" opacity="0.88" stroke="#f5be55" stroke-opacity="0.78" stroke-width="3"/>
+<rect x="1408" y="375" width="68" height="50" rx="16" fill="#f5be55" fill-opacity="0.20" stroke="#f5be55" stroke-opacity="0.82" stroke-width="2"/>
+<text x="1421" y="409" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">P7</text>
+<text x="1494" y="392" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">HITL + Audit</text>
+<text x="1494" y="428" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">review queue +</text>
+<text x="1494" y="453" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">SHA-256 hash chain</text>
+<rect x="1388" y="480" width="504" height="110" rx="20" fill="#2a2316" opacity="0.88" stroke="#f5be55" stroke-opacity="0.78" stroke-width="3"/>
+<rect x="1408" y="505" width="68" height="50" rx="16" fill="#f5be55" fill-opacity="0.20" stroke="#f5be55" stroke-opacity="0.82" stroke-width="2"/>
+<text x="1421" y="539" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">P8</text>
+<text x="1494" y="522" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">Evaluation Harness</text>
+<text x="1494" y="558" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">retrieval / extraction</text>
+<text x="1494" y="583" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">reasoning / citation checks</text>
+<rect x="1388" y="610" width="504" height="110" rx="20" fill="#2a2316" opacity="0.88" stroke="#f5be55" stroke-opacity="0.78" stroke-width="3"/>
+<rect x="1408" y="635" width="68" height="50" rx="16" fill="#f5be55" fill-opacity="0.20" stroke="#f5be55" stroke-opacity="0.82" stroke-width="2"/>
+<text x="1421" y="669" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">P9</text>
+<text x="1494" y="652" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">Compliance Dashboard</text>
+<text x="1494" y="688" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">dashboard / review / audit</text>
+<text x="1494" y="713" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">graph / ingestion / guide</text>
+<rect x="1388" y="740" width="504" height="110" rx="20" fill="#2a2316" opacity="0.88" stroke="#5ceead" stroke-opacity="0.78" stroke-width="3"/>
+<rect x="1408" y="765" width="68" height="50" rx="16" fill="#5ceead" fill-opacity="0.20" stroke="#5ceead" stroke-opacity="0.82" stroke-width="2"/>
+<text x="1421" y="799" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">P10</text>
+<text x="1494" y="782" font-size="25" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="700" text-anchor="start">NVIDIA NIM</text>
+<text x="1494" y="818" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">Llama 3.3 chunker</text>
+<text x="1494" y="843" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">DeepSeek R1 extractor</text>
+<text x="1494" y="868" font-size="20" fill="#d6e8f2" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">Gemini / mock fallback</text>
+<line x1="1640.0" y1="470" x2="1640.0" y2="470" stroke="#f5be55" stroke-opacity="0.65" stroke-width="4" marker-end="url(#arrowGold)"/>
+<line x1="1640.0" y1="600" x2="1640.0" y2="600" stroke="#f5be55" stroke-opacity="0.65" stroke-width="4" marker-end="url(#arrowGold)"/>
+<line x1="1640.0" y1="730" x2="1640.0" y2="730" stroke="#5ceead" stroke-opacity="0.65" stroke-width="4" marker-end="url(#arrowCyan)"/>
+<line x1="688" y1="590" x2="711" y2="590" stroke="#5fe1ff" stroke-width="7" marker-end="url(#arrowCyan)"/>
+<text x="570" y="562" font-size="18" fill="#b4cfe1" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">compiled</text>
+<text x="570" y="584" font-size="18" fill="#b4cfe1" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">clauses</text>
+<line x1="1313" y1="590" x2="1336" y2="590" stroke="#f5be55" stroke-width="7" marker-end="url(#arrowGold)"/>
+<text x="1190" y="562" font-size="18" fill="#b4cfe1" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">governed</text>
+<text x="1190" y="584" font-size="18" fill="#b4cfe1" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="start">product</text>
+<rect x="118" y="1012" width="1812" height="70" rx="22" fill="#000000" opacity="0.47" stroke="#5fe1ff" stroke-opacity="0.31"/>
+<text x="148" y="1062" font-size="30" fill="#f5faff" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="600" text-anchor="start">不是 generic PDF RAG chatbot，而是 AML/CDD knowledge compilation + governance demo</text>
+<text x="1930" y="1113" font-size="18" fill="#a6c9d8" font-family="PingFang TC, Noto Sans CJK TC, Arial, sans-serif" font-weight="400" text-anchor="end">Paper roots: ComplianceNLP -&gt; GraphCompliance -&gt; LegalWiz -&gt; LegalBench-RAG / Legal RAG Bench -&gt; RAGulating Compliance</text>
+</svg>
