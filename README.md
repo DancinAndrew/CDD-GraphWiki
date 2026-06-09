@@ -1,128 +1,128 @@
 # CDD-GraphWiki
 
-CDD-GraphWiki is an AI-assisted risk workflow and graph-based knowledge organization project developed for a Technology Risk Management course.
+CDD-GraphWiki 是一個為「科技風險管理」課程開發的專案，結合了 AI 輔助的風險工作流程，以及以圖（graph）為基礎的知識組織方式。
 
-It explores how compliance documents, risk obligations, customer/entity information, review decisions, and audit evidence can be organized into a traceable workflow instead of a generic "upload PDF and chat" application.
+它探討的是：如何把合規文件、風險義務、客戶／實體資訊、審查決策、稽核證據，組織成一條可追溯的工作流程，而不是做成一個通用的「上傳 PDF 然後聊天」的應用。
 
-## 30-Second Summary
+## 30 秒摘要
 
-- **What it is:** a proof-of-concept compliance workflow system for AML / CDD due diligence scenarios.
-- **What it demonstrates:** structured compliance knowledge extraction, graph-based relationship mapping, CDD / EDD checklist generation, human review routing, and tamper-evident audit logs.
-- **Why it matters:** risk and compliance work depends on fragmented documents, requirements, entities, evidence, approvals, and historical decisions. This project shows one way AI and knowledge graphs can support that workflow while keeping human judgment and provenance visible.
-- **Current status:** course final project / working prototype, not a production legal or compliance decision system.
+- **這是什麼：** 一個概念驗證（proof-of-concept）的合規工作流程系統，針對 AML／CDD 盡職調查情境。
+- **它展示了什麼：** 結構化的合規知識萃取、以圖為基礎的關係對應、CDD／EDD 檢查清單生成、人工審查路由，以及防篡改的稽核日誌。
+- **為什麼重要：** 風險與合規工作仰賴大量零散的文件、要求、實體、證據、簽核和歷史決策。這個專案示範了一種做法——讓 AI 與知識圖譜支援這套流程，同時保持「人的判斷」與「來源出處」清楚可見。
+- **目前狀態：** 課程期末專案／可運作的原型，不是正式的法律或合規決策系統。
 
-## Problem
+## 問題
 
-Risk and compliance review often requires searching across fragmented documents, policies, entity records, obligations, and historical review decisions. This creates several practical problems:
+風險與合規審查經常需要在零散的文件、政策、實體紀錄、義務和歷史審查決策之間翻找。這帶來幾個實際的問題：
 
-- information is scattered across documents and systems
-- relationships between entities, documents, risks, obligations, and evidence are hard to track
-- manual lookup slows down compliance review and due diligence workflows
-- teams need explainable, traceable retrieval instead of opaque model answers
-- high-risk decisions still need human review, escalation, and auditability
+- 資訊散落在不同的文件和系統裡
+- 實體、文件、風險、義務和證據之間的關係很難追蹤
+- 人工查找拖慢了合規審查與盡職調查的流程
+- 團隊需要的是可解釋、可追溯的檢索，而不是模型給出的黑箱答案
+- 高風險的決策仍然需要人工審查、上呈與可稽核性
 
-## Solution
+## 解法
 
-CDD-GraphWiki organizes compliance knowledge into structured objects and graph relationships, then uses that structure to support risk review workflows.
+CDD-GraphWiki 把合規知識組織成結構化的物件與圖的關係，再用這套結構去支援風險審查流程。
 
-The prototype pipeline is:
+原型的處理流程如下：
 
-1. Ingest regulatory or policy sources.
-2. Segment sources into stable clause records.
-3. Extract compliance obligations and evidence requirements.
-4. Build a regulatory knowledge graph linking documents, clauses, obligations, customers, conflicts, and checklists.
-5. Generate CDD / EDD checklist outputs from structured customer context.
-6. Route high-risk cases to human-in-the-loop review.
-7. Record reasoning, routing, and reviewer decisions in a tamper-evident SHA-256 audit chain.
+1. 匯入法規或政策來源。
+2. 把來源切分成穩定的條文（clause）紀錄。
+3. 萃取合規義務與證據要求。
+4. 建立一張法規知識圖譜，連結文件、條文、義務、客戶、衝突和檢查清單。
+5. 從結構化的客戶情境（customer context）生成 CDD／EDD 檢查清單。
+6. 把高風險案件路由到人工介入（human-in-the-loop）的審查。
+7. 用防篡改的 SHA-256 雜湊鏈，記錄推理過程、案件路由和審查者的決策。
 
-The goal is not to replace compliance judgment. The goal is to make information retrieval, relationship mapping, review routing, and audit evidence easier to inspect.
+目標不是取代合規判斷，而是讓資訊檢索、關係對應、審查路由和稽核證據更容易被檢視。
 
-## Relevance to Compliance / Risk Management
+## 與合規／風險管理的關聯
 
-The demo domain is AML / CDD, but the design pattern is relevant to broader risk and compliance workflows, including product compliance contexts.
+示範的領域是 AML／CDD，但這套設計模式同樣適用於更廣的風險與合規工作流程，包含產品合規的情境。
 
-Product compliance teams often need to manage:
+產品合規團隊通常需要管理：
 
-- regulatory requirements and standards
-- product requirements and test evidence
-- certification or approval records
-- risk findings and mitigation decisions
-- document-to-product relationships
-- cross-functional review history
+- 法規要求與標準
+- 產品需求與測試證據
+- 認證或核可紀錄
+- 風險發現與緩解決策
+- 文件與產品之間的關聯
+- 跨部門的審查歷史
 
-CDD-GraphWiki demonstrates transferable workflow ideas for these settings:
+CDD-GraphWiki 展示了在這些情境中可以轉移套用的工作流程概念：
 
-- document and requirement retrieval
-- risk evidence organization
-- entity / document / obligation relationship mapping
-- traceable AI-assisted review support
-- human approval boundaries for high-risk decisions
-- audit logs for later review
+- 文件與需求的檢索
+- 風險證據的組織
+- 實體／文件／義務之間的關係對應
+- 可追溯的 AI 輔助審查支援
+- 高風險決策的人工簽核邊界
+- 供日後查閱的稽核日誌
 
-## Key Features
+## 主要功能
 
-- **Structured compliance data contracts:** JSON Schema and Pydantic models for source documents, clauses, obligations, customer contexts, conflicts, checklists, graph nodes, and audit logs.
-- **CDD / EDD decisioning:** rule-based checklist generation from structured customer context, including required documents, risk triggers, citations, conflicts, and human review flags.
-- **Human-in-the-loop review:** review queue for high-risk or ambiguous cases, with reviewer decisions and notes captured through FastAPI validation.
-- **Tamper-evident audit trail:** SHA-256 hash-chain logging for reasoning, case routing, and reviewer overrides.
-- **Regulatory graph visualization:** D3-based interactive graph linking source documents, clauses, obligations, conflicts, customers, and generated checklists.
-- **Neo4j graph support:** optional graph database synchronization and Cypher-based UBO ownership traversal / loop detection.
-- **PDF ingestion workflow:** PDF upload, text extraction, LLM-assisted clause chunking, structured obligation extraction, YAML merge, cache refresh, and graph/checklist update.
-- **Evaluation and governance artifacts:** gold datasets, evaluation harness, OpenSpec requirements, ADRs, and system roadmap documents.
+- **結構化的合規資料契約：** 以 JSON Schema 和 Pydantic 模型定義來源文件、條文、義務、客戶情境、衝突、檢查清單、圖節點和稽核日誌。
+- **CDD／EDD 決策：** 以規則為基礎，從結構化的客戶情境生成檢查清單，包含所需文件、風險觸發條件、引用出處、衝突，以及人工審查標記。
+- **人工介入審查：** 針對高風險或不明確的案件提供審查佇列，審查者的決策與註記都透過 FastAPI 驗證後記錄下來。
+- **防篡改稽核軌跡：** 用 SHA-256 雜湊鏈記錄推理過程、案件路由和審查者的覆寫。
+- **法規圖譜視覺化：** 以 D3 製作的互動式圖，連結來源文件、條文、義務、衝突、客戶和生成的檢查清單。
+- **Neo4j 圖資料庫支援：** 可選的圖資料庫同步，以及用 Cypher 進行 UBO 股權穿透追蹤／循環偵測。
+- **PDF 匯入工作流程：** PDF 上傳、文字萃取、LLM 輔助的條文切塊、結構化義務萃取、YAML 合併、快取刷新，以及圖譜／檢查清單更新。
+- **評估與治理產出物：** 黃金資料集（gold dataset）、評估工具（evaluation harness）、OpenSpec 需求、ADR，以及系統路線圖文件。
 
-## Demo And Visual Assets
+## Demo 與視覺素材
 
-The live demo is available after running the app locally:
+在本機跑起應用後，即可使用線上 demo：
 
-- Frontend dashboard: `http://localhost:3000`
-- Backend API docs: `http://localhost:8000/docs`
-- Neo4j Browser: `http://localhost:7474`
+- 前端儀表板：`http://localhost:3000`
+- 後端 API 文件：`http://localhost:8000/docs`
+- Neo4j Browser：`http://localhost:7474`
 
-Existing visual assets:
+既有的視覺素材：
 
 ![Phase 1-10 Architecture](docs/assets/phase_1_10_architecture.png)
 
-- Architecture diagram: [`docs/assets/phase_1_10_architecture.png`](docs/assets/phase_1_10_architecture.png)
-- Future development direction preview: [`docs/assets/future_development_direction_preview.png`](docs/assets/future_development_direction_preview.png)
-- Demo narration for slides/pages 15-21: [`docs/presentation_script_pages_15_21.md`](docs/presentation_script_pages_15_21.md)
+- 架構圖：[`docs/assets/phase_1_10_architecture.png`](docs/assets/phase_1_10_architecture.png)
+- 未來發展方向預覽：[`docs/assets/future_development_direction_preview.png`](docs/assets/future_development_direction_preview.png)
+- 投影片／第 15-21 頁的 demo 解說：[`docs/presentation_script_pages_15_21.md`](docs/presentation_script_pages_15_21.md)
 
-The project slides include the fuller dashboard walkthrough, including the dashboard, review queue, audit timeline, graph view, ingestion console, and user guide.
+專案投影片包含更完整的儀表板導覽，涵蓋儀表板、審查佇列、稽核時間軸、圖譜檢視、匯入主控台和使用者指南。
 
-## Screenshots
+## 畫面截圖
 
-These are screenshots of the working demo. Each page handles one step of the compliance review workflow.
+以下是實際運作 demo 的截圖。每個頁面負責合規審查流程中的一個步驟。
 
-### 1. Compliance Dashboard
+### 1. 合規儀表板（Compliance Dashboard）
 
-![Compliance dashboard](images/01-dashboard.png)
+![合規儀表板](images/01-dashboard.png)
 
-The home page. It shows a quick summary at the top (how many customers, how many cases need a person to look at them, how many are done). You pick a customer from the list on the left, and the system automatically generates a checklist of what documents and checks are required for that customer — including which official rule each item comes from.
+首頁。最上方顯示一個快速摘要（有多少客戶、有多少案件需要人來看、有多少已經處理完）。你從左邊的清單挑一個客戶，系統就會自動產生一份檢查清單——列出這個客戶需要哪些文件和檢查，並標出每一項是出自哪一條官方法規。
 
-### 2. Human Review Queue
+### 2. 人工審查佇列（Human Review Queue）
 
-![Human review queue](images/02-review-queue.png)
+![人工審查佇列](images/02-review-queue.png)
 
-When a case is risky or unclear, the system does not decide on its own — it sends the case here for a real person to review. The reviewer reads the case, picks a decision (approve, ask for deeper checks, or reject), writes a note explaining why, and submits. This keeps a human in control of the important calls.
+當案件有風險或不明確時，系統不會自己下決定，而是把案件送到這裡讓真人來審查。審查者讀完案件後，挑一個決定（核准、要求更深入的查核，或駁回），寫下說明理由的註記，然後送出。這讓重要的決定始終由人來掌控。
 
-### 3. Audit Trail
+### 3. 稽核軌跡（Audit Trail）
 
-![Tamper-evident audit trail](images/03-audit-trail.png)
+![防篡改稽核軌跡](images/03-audit-trail.png)
 
-A complete history log of everything that happened — every decision and every review, in order. Each entry is locked together using a digital "fingerprint" (hash) chain, so if anyone tried to secretly change an old record, it would be obvious. This is the proof you can show later that the process was followed correctly.
+一份完整的歷史紀錄——所有發生過的事、每一個決定、每一次審查，按順序排列。每一筆紀錄都用數位「指紋」（雜湊）鏈鎖在一起，所以如果有人想偷偷竄改舊紀錄，馬上就會被發現。這就是你日後可以拿出來證明「流程確實有照規矩走」的依據。
 
-### 4. Knowledge Graph View
+### 4. 知識圖譜檢視（Knowledge Graph View）
 
-![Regulatory knowledge graph](images/04-graph-view.png)
+![法規知識圖譜](images/04-graph-view.png)
 
-An interactive map showing how everything connects — rules, documents, customers, requirements, and the generated checklists are drawn as dots, with lines showing how they relate. Instead of digging through separate files, you can see the whole picture and trace where any requirement came from.
+一張互動式的地圖，呈現所有東西怎麼連在一起——法規、文件、客戶、要求和生成的檢查清單都畫成圓點，再用線標出彼此的關係。你不必在一堆分散的檔案裡翻找，就能看到全貌，並追溯任何一項要求是從哪裡來的。
 
-### 5. Regulation Ingestion Console
+### 5. 法規匯入主控台（Regulation Ingestion Console）
 
-![PDF ingestion console](images/05-ingestion.png)
+![PDF 匯入主控台](images/05-ingestion.png)
 
-Where new regulations get added to the system. You upload an official rule document (a PDF), and the system reads it, breaks it into clauses, and pulls out the obligations automatically. The panel on the right shows live progress as it processes the file.
+把新法規加進系統的地方。你上傳一份官方法規文件（PDF），系統會讀取它、把它切成一條條條文，並自動抽出其中的義務。右邊的面板會即時顯示處理檔案的進度。
 
-## System Architecture
+## 系統架構
 
 ```text
 Source PDFs / Markdown / Policies
@@ -149,32 +149,32 @@ Human review queue + tamper-evident audit log
 React dashboard, D3 graph view, FastAPI endpoints, optional Neo4j queries
 ```
 
-Important design boundary: the system treats customer input as structured `CustomerContext`, not as an unconstrained prompt. High-risk decisions are routed to human review.
+重要的設計邊界：系統把客戶輸入當成結構化的 `CustomerContext` 來處理，而不是當成不受限制的 prompt。高風險的決策一律路由到人工審查。
 
-## Tech Stack
+## 技術堆疊
 
-- **Frontend:** React 18, TypeScript, Vite, D3, lucide-react
-- **Backend:** Python, FastAPI, Pydantic, PyYAML, jsonschema
-- **Ingestion:** pypdf, PDF text extraction, structured clause and obligation extraction
-- **Graph:** in-memory regulatory graph builder, D3 visualization, optional Neo4j Community Edition
-- **AI / LLM:** NVIDIA NIM support, Gemini fallback, mock fallback for tests and demos
-- **Data:** YAML gold datasets, processed datasets, JSON Schema contracts
-- **Testing:** pytest backend tests, evaluation harness, sample schema examples
-- **Deployment:** Docker, Docker Compose
-- **Governance:** OpenSpec specs/changes and ADR decision records
+- **前端：** React 18、TypeScript、Vite、D3、lucide-react
+- **後端：** Python、FastAPI、Pydantic、PyYAML、jsonschema
+- **匯入：** pypdf、PDF 文字萃取、結構化的條文與義務萃取
+- **圖：** 記憶體內的法規圖建構器、D3 視覺化、可選的 Neo4j Community Edition
+- **AI／LLM：** 支援 NVIDIA NIM、Gemini 後備方案、供測試與 demo 用的 mock 後備方案
+- **資料：** YAML 黃金資料集、處理後資料集、JSON Schema 契約
+- **測試：** pytest 後端測試、評估工具、範例 schema
+- **部署：** Docker、Docker Compose
+- **治理：** OpenSpec 規格／變更，以及 ADR 決策紀錄
 
-## Project Materials
+## 專案資料
 
-- Paper / written report: [Google Docs](https://docs.google.com/document/d/18sSEPHwYYoJUjvCJkYucqSJ-gF9ndiVysm-VFIubL8g/edit?tab=t.0)
-- Presentation slides: [Google Slides](https://docs.google.com/presentation/d/1fYlCTjPTBb8Kf8QJfHVWZ1CbFYJCz8LnEv-pMoTzKeQ/edit?slide=id.g3ec91351360_1_53#slide=id.g3ec91351360_1_53)
-- Product/spec thesis: [`docs/SPEC.md`](docs/SPEC.md)
-- System roadmap: [`docs/system-build-roadmap.md`](docs/system-build-roadmap.md)
-- Architecture decisions: [`docs/adr/`](docs/adr/)
-- OpenSpec contracts: [`openspec/`](openspec/)
+- 論文／書面報告：[Google Docs](https://docs.google.com/document/d/18sSEPHwYYoJUjvCJkYucqSJ-gF9ndiVysm-VFIubL8g/edit?tab=t.0)
+- 簡報投影片：[Google Slides](https://docs.google.com/presentation/d/1fYlCTjPTBb8Kf8QJfHVWZ1CbFYJCz8LnEv-pMoTzKeQ/edit?slide=id.g3ec91351360_1_53#slide=id.g3ec91351360_1_53)
+- 產品／規格論述：[`docs/SPEC.md`](docs/SPEC.md)
+- 系統路線圖：[`docs/system-build-roadmap.md`](docs/system-build-roadmap.md)
+- 架構決策：[`docs/adr/`](docs/adr/)
+- OpenSpec 契約：[`openspec/`](openspec/)
 
-## How To Run
+## 如何執行
 
-### Option A: Run With Docker Compose
+### 方式 A：用 Docker Compose 執行
 
 ```bash
 git clone https://github.com/DancinAndrew/CDD-GraphWiki.git
@@ -183,19 +183,19 @@ cp .env.example .env
 docker compose -f deployment/docker-compose.yml up --build
 ```
 
-Then open:
+接著打開：
 
-- Frontend: `http://localhost:3000`
-- Backend API docs: `http://localhost:8000/docs`
-- Neo4j Browser: `http://localhost:7474`
-  - username: `neo4j`
-  - password: `testpassword123`
+- 前端：`http://localhost:3000`
+- 後端 API 文件：`http://localhost:8000/docs`
+- Neo4j Browser：`http://localhost:7474`
+  - 帳號：`neo4j`
+  - 密碼：`testpassword123`
 
-The default `.env.example` contains placeholder AI keys. Core demo data and many workflows can still be inspected without real model keys; real PDF ingestion with LLM extraction requires a configured provider key.
+預設的 `.env.example` 裡放的是佔位用的 AI 金鑰。即使沒有真正的模型金鑰，核心 demo 資料和許多工作流程仍然可以檢視；但要做真正的 PDF 匯入（含 LLM 萃取）就需要設定好的供應商金鑰。
 
-### Option B: Run Backend And Frontend Separately
+### 方式 B：後端與前端分開執行
 
-Backend:
+後端：
 
 ```bash
 python3 -m venv .venv
@@ -204,7 +204,7 @@ pip install -r backend/requirements.txt
 PYTHONPATH=backend uvicorn src.api.main:app --reload --port 8000
 ```
 
-Frontend:
+前端：
 
 ```bash
 cd frontend
@@ -212,47 +212,47 @@ npm install
 npm run dev -- --host 0.0.0.0 --port 3000
 ```
 
-Neo4j is optional for the basic demo. If Neo4j is unavailable, the API falls back to in-memory behavior for several graph workflows.
+基本 demo 不一定要 Neo4j。如果 Neo4j 不可用，API 會在數個圖工作流程上退回（fallback）到記憶體內的行為。
 
-## Repository Guide
+## 專案目錄導覽
 
-- [`backend/`](backend/) - FastAPI service, data contracts, decision engine, audit manager, graph builder, ingestion, evaluation, and tests
-- [`frontend/`](frontend/) - React dashboard with compliance overview, review queue, audit timeline, regulatory graph, ingestion console, and user guide
-- [`data/gold/`](data/gold/) - manual gold dataset for source documents, clauses, obligations, customers, checklists, and conflicts
-- [`data/processed/`](data/processed/) - generated or merged runtime data, including processed source documents and audit logs
-- [`schemas/`](schemas/) - JSON Schema contracts and examples
-- [`docs/`](docs/) - product spec, roadmap, ADRs, paper notes, presentation support, and visual assets
-- [`openspec/`](openspec/) - requirement specs and archived implementation changes
-- [`deployment/`](deployment/) - Docker and Docker Compose configuration
+- [`backend/`](backend/) - FastAPI 服務、資料契約、決策引擎、稽核管理器、圖建構器、匯入、評估和測試
+- [`frontend/`](frontend/) - React 儀表板，包含合規總覽、審查佇列、稽核時間軸、法規圖譜、匯入主控台和使用者指南
+- [`data/gold/`](data/gold/) - 人工整理的黃金資料集，涵蓋來源文件、條文、義務、客戶、檢查清單和衝突
+- [`data/processed/`](data/processed/) - 生成或合併後的執行期資料，包含處理後的來源文件和稽核日誌
+- [`schemas/`](schemas/) - JSON Schema 契約與範例
+- [`docs/`](docs/) - 產品規格、路線圖、ADR、論文筆記、簡報支援素材和視覺素材
+- [`openspec/`](openspec/) - 需求規格與封存的實作變更
+- [`deployment/`](deployment/) - Docker 與 Docker Compose 設定
 
-## Example Workflow
+## 範例工作流程
 
-1. Open the dashboard and inspect available customer contexts.
-2. Select a customer to view generated CDD / EDD checklist output.
-3. Inspect required documents, risk triggers, applicable obligations, and citations.
-4. Open the review queue for cases requiring human approval.
-5. Submit a reviewer decision and notes.
-6. Verify that the audit timeline records the reasoning and review event.
-7. Open the graph view to inspect relationships among documents, clauses, obligations, customers, conflicts, and checklists.
-8. Optionally upload a regulatory PDF through the ingestion console and monitor extraction progress.
+1. 打開儀表板，檢視可用的客戶情境。
+2. 選一個客戶，查看生成的 CDD／EDD 檢查清單。
+3. 檢視所需文件、風險觸發條件、適用義務和引用出處。
+4. 打開審查佇列，查看需要人工簽核的案件。
+5. 送出審查者的決策與註記。
+6. 確認稽核時間軸有記錄下推理過程與審查事件。
+7. 打開圖譜檢視，檢視文件、條文、義務、客戶、衝突和檢查清單之間的關係。
+8. （選用）透過匯入主控台上傳一份法規 PDF，並監看萃取進度。
 
-## Current Limitations
+## 目前的限制
 
-- This is a prototype for a course project, not production legal advice or a deployed compliance platform.
-- The primary demo corpus is AML / CDD oriented, not a product compliance corpus.
-- The CDD decision layer is intentionally constrained and rule-driven for explainability.
-- LLM extraction depends on configured provider keys for real PDF ingestion.
-- More rigorous retrieval evaluation, human annotation, access control, and production governance would be needed before real compliance use.
+- 這是課程專案的原型，不是正式的法律意見，也不是已部署的合規平台。
+- 主要的 demo 語料偏向 AML／CDD，不是產品合規的語料。
+- CDD 決策層刻意設計得受限且以規則驅動，以換取可解釋性。
+- 真正的 PDF 匯入時，LLM 萃取仰賴設定好的供應商金鑰。
+- 在真正用於合規之前，還需要更嚴謹的檢索評估、人工標註、存取控制和正式的治理機制。
 
-## Future Improvements
+## 未來改進
 
-- Extend the corpus from AML / CDD examples to product compliance standards, product requirement documents, certification evidence, and test reports.
-- Add evidence-grade retrieval with hybrid BM25, dense retrieval, GraphRAG, and character-span citation support.
-- Expand graph reasoning for product-to-requirement, requirement-to-test, and risk-to-evidence traceability.
-- Strengthen conflict and gap adjudication with NLI, LLM-assisted contradiction detection, and explicit human resolution workflows.
-- Add role-based access control, reviewer permissions, and production deployment hardening.
-- Build a richer screenshot/demo asset folder for quick recruiter and hiring-manager review.
+- 把語料從 AML／CDD 範例擴展到產品合規標準、產品需求文件、認證證據和測試報告。
+- 加入證據等級的檢索，結合 BM25、密集檢索（dense retrieval）、GraphRAG，以及字元級（character-span）的引用支援。
+- 擴展圖推理，支援產品對需求、需求對測試、風險對證據的可追溯性。
+- 強化衝突與落差的裁決，導入 NLI、LLM 輔助的矛盾偵測，以及明確的人工解決流程。
+- 加入角色式存取控制（RBAC）、審查者權限，以及正式部署的強化。
+- 建立更豐富的截圖／demo 素材資料夾，方便招募者與用人主管快速檢視。
 
-## Disclaimer
+## 免責聲明
 
-CDD-GraphWiki is a learning and prototype project. It is intended to demonstrate AI-assisted compliance workflow design, graph-based knowledge organization, and auditability patterns. It should not be used as legal, regulatory, financial, or production compliance advice.
+CDD-GraphWiki 是一個學習與原型專案，目的是示範 AI 輔助的合規工作流程設計、以圖為基礎的知識組織，以及可稽核性的模式。它不應被當作法律、法規、財務或正式合規的建議使用。
