@@ -1,0 +1,117 @@
+- clause_id: mas_notice_626_6_cdd_6_14a
+  types:
+  - verify_customer
+- clause_id: mas_notice_626_6_cdd_6_14a_a
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_a_i
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_a_ii
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_a_iii
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_a_iv
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_a_v
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_b
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_b_i
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_b_ii
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_b_iii
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_b_iv
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_b_v
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_b_vi
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_b_vii
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_b_viii
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14a_b_ix
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_14c_b
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_16
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_16_a
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_16_b
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_16_b_i
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_16_b_ii
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_16_c
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_16_d
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_16_e
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_16_e_i
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_6_cdd_6_16_e_ii
+  types:
+  - identify_ubo
+- clause_id: mas_notice_626_8_enhanced_cdd_8_4_a
+  types:
+  - pep_edd
+- clause_id: mas_notice_626_8_enhanced_cdd_8_4_b
+  types:
+  - pep_edd
+- clause_id: mas_notice_626_8_enhanced_cdd_8_4_c
+  types:
+  - pep_edd
+- clause_id: mas_notice_626_10_correspondent_banking_10_3
+  types:
+  - cdd_triggers
+- clause_id: mas_notice_626_10_correspondent_banking_10_3_a
+  types:
+  - cdd_triggers
+- clause_id: mas_notice_626_10_correspondent_banking_10_3_a_i
+  types:
+  - cdd_triggers
+- clause_id: mas_notice_626_10_correspondent_banking_10_3_a_ii
+  types:
+  - cdd_triggers
+- clause_id: mas_notice_626_10_correspondent_banking_10_3_a_iii
+  types:
+  - cdd_triggers
+- clause_id: mas_notice_626_10_correspondent_banking_10_3_b
+  types:
+  - cdd_triggers
+- clause_id: mas_notice_626_10_correspondent_banking_10_3_c
+  types:
+  - cdd_triggers
+- clause_id: mas_notice_626_13_personal_data_13_3_a_ii
+  types:
+  - identify_ubo

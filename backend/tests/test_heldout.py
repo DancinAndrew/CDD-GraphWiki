@@ -1,0 +1,128 @@
+"""
+Held-out evaluation on the full MAS Notice 626: the corpus is a faithful conversion of the official PDF,
+the gold labels only touch held-out clauses, and the committed scores can be recomputed exactly.
+"""
+import json
+import re
+from collections import Counter
+from pathlib import Path
+
+import pytest
+import yaml
+
+from src.heldout import convert, evaluate, llm_compare
+from src.ingestion.parser import SemanticHierarchicalSegmenter
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DATA_DIR = str(REPO_ROOT / "data")
+PDF = REPO_ROOT / "data" / "sources" / "official" / "mas_notice_626.pdf"
+FULL_TEXT = REPO_ROOT / "data" / "heldout" / "sources" / "mas_notice_626.md"
+RESULTS = REPO_ROOT / "data" / "heldout" / "results"
+LLM_RUN = REPO_ROOT / "data" / "heldout" / "llm_runs" / f"{llm_compare.model_slug(llm_compare.DEFAULT_MODEL)}.jsonl"
+
+
+def _squash(text: str) -> str:
+    return re.sub(r"\s+", "", text).replace("–", "-")
+
+
+def _found_across_page_breaks(line: str, official: str, max_gap: int = 2500) -> bool:
+    """
+    True when the line appears in the PDF text in order, allowing a gap where a paragraph runs over a page
+    break (the plain PDF text puts the page number and footnotes there). Each piece must be at least 8 characters.
+    """
+    rest, start, window_end = line, 0, len(official)
+    while rest:
+        window = official[start:window_end]
+        lo, hi = 0, len(rest)
+        while lo < hi:  # longest prefix of `rest` that occurs in the window
+            mid = (lo + hi + 1) // 2
+            if rest[:mid] in window:
+                lo = mid
+            else:
+                hi = mid - 1
+        if lo < min(8, len(rest)):
+            return False
+        start = start + window.index(rest[:lo]) + lo
+        rest = rest[lo:]
+        window_end = start + max_gap
+    return True
+
+
+@pytest.fixture(scope="module")
+def corpus():
+    return evaluate.load_corpus(DATA_DIR)
+
+
+def test_full_text_is_the_committed_conversion_of_the_official_pdf():
+    assert convert.convert(str(PDF)) == FULL_TEXT.read_text(encoding="utf-8")
+
+
+def test_full_text_lines_are_verbatim_from_the_official_pdf():
+    from pypdf import PdfReader
+    official = _squash(" ".join(page.extract_text() or "" for page in PdfReader(str(PDF)).pages))
+    body = [ln.strip() for ln in FULL_TEXT.read_text(encoding="utf-8").splitlines()
+            if ln.strip() and not ln.lstrip().startswith(("#", ">"))]
+    body = [re.sub(r"^\(([a-z]{1,2}|[ivx]+|[A-Z])\)\s+", "", ln) for ln in body]
+    assert len(body) > 300
+    missing = [ln[:80] for ln in body if not _found_across_page_breaks(_squash(ln), official)]
+    assert missing == [], f"Lines not found in the official PDF text: {missing}"
+
+
+def test_full_text_has_every_numbered_paragraph_and_unique_clause_ids():
+    markdown = FULL_TEXT.read_text(encoding="utf-8")
+    assert len(re.findall(r"^### \d", markdown, flags=re.M)) == 167
+    _, clauses = SemanticHierarchicalSegmenter("mas_notice_626").parse(markdown)
+    duplicates = [cid for cid, n in Counter(c.clause_id for c in clauses).items() if n > 1]
+    assert duplicates == []
+
+
+def test_development_clauses_keep_their_ids_in_the_full_text(corpus):
+    dev_ids = [c["clause_id"] for c in yaml.safe_load((REPO_ROOT / "data" / "gold" / "clauses.yaml").read_text())
+               if c["source_document_id"] == "mas_notice_626"]
+    full_ids = {c.clause_id for c in corpus.clauses}
+    assert dev_ids and set(dev_ids) <= full_ids
+
+
+def test_held_out_set_excludes_every_development_paragraph(corpus):
+    held_paragraphs = {corpus.paragraph_of[c.clause_id] for c in corpus.held_out}
+    assert held_paragraphs.isdisjoint(corpus.development_paragraphs)
+    assert len(held_paragraphs) == 157
+
+
+def test_gold_labels_cover_only_held_out_clauses(corpus):
+    labelled = {cid: types for cid, types in corpus.gold.items() if types}
+    assert len(labelled) == 42
+    assert all(types <= set(corpus.types) for types in labelled.values())
+
+
+def test_rule_scores_match_the_committed_report(corpus, tmp_path):
+    summary = evaluate.run(DATA_DIR, str(tmp_path))
+    committed = json.loads((RESULTS / "rules_summary.json").read_text())
+    assert summary == committed
+    assert (tmp_path / "rules_report.txt").read_text() == (RESULTS / "rules_report.txt").read_text()
+
+
+def test_llm_scores_can_be_recomputed_offline_from_cached_answers(tmp_path):
+    summary = llm_compare.score_cached(DATA_DIR, str(LLM_RUN), str(tmp_path))
+    slug = LLM_RUN.stem
+    committed = json.loads((RESULTS / f"llm_{slug}_summary.json").read_text())
+    assert summary == committed
+    assert summary["requests"]["paragraphs_sent"] == 157
+
+
+def test_answers_citing_clause_ids_that_were_not_sent_are_counted_not_scored(corpus, tmp_path):
+    first = llm_compare.paragraph_units(corpus)[0]
+    run = tmp_path / "fake.jsonl"
+    answer = {"labels": [{"clause_id": first["clause_ids"][0], "types": ["cdd_triggers"]},
+                         {"clause_id": "mas_notice_626_99_invented", "types": ["cdd_triggers"]}]}
+    run.write_text(json.dumps({"paragraph": first["paragraph"], "model": "fake",
+                               "response": "```json\n" + json.dumps(answer) + "\n```"}) + "\n")
+    loaded = llm_compare.load_answers(str(run), corpus)
+    assert loaded["stats"]["invalid_clause_ids"] == [f"{first['paragraph']}: mas_notice_626_99_invented"]
+    assert loaded["predictions"][first["clause_ids"][0]] == {"cdd_triggers"}
+    assert "mas_notice_626_99_invented" not in loaded["predictions"]
+
+
+def test_parse_answer_ignores_reasoning_and_code_fences():
+    content = "<think>maybe 6.1</think>Here you go:\n```json\n{\"labels\": []}\n```"
+    assert llm_compare.parse_answer(content) == {"labels": []}
