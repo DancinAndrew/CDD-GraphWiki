@@ -134,3 +134,75 @@ def test_answers_citing_clause_ids_that_were_not_sent_are_counted_not_scored(cor
 def test_parse_answer_ignores_reasoning_and_code_fences():
     content = "<think>maybe 6.1</think>Here you go:\n```json\n{\"labels\": []}\n```"
     assert llm_compare.parse_answer(content) == {"labels": []}
+
+
+# --- UK Money Laundering Regulations 2017, Part 3: the second held-out set, unseen by both rule versions ------
+
+UK_XML = REPO_ROOT / "data" / "heldout" / "sources" / "official" / "uk_mlr_2017_part_3.xml"
+UK_TEXT = REPO_ROOT / "data" / "heldout" / "sources" / "uk_mlr_2017.md"
+UK_RESULTS = REPO_ROOT / "data" / "heldout" / "results" / "uk_mlr_2017"
+
+
+def _found_in_order(line: str, reference: str, max_gap: int = 8) -> bool:
+    """The line's characters occur in the reference in order, with gaps of at most `max_gap` characters
+    (where the reference has a sub-paragraph number that the converted text writes differently)."""
+    rest, start, first = line, 0, True
+    while rest:
+        lo, hi, found_at = 0, len(rest), -1
+        while lo < hi:
+            mid = (lo + hi + 1) // 2
+            end = len(reference) if first else start + max_gap + mid
+            at = reference.find(rest[:mid], start, end)
+            if at != -1:
+                lo, found_at = mid, at
+            else:
+                hi = mid - 1
+        if lo < min(8, len(rest)):
+            return False
+        start, rest, first = found_at + lo, rest[lo:], False
+    return True
+
+
+@pytest.fixture(scope="module")
+def uk_corpus():
+    return evaluate.load_corpus(DATA_DIR, "uk_mlr_2017")
+
+
+def test_uk_text_is_the_committed_conversion_of_the_official_xml():
+    from src.heldout import convert_uk
+    assert convert_uk.convert(str(UK_XML)) == UK_TEXT.read_text(encoding="utf-8")
+
+
+def test_uk_text_lines_are_verbatim_from_the_official_xml():
+    import xml.etree.ElementTree as ET
+    ns = "{http://www.legislation.gov.uk/namespaces/legislation}"
+    body = ET.parse(str(UK_XML)).getroot().find(f".//{ns}Body")
+
+    def words(el):
+        if el.tag in (f"{ns}CommentaryRef", f"{ns}Commentary"):
+            return el.tail or ""
+        return (el.text or "") + "".join(words(child) for child in el) + (el.tail or "")
+
+    reference = _squash(words(body))
+    lines = [ln.strip() for ln in UK_TEXT.read_text(encoding="utf-8").splitlines()
+             if ln.strip() and not ln.lstrip().startswith(("#", ">"))]
+    lines = [re.sub(r"^\(([a-z]{1,2}|[ivx]+)\)\s+", "", ln) for ln in lines]
+    # deeper levels such as "(aa)" are kept inline by the converter; the XML numbers them "aa" without brackets
+    lines = [re.sub(r"\((?:[a-z]{2}|[ivx]{2,4})\)\s", "", ln) for ln in lines]
+    assert len(lines) > 300
+    missing = [ln[:80] for ln in lines if not _found_in_order(_squash(ln), reference)]
+    assert missing == [], f"Lines not found in the legislation.gov.uk XML: {missing}"
+
+
+def test_uk_set_is_fully_held_out_and_labels_point_at_its_clauses(uk_corpus):
+    assert uk_corpus.development_paragraphs == []
+    assert len({uk_corpus.paragraph_of[c.clause_id] for c in uk_corpus.held_out}) == 137
+    assert sum(1 for types in uk_corpus.gold.values() if types) == 75
+
+
+def test_uk_rule_scores_match_the_committed_report(tmp_path):
+    summary = evaluate.run_set(DATA_DIR, "uk_mlr_2017", str(tmp_path))
+    assert summary == json.loads((UK_RESULTS / "rules_summary.json").read_text())
+    for version in ("rules_v1", "rules_v2"):
+        assert (tmp_path / f"{version}_report.txt").read_text() == (UK_RESULTS / f"{version}_report.txt").read_text()
+    assert summary["rules_v1"]["paragraph"]["overall"]["tp"] == 0  # v1 has no profile for the United Kingdom

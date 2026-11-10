@@ -25,6 +25,7 @@ jobs:
       - name: Rebuild the held-out corpus and scores and check they match the commit
         run: |
           PYTHONPATH=backend python -m src.heldout.convert
+          PYTHONPATH=backend python -m src.heldout.convert_uk
           PYTHONPATH=backend python -m src.heldout.evaluate
           PYTHONPATH=backend python -m src.heldout.llm_compare score
           git diff --exit-code -- data/heldout

@@ -1,0 +1,178 @@
+Rule-based extractor v1 (frozen, written against the development excerpts) on held-out Part 3 of the UK Money Laundering Regulations 2017 paragraphs
+====================================================================================================================================================
+
+Corpus: 137 numbered paragraphs (443 clause records) of Part 3 of the UK Money Laundering Regulations 2017; 0 development paragraphs excluded.
+Held out: 137 paragraphs, 429 clauses; 75 clauses in 30 paragraphs carry one of the modelled types.
+Held-out clauses containing 'shall' or 'must': 74.
+v1 has no rule profiles for United Kingdom, so it labels nothing here. Treating the text as another jurisdiction to give it its best chance:
+  as Global: paragraph level found 3/32, precision 0.30 (FP 7)
+  as Singapore: paragraph level found 3/32, precision 0.50 (FP 3)
+
+Paragraph level (unit, type) pairs: precision 0.00, recall 0.00, F1 0.00  (TP 0, FP 0, FN 32)
+  prohibit_anonymous   P 0.00  R 0.00  (TP 0, FP 0, FN 1)
+  cdd_triggers         P 0.00  R 0.00  (TP 0, FP 0, FN 13)
+  verify_customer      P 0.00  R 0.00  (TP 0, FP 0, FN 4)
+  identify_ubo         P 0.00  R 0.00  (TP 0, FP 0, FN 8)
+  pep_edd              P 0.00  R 0.00  (TP 0, FP 0, FN 4)
+  cdd_incomplete       P 0.00  R 0.00  (TP 0, FP 0, FN 2)
+
+Clause level (unit, type) pairs: precision 0.00, recall 0.00, F1 0.00  (TP 0, FP 0, FN 77)
+  prohibit_anonymous   P 0.00  R 0.00  (TP 0, FP 0, FN 1)
+  cdd_triggers         P 0.00  R 0.00  (TP 0, FP 0, FN 25)
+  verify_customer      P 0.00  R 0.00  (TP 0, FP 0, FN 14)
+  identify_ubo         P 0.00  R 0.00  (TP 0, FP 0, FN 20)
+  pep_edd              P 0.00  R 0.00  (TP 0, FP 0, FN 11)
+  cdd_incomplete       P 0.00  R 0.00  (TP 0, FP 0, FN 6)
+
+Disagreements with the gold labels (75 clauses):
+- 27(1)   uk_mlr_2017_27_cdd_27_1: missed cdd_triggers
+    "A relevant person must apply customer due diligence measures if the person—"
+- 27(1)   uk_mlr_2017_27_cdd_27_1_a: missed cdd_triggers
+    "(a) establishes a business relationship;"
+- 27(1)   uk_mlr_2017_27_cdd_27_1_b: missed cdd_triggers
+    "(b) carries out an occasional transaction that amounts to a transfer of funds within the meaning of Article 3.9 of the funds transfer regulation exceeding £800;"
+- 27(1)   uk_mlr_2017_27_cdd_27_1_c: missed cdd_triggers
+    "(c) suspects money laundering or terrorist financing; or"
+- 27(1)   uk_mlr_2017_27_cdd_27_1_d: missed cdd_triggers
+    "(d) doubts the veracity or adequacy of documents or information previously obtained for the purposes of identification or verification."
+- 27(2)   uk_mlr_2017_27_cdd_27_2: missed cdd_triggers
+    "A relevant person who is not a letting agent, a high value dealer, an art market participant, a cryptoasset exchange provider of the kind referred to in paragraph (7D) or (7E), a custodian wallet provider of the kind ref"
+- 27(3)   uk_mlr_2017_27_cdd_27_3: missed cdd_triggers
+    "A high value dealer must also apply customer due diligence measures if that dealer carries out an occasional transaction in cash that amounts to £10,000 or more, whether the transaction is executed in a single operation "
+- 27(5)   uk_mlr_2017_27_cdd_27_5: missed cdd_triggers
+    "A casino must also apply customer due diligence measures in relation to any transaction within paragraph (6) that amounts to £2,000 or more, whether the transaction is executed in a single operation or in several operati"
+- 27(7A)  uk_mlr_2017_27_cdd_27_7a: missed cdd_triggers
+    "A letting agent must also apply customer due diligence measures in relation to any occasional transaction which consists of the conclusion of an agreement for the letting of land (within the meaning given in regulation 1"
+- 27(7C)  uk_mlr_2017_27_cdd_27_7c: missed cdd_triggers
+    "An art market participant must also apply customer due diligence measures—"
+- 27(7C)  uk_mlr_2017_27_cdd_27_7c_a: missed cdd_triggers
+    "(a) in relation to any trade in a work of art (within the meaning given in regulation 14), when the firm or sole practitioner carries out, or acts in respect of, any such occasional transaction, whether executed in a sin"
+- 27(7C)  uk_mlr_2017_27_cdd_27_7c_b: missed cdd_triggers
+    "(b) in relation to the storage of a work of art (within the meaning given in regulation 14), when it is the operator of a freeport and the value of the works of art so stored for a person, or series of linked persons, am"
+- 27(7D)  uk_mlr_2017_27_cdd_27_7d: missed cdd_triggers
+    "A cryptoasset exchange provider of the kind who operates a machine which utilises automated processes to exchange cryptoassets for money, or money for cryptoassets, must also apply customer due diligence measures in rela"
+- 27(7E)  uk_mlr_2017_27_cdd_27_7e: missed cdd_triggers
+    "Without prejudice to paragraph (7D), a cryptoasset exchange provider and a custodian wallet provider must also apply customer due diligence measures in relation to a cryptoasset transfer which is equal to or exceeds the "
+- 27(8)   uk_mlr_2017_27_cdd_27_8: missed cdd_triggers
+    "A relevant person must also apply customer due diligence measures—
+(za) when the relevant person has any legal duty in the course of the calendar year to contact an existing customer for the purpose of reviewing any info"
+- 27(8)   uk_mlr_2017_27_cdd_27_8_i: missed cdd_triggers
+    "(i) is relevant to the relevant person’s risk assessment for that customer, and"
+- 27(8)   uk_mlr_2017_27_cdd_27_8_ii: missed cdd_triggers
+    "(ii) relates to the beneficial ownership of the customer, including information which enables the relevant person to understand the ownership or control structure of a legal person, trust, foundation or similar arrangeme"
+- 27(8)   uk_mlr_2017_27_cdd_27_8_a: missed cdd_triggers
+    "(a) at other appropriate times to existing customers on a risk based approach;"
+- 27(8)   uk_mlr_2017_27_cdd_27_8_b: missed cdd_triggers
+    "(b) when the relevant person becomes aware that the circumstances of an existing customer relevant to its risk assessment for that customer have changed."
+- 28(2)   uk_mlr_2017_28_cdd_measures_28_2: missed verify_customer
+    "The relevant person must—"
+- 28(2)   uk_mlr_2017_28_cdd_measures_28_2_a: missed verify_customer
+    "(a) identify the customer unless the identity of that customer is known to, and has been verified by, the relevant person;"
+- 28(2)   uk_mlr_2017_28_cdd_measures_28_2_b: missed verify_customer
+    "(b) verify the customer's identity unless the customer's identity has already been verified by the relevant person; and"
+- 28(3)   uk_mlr_2017_28_cdd_measures_28_3: missed verify_customer
+    "Where the customer is a body corporate—"
+- 28(3)   uk_mlr_2017_28_cdd_measures_28_3_a: missed verify_customer
+    "(a) the relevant person must obtain and verify—"
+- 28(3)   uk_mlr_2017_28_cdd_measures_28_3_a_i: missed verify_customer
+    "(i) the name of the body corporate;"
+- 28(3)   uk_mlr_2017_28_cdd_measures_28_3_a_ii: missed verify_customer
+    "(ii) its company number or other registration number;"
+- 28(3)   uk_mlr_2017_28_cdd_measures_28_3_a_iii: missed verify_customer
+    "(iii) the address of its registered office, and if different, its principal place of business;"
+- 28(3)   uk_mlr_2017_28_cdd_measures_28_3_b: missed verify_customer
+    "(b) subject to paragraph (5), the relevant person must take reasonable measures to determine and verify—"
+- 28(3)   uk_mlr_2017_28_cdd_measures_28_3_b_i: missed verify_customer
+    "(i) the law to which the body corporate is subject, and its constitution (whether set out in its articles of association or other governing documents);"
+- 28(3)   uk_mlr_2017_28_cdd_measures_28_3_b_ii: missed verify_customer
+    "(ii) the full names of the board of directors (or if there is no board, the members of the equivalent management body) and the senior persons responsible for the operations of the body corporate."
+- 28(3A)  uk_mlr_2017_28_cdd_measures_28_3a: missed identify_ubo
+    "Where the customer is a legal person, trust, company, foundation or similar legal arrangement the relevant person must take reasonable measures to understand the ownership and control structure of that legal person, trus"
+- 28(4)   uk_mlr_2017_28_cdd_measures_28_4: missed identify_ubo
+    "Subject to paragraph (5), where the customer is beneficially owned by another person, the relevant person must—"
+- 28(4)   uk_mlr_2017_28_cdd_measures_28_4_a: missed identify_ubo
+    "(a) identify the beneficial owner;"
+- 28(4)   uk_mlr_2017_28_cdd_measures_28_4_b: missed identify_ubo
+    "(b) take reasonable measures to verify the identity of the beneficial owner so that the relevant person is satisfied that it knows who the beneficial owner is; and"
+- 28(4)   uk_mlr_2017_28_cdd_measures_28_4_c: missed identify_ubo
+    "(c) if the beneficial owner is a legal person, trust, company, foundation or similar legal arrangement take reasonable measures to understand the ownership and control structure of that legal person, trust, company, foun"
+- 28(8)   uk_mlr_2017_28_cdd_measures_28_8: missed identify_ubo
+    "If paragraph (7) applies, the relevant person must—"
+- 28(8)   uk_mlr_2017_28_cdd_measures_28_8_b: missed identify_ubo
+    "(b) take reasonable measures to verify the identity of the senior person in the body corporate responsible for managing it, and keep records in writing of—"
+- 28(9)   uk_mlr_2017_28_cdd_measures_28_9: missed identify_ubo
+    "Relevant persons do not satisfy their requirements under paragraph (4) by relying solely on information delivered to the registrar under any enactment that requires information to be delivered to the registrar about regi"
+- 29(6)   uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_6: missed prohibit_anonymous
+    "The relevant person must not set up an anonymous account, an anonymous passbook or an anonymous safe-deposit box for any new or existing customer."
+- 29(7)   uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7: missed cdd_triggers
+    "The relevant person must apply customer due diligence measures to all anonymous accounts and passbooks in existence on the date on which these Regulations come into force, and in any event before such accounts or passboo"
+- 29(7A)  uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7a: missed cdd_triggers
+    "The relevant person must apply customer due diligence measures to all anonymous safe-deposit boxes in existence on 10th January 2019, and in any event before such safe-deposit boxes are used in any way."
+- 29(11)  uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_11: missed cdd_triggers
+    "When providing a customer with a pooled account, the relevant person must—"
+- 29(11)  uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_11_b: missed cdd_triggers
+    "(b) take steps to be satisfied that the purpose and proposed use under sub-paragraph (a) is consistent with the relevant person’s knowledge of the customer, the customer’s business and risk profile, and must conduct upda"
+- 30(2)   uk_mlr_2017_30_timing_of_verification_30_2: missed identify_ubo, verify_customer
+    "Subject to paragraph (3) or (4), a relevant person must comply with the requirement to verify the identity of the customer, any person purporting to act on behalf of the customer and any beneficial owner of the customer "
+- 30(7)   uk_mlr_2017_30_timing_of_verification_30_7: missed identify_ubo
+    "If this paragraph applies, the relevant person must establish and verify the identity of any beneficiary before—"
+- 30(7)   uk_mlr_2017_30_timing_of_verification_30_7_a: missed identify_ubo
+    "(a) any payment is made to the beneficiary; or"
+- 30(7)   uk_mlr_2017_30_timing_of_verification_30_7_b: missed identify_ubo
+    "(b) the beneficiary exercises its vested rights in the trust, legal entity or legal arrangement."
+- 30ZA(2) uk_mlr_2017_30za_insolvent_bank_customers_30za_2: missed verify_customer
+    "Before permitting an insolvent bank customer to open an account and transact from it under paragraph (1), the credit institution must—"
+- 30ZA(2) uk_mlr_2017_30za_insolvent_bank_customers_30za_2_a: missed verify_customer
+    "(a) identify the customer in accordance with regulation 28(2)(a); and"
+- 30ZA(3) uk_mlr_2017_30za_insolvent_bank_customers_30za_3: missed cdd_incomplete, cdd_triggers
+    "After permitting an insolvent bank customer to open an account and transact from it under paragraph (1), the credit institution must—"
+- 30ZA(3) uk_mlr_2017_30za_insolvent_bank_customers_30za_3_a: missed cdd_triggers
+    "(a) apply the other customer due diligence measures required by regulation 28 as soon as practicable; and"
+- 30ZA(3) uk_mlr_2017_30za_insolvent_bank_customers_30za_3_b: missed cdd_incomplete
+    "(b) if it becomes apparent that any of the situations or cases set out in regulation 33(1) apply, carry out no further transactions from the insolvent bank customer’s account until it has completed the customer due dilig"
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1: missed identify_ubo
+    "Subject to paragraph (8A), before establishing a business relationship with—"
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_a: missed identify_ubo
+    "(a) a company which is subject to the requirements of Part 21A of the Companies Act 2006 (information about people with significant control);"
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_b: missed identify_ubo
+    "(b) an unregistered company which is subject to the requirements of the Unregistered Companies Regulations 2009;"
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_c: missed identify_ubo
+    "(c) a limited liability partnership which is subject to the requirements of the Limited Liability Partnerships (Application of Companies Act 2006) Regulations 2009;"
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_d: missed identify_ubo
+    "(d) an eligible Scottish partnership which is subject to the requirements of the Scottish Partnerships (Register of People with Significant Control) Regulations 2017, ..."
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_e: missed identify_ubo
+    "(e) a trust which is subject to registration under Part 5 of these Regulations, or"
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_f: missed identify_ubo
+    "(f) an overseas entity which is subject to registration under Part 1 of the Economic Crime (Transparency and Enforcement) Act 2022, a relevant person must collect an excerpt of the register which contains full details of"
+- 30A(2A) uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_2a: missed identify_ubo
+    "When taking measures to fulfil the duties to carry out customer due diligence and ongoing monitoring of a business relationship (including enhanced customer due diligence and enhanced ongoing monitoring) under Part 3 of "
+- 31(1)   uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1: missed cdd_incomplete
+    "Where, in relation to any customer, a relevant person is unable to apply customer due diligence measures as required by regulation 28, that person—"
+- 31(1)   uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1_a: missed cdd_incomplete
+    "(a) must not carry out any transaction through a bank account with the customer or on behalf of the customer;"
+- 31(1)   uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1_b: missed cdd_incomplete
+    "(b) must not establish a business relationship or carry out a transaction with the customer otherwise than through a bank account;"
+- 31(1)   uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1_c: missed cdd_incomplete
+    "(c) must terminate any existing business relationship with the customer;"
+- 33(1)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1: missed pep_edd
+    "A relevant person must apply enhanced customer due diligence measures and enhanced ongoing monitoring, in addition to the customer due diligence measures required under regulation 28 and, if applicable, regulation 29, to"
+- 33(1)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_d: missed pep_edd
+    "(d) if a relevant person has determined that a customer or potential customer is a PEP, or a family member or known close associate of a PEP (in accordance with regulation 35);"
+- 35(3)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_3: missed pep_edd
+    "If a relevant person has determined that a customer or a potential customer is a PEP, or a family member or known close associate of a PEP, the relevant person must assess—"
+- 35(3)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_3_b: missed pep_edd
+    "(b) the extent of the enhanced customer due diligence measures to be applied in relation to that customer."
+- 35(5)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5: missed pep_edd
+    "A relevant person who proposes to have, or to continue, a business relationship with a PEP, or a family member or a known close associate of a PEP, must, in addition to the measures required by regulation 33—"
+- 35(5)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5_a: missed pep_edd
+    "(a) have approval from senior management for establishing or continuing the business relationship with that person;"
+- 35(5)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5_b: missed pep_edd
+    "(b) take adequate measures to establish the source of wealth and source of funds which are involved in the proposed business relationship or transactions with that person; and"
+- 35(5)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5_c: missed pep_edd
+    "(c) where the business relationship is entered into, conduct enhanced ongoing monitoring of the business relationship with that person."
+- 35(9)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_9: missed pep_edd
+    "Where a person who was a PEP is no longer entrusted with a prominent public function, a relevant person must continue to apply the requirements in paragraphs (5) and (8) in relation to that person—"
+- 35(9)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_9_a: missed pep_edd
+    "(a) for a period of at least 12 months after the date on which that person ceased to be entrusted with that public function; or"
+- 35(9)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_9_b: missed pep_edd
+    "(b) for such longer period as the relevant person considers appropriate to address risks of money laundering or terrorist financing in relation to that person."

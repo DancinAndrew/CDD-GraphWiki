@@ -1,0 +1,88 @@
+- clause_id: uk_mlr_2017_27_cdd_27_1
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_1_a
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_1_b
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_1_c
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_1_d
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_2
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_3
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_5
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_7a
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_8
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_8_i
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_8_ii
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_8_a
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_27_cdd_27_8_b
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_28_cdd_measures_28_2
+  types:
+  - verify_customer
+- clause_id: uk_mlr_2017_28_cdd_measures_28_2_a
+  types:
+  - verify_customer
+- clause_id: uk_mlr_2017_28_cdd_measures_28_2_b
+  types:
+  - verify_customer
+- clause_id: uk_mlr_2017_28_cdd_measures_28_3a
+  types:
+  - identify_ubo
+- clause_id: uk_mlr_2017_28_cdd_measures_28_4
+  types:
+  - identify_ubo
+- clause_id: uk_mlr_2017_28_cdd_measures_28_4_a
+  types:
+  - identify_ubo
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_6
+  types:
+  - prohibit_anonymous
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7a
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_30_timing_of_verification_30_2
+  types:
+  - identify_ubo
+  - verify_customer
+- clause_id: uk_mlr_2017_30_timing_of_verification_30_6_a
+  types:
+  - cdd_triggers
+- clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_2
+  types:
+  - verify_customer
+- clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_2_a
+  types:
+  - verify_customer
+- clause_id: uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4b
+  types:
+  - identify_ubo
+- clause_id: uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4b_b
+  types:
+  - identify_ubo

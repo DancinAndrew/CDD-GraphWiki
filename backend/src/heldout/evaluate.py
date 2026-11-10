@@ -221,7 +221,24 @@ V1_NOTES = {
 }
 V2_NOTES = {
     "mas_notice_626": ["v2 was designed after studying the v1 errors on these paragraphs, so this is not an unseen-data score."],
+    "uk_mlr_2017": ["v2 was frozen (commit 98332e9) before this text was fetched or labelled (commit 5a89252), so this is an unseen-data score."],
 }
+
+
+V1_JURISDICTIONS = ("Global", "Singapore", "Internal")  # the only jurisdictions v1 has rule profiles for
+
+
+def v1_best_case_notes(corpus: HeldOutCorpus) -> List[str]:
+    """v1 cannot label text from a jurisdiction it has no profile for; report how it does if told otherwise."""
+    if corpus.spec.jurisdiction in V1_JURISDICTIONS:
+        return []
+    notes = [f"v1 has no rule profiles for {corpus.spec.jurisdiction}, so it labels nothing here. "
+             f"Treating the text as another jurisdiction to give it its best chance:"]
+    for jurisdiction in ("Global", "Singapore"):
+        o = score(corpus, rules_v1_predictions(corpus, jurisdiction))["paragraph"]["overall"]
+        notes.append(f"  as {jurisdiction}: paragraph level found {o['tp']}/{o['tp'] + o['fn']}, "
+                     f"precision {o['precision']:.2f} (FP {o['fp']})")
+    return notes
 
 
 def run_set(data_dir: str, set_name: str, out_dir: str) -> Dict[str, Any]:
@@ -232,7 +249,9 @@ def run_set(data_dir: str, set_name: str, out_dir: str) -> Dict[str, Any]:
     for version, (title, predict) in RULE_VERSIONS.items():
         predictions = predict(corpus, corpus.spec.jurisdiction)
         scores = score(corpus, predictions)
-        notes = (V1_NOTES if version == "rules_v1" else V2_NOTES).get(set_name, [])
+        notes = list((V1_NOTES if version == "rules_v1" else V2_NOTES).get(set_name, []))
+        if version == "rules_v1":
+            notes += v1_best_case_notes(corpus)
         with open(os.path.join(out_dir, f"{version}_predictions.yaml"), "w", encoding="utf-8") as f:
             yaml.dump([{"clause_id": c.clause_id, "types": sorted(predictions[c.clause_id])}
                        for c in corpus.held_out if predictions[c.clause_id]], f, allow_unicode=True, sort_keys=False)
