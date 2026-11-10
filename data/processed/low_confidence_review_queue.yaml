@@ -49,25 +49,6 @@
     corporate and individual customers to undergo standard Know Your Customer (KYC)
     procedures.'
   failure_reason: NON_OBLIGATION_TEXT
-- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification
-  section_ref: 'Section 1: Customer Onboarding Standards > 1.1 Customer Identification'
-  raw_text: '### 1.1 Customer Identification Every customer must be identified and
-    verified before onboarding.'
-  failure_reason: MISSING_CORE_ELEMENTS
-- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification_a
-  section_ref: 'Section 1: Customer Onboarding Standards > 1.1 Customer Identification
-    > (a)'
-  raw_text: '(a) For individuals: Full name, date of birth, residential address, and
-    unique national identification number must be collected and verified against an
-    independent passport or identity card.'
-  failure_reason: MISSING_CORE_ELEMENTS
-- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification_b
-  section_ref: 'Section 1: Customer Onboarding Standards > 1.1 Customer Identification
-    > (b)'
-  raw_text: '(b) For corporate entities: Legal entity name, registration number, registered
-    address, and the names of all active directors must be verified against official
-    registry extracts.'
-  failure_reason: MISSING_CORE_ELEMENTS
 - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_3_high_risk_reviews_and_escalations
   section_ref: 'Section 1: Customer Onboarding Standards > 1.3 High-Risk Reviews and
     Escalations'

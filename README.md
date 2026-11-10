@@ -2,25 +2,25 @@
 
 [![CI](https://github.com/DancinAndrew/CDD-GraphWiki/actions/workflows/ci.yml/badge.svg)](https://github.com/DancinAndrew/CDD-GraphWiki/actions/workflows/ci.yml)
 
-**What it is:** a proof-of-concept anti-money laundering (AML) customer due diligence (CDD) workflow. It parses verbatim excerpts of FATF Recommendation 10 and MAS Notice 626, plus a fictional bank policy, into 54 schema-validated clauses and links them in a knowledge graph with obligations, conflicts and customer contexts. A rule-based extractor finds all 12 obligations in my hand-labelled gold set, with the right source clauses. The system flags 3 conflicts between sources, such as 25% versus 10% beneficial ownership thresholds. It generates CDD/EDD checklists that cite their source clauses for 5 synthetic customer profiles, and routes high-risk cases to human review with a SHA-256 hash chain audit log.
+**What it is:** a proof-of-concept anti-money laundering (AML) customer due diligence (CDD) workflow. It parses verbatim excerpts of FATF Recommendation 10 and MAS Notice 626, plus a fictional bank policy, into 54 schema-validated clauses and links them in a knowledge graph with obligations, conflicts and customer contexts. A rule-based extractor finds all 13 obligations in my hand-labelled gold set, with the right source clauses. The system flags 3 conflicts between sources, such as 25% versus 10% beneficial ownership thresholds. It generates CDD/EDD checklists that cite their source clauses for 5 synthetic customer profiles, and routes high-risk cases to human review with a SHA-256 hash chain audit log.
 
 **Held-out test:** to see whether the rules generalise, the full official MAS Notice 626 (167 paragraphs, 419 clause records) was converted from the PDF, and the 157 paragraphs not used to write the rules were labelled against a written guideline. The labels were committed before the rules were run on them. On those paragraphs the rules found 1 of 18 labelled obligations (paragraph level, precision 0.14). A local open-weight LLM (qwen3.5:9b, temperature 0) given the same guideline found 16 of 18 but with precision 0.40. The keyword rules overfit their development text and the LLM over-labels neighbouring duties, so neither replaces the human review step.
 
 **My role:** individual final project for the IT Risk Management course at National Central University (May–June 2026). I designed and built the data contracts, gold dataset, extraction and decision rules, evaluation, API and dashboard.
 
-**How to run:** `docker compose -f deployment/docker-compose.yml up --build` starts the dashboard at `http://localhost:3000`. `PYTHONPATH=backend python -m src.pipeline` rebuilds `data/processed` and prints every number below. `PYTHONPATH=backend pytest backend/tests` runs the 89 tests. `PYTHONPATH=backend python -m src.heldout.evaluate` and `PYTHONPATH=backend python -m src.heldout.llm_compare score` recompute the held-out scores.
+**How to run:** `docker compose -f deployment/docker-compose.yml up --build` starts the dashboard at `http://localhost:3000`. `PYTHONPATH=backend python -m src.pipeline` rebuilds `data/processed` and prints every number below. `PYTHONPATH=backend pytest backend/tests` runs the 97 tests. `PYTHONPATH=backend python -m src.heldout.evaluate` and `PYTHONPATH=backend python -m src.heldout.llm_compare score` recompute the held-out scores.
 
 | Number | Where it comes from |
 | --- | --- |
 | 54 clauses with text, plus 5 section-heading records (59 records: FATF 17, MAS 28, fictional bank policy 14) | [`data/processed/clauses.yaml`](data/processed/clauses.yaml), parsed from [`data/sources/`](data/sources/) |
-| 12/12 gold obligations found, each with the right anchor clause, jurisdiction and full set of source clauses | [`data/processed/evaluation_report.txt`](data/processed/evaluation_report.txt) |
+| 13/13 gold obligations found, each with the right anchor clause, jurisdiction and full set of source clauses | [`data/processed/evaluation_report.txt`](data/processed/evaluation_report.txt) |
 | 3 conflicts: ownership 25% vs 10%, occasional transactions USD/EUR 15,000 vs S$20,000, PEPs allowed vs prohibited | [`data/processed/conflicts.yaml`](data/processed/conflicts.yaml) |
 | 5 checklists for 5 synthetic profiles, 4 routed to human review | [`data/processed/checklists.yaml`](data/processed/checklists.yaml) |
 | All numbers in one file | [`data/processed/summary.json`](data/processed/summary.json) |
-| Held-out (157 MAS Notice 626 paragraphs not used to write the rules): rules find 1/18 labelled obligations, precision 0.14 | [`data/heldout/results/rules_report.txt`](data/heldout/results/rules_report.txt) |
-| Same paragraphs, local LLM qwen3.5:9b: 16/18, precision 0.40; all 108 clause IDs it returned exist | [`data/heldout/results/llm_qwen3_5_9b_report.txt`](data/heldout/results/llm_qwen3_5_9b_report.txt) |
+| Held-out (157 MAS Notice 626 paragraphs not used to write the rules): rules find 1/18 labelled obligations, precision 0.14 | [`data/heldout/results/mas_notice_626/rules_v1_report.txt`](data/heldout/results/mas_notice_626/rules_v1_report.txt) |
+| Same paragraphs, local LLM qwen3.5:9b: 16/18, precision 0.40; all 108 clause IDs it returned exist | [`data/heldout/results/mas_notice_626/llm_qwen3_5_9b_report.txt`](data/heldout/results/mas_notice_626/llm_qwen3_5_9b_report.txt) |
 
-The development gold set in [`data/gold/`](data/gold/) is my own annotation of these sources and the rules were written against it, so 12/12 shows that the rules cover the annotated obligations; the held-out rows show they do not generalise. The LLM chose clause IDs from the one paragraph it was sent, so its valid citations do not show it would cite correctly without that list. The MAS texts are checked line by line against the official PDF in [`data/sources/official/`](data/sources/official/) by the test suite.
+The development gold set in [`data/gold/`](data/gold/) is my own annotation of these sources and the rules were written against it, so 13/13 shows that the rules cover the annotated obligations; the held-out rows show they do not generalise. The LLM chose clause IDs from the one paragraph it was sent, so its valid citations do not show it would cite correctly without that list. The MAS texts are checked line by line against the official PDF in [`data/sources/official/`](data/sources/official/) by the test suite.
 
 ![Demo: pick a synthetic customer, read the checklist and the clauses it cites, open the review queue, then trace the checklist in the knowledge graph](images/00-demo.gif)
 
@@ -260,7 +260,7 @@ GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評�
 
 ## 未用於開發的測試（held-out）
 
-12/12 是在寫規則時看過的資料上得到的，不能說明規則能不能用在新的條文上。為了檢驗這點：
+開發資料上的滿分是在寫規則時看過的資料上得到的，不能說明規則能不能用在新的條文上。為了檢驗這點：
 
 1. **全文：** 用 [`backend/src/heldout/convert.py`](backend/src/heldout/convert.py) 把官方 MAS Notice 626 PDF 轉成 Markdown，共 167 個編號段落、419 筆條文紀錄。測試會逐行比對 PDF 原文，跨頁的段落也一樣。
 2. **切出測試資料：** 寫規則時用過的 10 個段落（6.3、6.5、6.6、6.9、6.13、6.14、6.14B、6.35、8.2、8.3）整段排除，剩下的 157 段是測試資料。
@@ -272,13 +272,13 @@ GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評�
 | 規則式萃取器 | 1／18 | 0.14 | 0.41／0.32 |
 | qwen3.5:9b | 16／18 | 0.40 | 0.30／0.56 |
 
-**規則為什麼失準**（細節見 [`rules_report.txt`](data/heldout/results/rules_report.txt)）：
+**規則為什麼失準**（細節見 [`rules_v1_report.txt`](data/heldout/results/mas_notice_626/rules_v1_report.txt)）：
 - 規則綁定開發段落的句型。例如 CDD 觸發規則要找「measures as required by paragraphs … when」，6.31 寫成「shall – (a) perform CDD measures as if …」就漏掉；10.3 的代理銀行條款剛好含有這個句型，反而誤判。
 - 規則依管轄區設定。禁止匿名帳戶只有 FATF 的設定，所以 MAS 第 6.1 段明明寫著禁止，也抓不到。
 - 規則不處理否定與放寬。第 6.16 段「shall not be required to inquire」（豁免查詢受益人）被判成要查詢受益人，一段就多出 10 筆誤判。
 - 每筆條文最多只給一種類型，所以第 6.32 段「同時驗證客戶與受益人」最多只能對一半。
 
-**LLM 的問題在另一邊**（[`llm_qwen3_5_9b_report.txt`](data/heldout/results/llm_qwen3_5_9b_report.txt)）：它找得到大部分義務，但會把相近的責任也標進來。例如代表客戶行事的人（6.10）被當成客戶身分驗證、關聯方（6.8）被當成受益人識別；名單篩檢的時點（6.40）被當成 CDD 觸發；非 PEP 的高風險客戶加強審查（8.7）也被當成 PEP 義務。
+**LLM 的問題在另一邊**（[`llm_qwen3_5_9b_report.txt`](data/heldout/results/mas_notice_626/llm_qwen3_5_9b_report.txt)）：它找得到大部分義務，但會把相近的責任也標進來。例如代表客戶行事的人（6.10）被當成客戶身分驗證、關聯方（6.8）被當成受益人識別；名單篩檢的時點（6.40）被當成 CDD 觸發；非 PEP 的高風險客戶加強審查（8.7）也被當成 PEP 義務。
 
 結論：關鍵字規則可以解釋，但只對寫規則時看過的文字有效；小型 LLM 召回率高，但精確率不到一半。兩者都需要人工審查把關，這也是系統把高風險清單送人工審查的理由。
 

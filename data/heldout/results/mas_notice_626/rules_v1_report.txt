@@ -1,5 +1,5 @@
-Rule-based extractor on held-out MAS Notice 626 paragraphs
-==========================================================
+Rule-based extractor v1 (frozen, written against the development excerpts) on held-out MAS Notice 626 paragraphs
+================================================================================================================
 
 Corpus: 167 numbered paragraphs (419 clause records) of MAS Notice 626; 10 development paragraphs excluded.
 Held out: 157 paragraphs, 360 clauses; 42 clauses in 16 paragraphs carry one of the modelled types.

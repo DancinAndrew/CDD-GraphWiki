@@ -13,8 +13,8 @@
     "mas_notice_626": 28,
     "mock_internal_policy": 14
   },
-  "obligations": 12,
-  "clauses_sent_to_review_queue": 16,
+  "obligations": 13,
+  "clauses_sent_to_review_queue": 13,
   "conflicts": 3,
   "conflict_ids": [
     "conf_ubo_threshold",
@@ -25,15 +25,15 @@
   "checklists": 5,
   "checklists_routed_to_human_review": 4,
   "extraction_vs_gold": {
-    "extracted": 12,
-    "gold": 12,
-    "matched": 12,
+    "extracted": 13,
+    "gold": 13,
+    "matched": 13,
     "precision": 1.0,
     "recall": 1.0,
     "f1_score": 1.0,
     "field_accuracy": 1.0,
-    "provenance_matches": 12,
-    "exact_source_matches": 12
+    "provenance_matches": 13,
+    "exact_source_matches": 13
   },
   "conflict_detection_vs_gold": {
     "detected": 3,
@@ -51,7 +51,7 @@
     "aligned_fields": 30.0
   },
   "provenance_check": {
-    "references_checked": 64,
+    "references_checked": 67,
     "unresolved_references": [],
     "conflicts_citing_one_source": []
   }

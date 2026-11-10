@@ -17,8 +17,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = str(REPO_ROOT / "data")
 PDF = REPO_ROOT / "data" / "sources" / "official" / "mas_notice_626.pdf"
 FULL_TEXT = REPO_ROOT / "data" / "heldout" / "sources" / "mas_notice_626.md"
-RESULTS = REPO_ROOT / "data" / "heldout" / "results"
-LLM_RUN = REPO_ROOT / "data" / "heldout" / "llm_runs" / f"{llm_compare.model_slug(llm_compare.DEFAULT_MODEL)}.jsonl"
+RESULTS = REPO_ROOT / "data" / "heldout" / "results" / "mas_notice_626"
+LLM_RUN = REPO_ROOT / "data" / "heldout" / "llm_runs" / "mas_notice_626" / f"{llm_compare.model_slug(llm_compare.DEFAULT_MODEL)}.jsonl"
 
 
 def _squash(text: str) -> str:
@@ -96,14 +96,22 @@ def test_gold_labels_cover_only_held_out_clauses(corpus):
 
 
 def test_rule_scores_match_the_committed_report(corpus, tmp_path):
-    summary = evaluate.run(DATA_DIR, str(tmp_path))
+    summary = evaluate.run_set(DATA_DIR, "mas_notice_626", str(tmp_path))
     committed = json.loads((RESULTS / "rules_summary.json").read_text())
     assert summary == committed
-    assert (tmp_path / "rules_report.txt").read_text() == (RESULTS / "rules_report.txt").read_text()
+    for version in ("rules_v1", "rules_v2"):
+        assert (tmp_path / f"{version}_report.txt").read_text() == (RESULTS / f"{version}_report.txt").read_text()
+
+
+def test_frozen_v1_rules_still_find_1_of_18_held_out_obligations(corpus):
+    """The frozen copy of the original rules reproduces the score committed before v2 existed."""
+    scores = evaluate.score(corpus, evaluate.rules_v1_predictions(corpus, "Singapore"))
+    paragraph = scores["paragraph"]["overall"]
+    assert (paragraph["tp"], paragraph["fp"], paragraph["fn"]) == (1, 6, 17)
 
 
 def test_llm_scores_can_be_recomputed_offline_from_cached_answers(tmp_path):
-    summary = llm_compare.score_cached(DATA_DIR, str(LLM_RUN), str(tmp_path))
+    summary = llm_compare.score_cached(DATA_DIR, "mas_notice_626", str(LLM_RUN), str(tmp_path))
     slug = LLM_RUN.stem
     committed = json.loads((RESULTS / f"llm_{slug}_summary.json").read_text())
     assert summary == committed

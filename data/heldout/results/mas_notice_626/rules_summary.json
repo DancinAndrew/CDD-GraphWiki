@@ -1,5 +1,6 @@
 {
   "corpus": {
+    "document": "MAS Notice 626",
     "clause_records": 419,
     "numbered_paragraphs": 167,
     "development_paragraphs": 10,
@@ -9,7 +10,7 @@
     "held_out_clauses_labelled_in_scope": 42,
     "held_out_paragraphs_labelled_in_scope": 16
   },
-  "rules": {
+  "rules_v1": {
     "clause": {
       "overall": {
         "tp": 16,
@@ -127,6 +128,112 @@
           "precision": 0.0,
           "recall": 0.0,
           "f1": 0.0
+        }
+      }
+    }
+  },
+  "rules_v2": {
+    "clause": {
+      "overall": {
+        "tp": 50,
+        "fp": 1,
+        "fn": 0,
+        "precision": 0.9804,
+        "recall": 1.0,
+        "f1": 0.9901
+      },
+      "by_type": {
+        "prohibit_anonymous": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "cdd_triggers": {
+          "tp": 6,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.8571,
+          "recall": 1.0,
+          "f1": 0.9231
+        },
+        "verify_customer": {
+          "tp": 15,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "identify_ubo": {
+          "tp": 26,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "cdd_incomplete": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      }
+    },
+    "paragraph": {
+      "overall": {
+        "tp": 18,
+        "fp": 1,
+        "fn": 0,
+        "precision": 0.9474,
+        "recall": 1.0,
+        "f1": 0.973
+      },
+      "by_type": {
+        "prohibit_anonymous": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "cdd_triggers": {
+          "tp": 4,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.8,
+          "recall": 1.0,
+          "f1": 0.8889
+        },
+        "verify_customer": {
+          "tp": 7,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "identify_ubo": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "cdd_incomplete": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
         }
       }
     }

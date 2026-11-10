@@ -235,7 +235,7 @@ def test_rules_do_not_depend_on_clause_ids():
 
 
 def test_extraction_on_parsed_sources_matches_gold_with_provenance(tmp_path):
-    """在解析出的條文上跑抽取：12 條金標義務全部命中，且錨點條文、管轄區、出處集合都對。"""
+    """在解析出的條文上跑抽取：13 條金標義務全部命中，且錨點條文、管轄區、出處集合都對。"""
     from src.extraction.extractor import extract_obligations, load_jurisdictions
     clauses = [Clause(**c) for c in _load("data/gold/clauses.yaml")]
     extractor = RuleBasedObligationExtractor(jurisdictions=load_jurisdictions(os.path.join(REPO_ROOT, "data/gold/source_documents.yaml")))
@@ -243,9 +243,9 @@ def test_extraction_on_parsed_sources_matches_gold_with_provenance(tmp_path):
 
     metrics = ObligationExtractionPipeline().evaluate_against_gold(
         obligations, os.path.join(REPO_ROOT, "data/gold/obligations.yaml"), tmp_path / "report.txt")
-    assert metrics["matched"] == metrics["gold"] == metrics["extracted"] == 12
-    assert metrics["provenance_matches"] == 12
-    assert metrics["exact_source_matches"] == 12
+    assert metrics["matched"] == metrics["gold"] == metrics["extracted"] == 13
+    assert metrics["provenance_matches"] == 13
+    assert metrics["exact_source_matches"] == 13
 
     by_id = {o.obligation_id: o for o in obligations}
     # MAS Notice 626 沒有數字門檻：實質受益人義務不應帶 25% 條件
@@ -258,6 +258,8 @@ def test_extraction_on_parsed_sources_matches_gold_with_provenance(tmp_path):
     assert by_id["ob_pep_prohibitions_gb"].source_clause_ids == ["mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons"]
     assert by_id["ob_pep_approval_gb"].source_clause_ids == ["mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a"]
     assert by_id["ob_cdd_incomplete_mas"].source_clause_ids == ["mas_notice_626_6_cdd_6_35"]
+    # 銀行政策 1.1「Every customer must be identified and verified」是第 2 版規則找到、原本漏標的義務
+    assert by_id["ob_verify_customer_gb"].source_clause_ids[0] == "mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification"
 
 
 def test_provenance_mismatch_is_reported(tmp_path):

@@ -192,6 +192,29 @@
   confidence: 0.97
   review_status: approved
 
+# Added in 2026-11: policy 1.1 ("Every customer must be identified and verified before onboarding") is a
+# customer identification obligation that the original annotation missed; the version-2 rules found it.
+- obligation_id: ob_verify_customer_gb
+  source_clause_ids:
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification_a
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification_b
+  jurisdiction: Internal
+  actor: bank
+  action: identify_and_verify
+  object: customer_identity
+  applies_to: {}
+  conditions:
+    - cdd_triggered
+  exceptions: []
+  required_evidence:
+    - independent_passport_or_identity_card
+    - official_registry_extract
+  review_flags:
+    - customer_not_verified_before_onboarding
+  confidence: 0.97
+  review_status: approved
+
 - obligation_id: ob_identify_ubo_10_gb
   source_clause_ids:
     - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification

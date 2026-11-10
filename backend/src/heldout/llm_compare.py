@@ -1,12 +1,12 @@
 """
-Run an LLM extractor on the same held-out MAS Notice 626 paragraphs and score it like the rules.
+Run an LLM extractor on the same held-out paragraphs as the rules and score it the same way.
 
     ollama pull qwen3.5:9b
-    PYTHONPATH=backend python -m src.heldout.llm_compare run     # calls the model
-    PYTHONPATH=backend python -m src.heldout.llm_compare score   # offline: scores the cached answers
+    PYTHONPATH=backend python -m src.heldout.llm_compare run --set uk_mlr_2017   # calls the model
+    PYTHONPATH=backend python -m src.heldout.llm_compare score                   # offline: scores every cached run
 
 `run` sends one held-out paragraph per request, with the task definition taken from
-data/heldout/ANNOTATION_GUIDELINE.md, and stores every raw answer in data/heldout/llm_runs/<model>.jsonl.
+data/heldout/ANNOTATION_GUIDELINE.md, and stores every raw answer in data/heldout/llm_runs/<set>/<model>.jsonl.
 The default model is the open-weight qwen3.5:9b served locally by Ollama (temperature 0, fixed seed), so the
 run needs no API key. Any OpenAI-compatible endpoint works through --base-url and --model; a remote endpoint
 reads its key from NVIDIA_API_KEY. There is no mock fallback: a failed request is recorded as a failure and
@@ -25,7 +25,7 @@ import httpx
 
 from src.paths import find_data_dir
 from src.heldout.evaluate import (
-    HeldOutCorpus, load_corpus, score, corpus_stats, error_rows, format_report,
+    HELDOUT_SETS, HeldOutCorpus, load_corpus, score, corpus_stats, error_rows, format_report, results_dir,
 )
 
 DEFAULT_MODEL = "qwen3.5:9b"
@@ -33,7 +33,7 @@ DEFAULT_BASE_URL = "http://localhost:11434/v1"  # Ollama's OpenAI-compatible end
 SEED = 7
 PROMPT_VERSION = "heldout-v1"
 
-SYSTEM_PROMPT = """You annotate clauses of MAS Notice 626 (Singapore AML/CFT rules for banks) with obligation types.
+SYSTEM_PROMPT = """You annotate clauses of {title} ({description}) with obligation types.
 
 {guideline}
 
@@ -41,7 +41,7 @@ Answer with JSON only, in this form:
 {{"labels": [{{"clause_id": "<an id from the input>", "types": ["<type>", ...]}}]}}
 List only clauses that have at least one type. Use only the eight type names above. If no clause has a type, answer {{"labels": []}}."""
 
-USER_PROMPT = """Paragraph {paragraph} of MAS Notice 626. Each line is one clause: its id in square brackets, then its text.
+USER_PROMPT = """Paragraph {paragraph} of {title}. Each line is one clause: its id in square brackets, then its text.
 
 {clauses}"""
 
@@ -63,7 +63,7 @@ def paragraph_units(corpus: HeldOutCorpus) -> List[Dict[str, Any]]:
     for paragraph, clauses in units.items():
         lines = []
         for c in clauses:
-            text = re.sub(r"^#+\s*[\w.]+\s*", "", c.raw_text).strip()  # drop the "### 6.14A" heading marker
+            text = re.sub(r"^#+\s*\S+\s*", "", c.raw_text).strip()  # drop the "### 6.14A" heading marker
             lines.append(f"[{c.clause_id}] {text}")
         out.append({"paragraph": paragraph, "clause_ids": [c.clause_id for c in clauses], "text": "\n".join(lines)})
     return out
@@ -90,19 +90,21 @@ def parse_answer(content: str) -> Dict[str, Any]:
     return json.loads(match.group(0))
 
 
-def run_model(data_dir: str, model: str, base_url: str, out_path: str, limit: Optional[int] = None) -> None:
+def run_model(data_dir: str, set_name: str, model: str, base_url: str, out_path: str,
+              limit: Optional[int] = None) -> None:
     repo_root = os.path.dirname(os.path.abspath(data_dir))
     local = any(host in base_url for host in ("localhost", "127.0.0.1"))
     api_key = "ollama" if local else _load_env_key(repo_root, "NVIDIA_API_KEY")
     if not api_key:
         sys.exit("NVIDIA_API_KEY is not set for a remote endpoint; `score` works without it on the cached answers.")
-    corpus = load_corpus(data_dir)
-    system = SYSTEM_PROMPT.format(guideline=guideline_text(data_dir))
+    corpus = load_corpus(data_dir, set_name)
+    system = SYSTEM_PROMPT.format(title=corpus.spec.title, description=corpus.spec.description,
+                                  guideline=guideline_text(data_dir))
     units = paragraph_units(corpus)[:limit] if limit else paragraph_units(corpus)
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as out, httpx.Client(timeout=600) as client:
         for i, unit in enumerate(units, 1):
-            user = USER_PROMPT.format(paragraph=unit["paragraph"], clauses=unit["text"])
+            user = USER_PROMPT.format(paragraph=unit["paragraph"], title=corpus.spec.title, clauses=unit["text"])
             record: Dict[str, Any] = {
                 "paragraph": unit["paragraph"], "model": model, "prompt_version": PROMPT_VERSION,
                 "prompt_sha256": hashlib.sha256((system + "\n" + user).encode("utf-8")).hexdigest(),
@@ -178,15 +180,16 @@ def load_answers(path: str, corpus: HeldOutCorpus) -> Dict[str, Any]:
     return {"predictions": predictions, "stats": stats}
 
 
-def score_cached(data_dir: str, path: str, out_dir: str) -> Dict[str, Any]:
-    corpus = load_corpus(data_dir)
+def score_cached(data_dir: str, set_name: str, path: str, out_dir: str) -> Dict[str, Any]:
+    corpus = load_corpus(data_dir, set_name)
     loaded = load_answers(path, corpus)
     predictions, stats = loaded["predictions"], loaded["stats"]
-    model = json.loads(open(path, encoding="utf-8").readline())["model"]
+    first = json.loads(open(path, encoding="utf-8").readline())
+    model, prompt_version = first["model"], first.get("prompt_version", PROMPT_VERSION)
     scores = score(corpus, predictions)
     invalid = len(stats["invalid_clause_ids"])
     notes = [
-        f"Model: {model} (temperature 0, seed {SEED}, reasoning mode off, prompt {PROMPT_VERSION}), one request per held-out paragraph, "
+        f"Model: {model} (temperature 0, seed {SEED}, reasoning mode off, prompt {prompt_version}), one request per held-out paragraph, "
         f"given the task definition from ANNOTATION_GUIDELINE.md.",
         f"Requests: {stats['paragraphs_sent']} sent, {stats['failed_requests']} failed, "
         f"{stats['unparseable_answers']} answers not valid JSON.",
@@ -198,9 +201,9 @@ def score_cached(data_dir: str, path: str, out_dir: str) -> Dict[str, Any]:
     slug = os.path.splitext(os.path.basename(path))[0]
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, f"llm_{slug}_report.txt"), "w", encoding="utf-8") as f:
-        f.write(format_report(f"LLM extractor ({model}) on held-out MAS Notice 626 paragraphs",
+        f.write(format_report(f"LLM extractor ({model}) on held-out {corpus.spec.title} paragraphs",
                               corpus_stats(corpus), scores, error_rows(corpus, predictions), notes))
-    summary = {"model": model, "prompt_version": PROMPT_VERSION, "requests": {k: v for k, v in stats.items()},
+    summary = {"model": model, "prompt_version": prompt_version, "requests": {k: v for k, v in stats.items()},
                "scores": scores}
     with open(os.path.join(out_dir, f"llm_{slug}_summary.json"), "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2, ensure_ascii=False)
@@ -212,25 +215,42 @@ def model_slug(model: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", model.lower()).strip("_")
 
 
+def runs_path(data_dir: str, set_name: str, model: str) -> str:
+    return os.path.join(data_dir, "heldout", "llm_runs", set_name, f"{model_slug(model)}.jsonl")
+
+
+def score_all(data_dir: str) -> Dict[str, Dict[str, Any]]:
+    """Score every cached run of every held-out set; needs no model."""
+    summaries: Dict[str, Dict[str, Any]] = {}
+    for set_name in HELDOUT_SETS:
+        folder = os.path.join(data_dir, "heldout", "llm_runs", set_name)
+        if not os.path.isdir(folder):
+            continue
+        for name in sorted(os.listdir(folder)):
+            if name.endswith(".jsonl"):
+                summaries[f"{set_name}/{name[:-6]}"] = score_cached(
+                    data_dir, set_name, os.path.join(folder, name), results_dir(data_dir, set_name))
+    return summaries
+
+
 def main() -> None:
     data_dir = find_data_dir()
-    parser = argparse.ArgumentParser(description="LLM comparison on held-out MAS Notice 626 paragraphs")
+    parser = argparse.ArgumentParser(description="LLM comparison on held-out regulatory paragraphs")
     parser.add_argument("command", choices=["run", "score"])
+    parser.add_argument("--set", default=None, choices=sorted(HELDOUT_SETS), help="held-out set to run (required for run)")
     parser.add_argument("--model", default=os.getenv("HELDOUT_LLM_MODEL", DEFAULT_MODEL))
     parser.add_argument("--base-url", default=os.getenv("HELDOUT_LLM_BASE_URL", DEFAULT_BASE_URL))
     parser.add_argument("--limit", type=int, default=None, help="only the first N paragraphs (smoke test)")
     args = parser.parse_args()
-    runs = os.path.join(data_dir, "heldout", "llm_runs", f"{model_slug(args.model)}.jsonl")
     if args.command == "run":
-        run_model(data_dir, args.model, args.base_url, runs, args.limit)
-    summary = score_cached(data_dir, runs, os.path.join(data_dir, "heldout", "results"))
-    for level in ("paragraph", "clause"):
-        o = summary["scores"][level]["overall"]
-        print(f"{level:<9} precision {o['precision']:.2f}  recall {o['recall']:.2f}  F1 {o['f1']:.2f}  "
-              f"(TP {o['tp']}, FP {o['fp']}, FN {o['fn']})")
-    r = summary["requests"]
-    print(f"invalid clause IDs {len(r['invalid_clause_ids'])}/{r['cited_clause_ids']}, "
-          f"failed {r['failed_requests']}, unparseable {r['unparseable_answers']}")
+        if not args.set:
+            parser.error("run needs --set")
+        run_model(data_dir, args.set, args.model, args.base_url, runs_path(data_dir, args.set, args.model), args.limit)
+    for key, summary in score_all(data_dir).items():
+        o = summary["scores"]["paragraph"]["overall"]
+        r = summary["requests"]
+        print(f"{key:<32} paragraph: found {o['tp']}/{o['tp'] + o['fn']}, precision {o['precision']:.2f} | "
+              f"invalid clause IDs {len(r['invalid_clause_ids'])}/{r['cited_clause_ids']}, failed {r['failed_requests']}")
 
 
 if __name__ == "__main__":

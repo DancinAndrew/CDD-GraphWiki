@@ -4,20 +4,15 @@ import yaml
 import argparse
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Dict, Any, Tuple, Optional, Iterable
+from typing import List, Dict, Any, Tuple, Optional, Iterable, Set
 from src.contracts.models import Clause, Obligation, SourceDocument
+from src.extraction import frames
 
 
 # ---------------------------------------------------------------------------
 # 文字特徵：門檻與觸發條件都從條文本身解析，不寫死在規則裡
 # ---------------------------------------------------------------------------
 
-# CDD 觸發句型，例如 FATF「undertake customer due diligence (CDD) measures when」
-# 或 MAS「perform the measures as required by paragraphs 6, 7 and 8 when」
-TRIGGER_STATEMENT = re.compile(
-    r"(customer due diligence|\bcdd\b)[^.:;]{0,40}\bmeasures\s+when"
-    r"|measures as required by paragraphs [\d,\sand]+\bwhen"
-)
 AMOUNT_PATTERN = re.compile(r"(usd/eur|s\$|sgd)\s?(\d{1,3}(?:,\d{3})+|\d+)")
 THRESHOLD_PERCENT_PATTERN = re.compile(r"threshold of (\d{1,3})\s?%")
 PERCENT_PATTERN = re.compile(r"(\d{1,3})\s?%")
@@ -107,6 +102,11 @@ PROFILES: Dict[Tuple[str, str], ObligationProfile] = {
                            "nationality", "reliable_independent_source_documents"),
         review_flags=("missing_mandatory_identification_fields",)),
     # identify_ubo 的 ID 依解析到的持股門檻決定：{pct} 會變成 "_25"、"_10" 或空字串
+    ("verify_customer", "Internal"): ObligationProfile(
+        "ob_verify_customer_gb", "bank", "identify_and_verify", "customer_identity", 0.97,
+        base_conditions=("cdd_triggered",),
+        required_evidence=("independent_passport_or_identity_card", "official_registry_extract"),
+        review_flags=("customer_not_verified_before_onboarding",)),
     ("identify_ubo", "Global"): ObligationProfile(
         "ob_identify_ubo{pct}", "financial_institution", "identify_and_verify", "beneficial_owner", 0.93,
         applies_to={"customer_type": "legal_person"},
@@ -150,6 +150,30 @@ PROFILES: Dict[Tuple[str, str], ObligationProfile] = {
 }
 
 
+# 沒有專屬樣板的管轄區（例如測試用的英國法規）用通用樣板：規則照樣能判斷，義務 ID 帶上管轄區
+RULE_DEFAULTS: Dict[str, Tuple[str, str, Dict[str, Any]]] = {
+    "prohibit_anonymous": ("prohibit", "anonymous_accounts", {}),
+    "cdd_triggers": ("perform_cdd", "customer", {}),
+    "verify_customer": ("identify_and_verify", "customer_identity", {}),
+    "identify_ubo": ("identify_and_verify", "beneficial_owner", {"customer_type": "legal_person"}),
+    "pep_edd": ("perform_edd", "pep", {"pep_exposure": True}),
+    "pep_prohibition": ("restrict_relationship", "pep", {"pep_exposure": True}),
+    "pep_approval": ("obtain_approval", "pep", {"pep_exposure": True}),
+    "cdd_incomplete": ("refuse_relationship", "customer", {}),
+}
+JURISDICTION_SUFFIX = {"Global": "", "Singapore": "mas", "Internal": "gb"}
+
+
+def profile_for(rule: str, jurisdiction: str) -> ObligationProfile:
+    if (rule, jurisdiction) in PROFILES:
+        return PROFILES[(rule, jurisdiction)]
+    suffix = JURISDICTION_SUFFIX.get(jurisdiction, re.sub(r"[^a-z0-9]+", "_", jurisdiction.lower()).strip("_"))
+    action, obj, applies_to = RULE_DEFAULTS[rule]
+    pct = "{pct}" if rule == "identify_ubo" else ""
+    return ObligationProfile(f"ob_{rule}{pct}{'_' + suffix if suffix else ''}", "regulated_entity", action, obj, 0.8,
+                             applies_to=dict(applies_to))
+
+
 @dataclass
 class ClauseMatch:
     """單一條文命中某條規則的結果；同一規則與管轄區的多筆命中會合併成一個義務。"""
@@ -159,12 +183,19 @@ class ClauseMatch:
     conditions: List[str]
 
 
+def _paragraph_of(clause: Clause) -> str:
+    parts = clause.section_ref.split(" > ")
+    return parts[1] if len(parts) > 1 else ""
+
+
 class RuleBasedObligationExtractor:
     """
-    基於語法特徵與關鍵字匹配的合規義務抽取器。
+    規則式合規義務抽取器（第 2 版）。
 
-    - 規則比對「條文本身＋段落層級的上層條文」，不比對章節標題。
-    - 管轄區來自來源文件的 metadata（沒有時依文件 ID 前綴推定）。
+    - 判斷依據是句子的結構（src/extraction/frames.py）：助動詞或條列開頭的動詞是否真的要求這個動作、
+      主詞是客戶還是實質受益人、「may」與「shall not be required to」等放寬句，以及條列與上層段落的關係。
+    - 一條條文可以同時屬於多種義務類型。
+    - 管轄區只決定義務 ID 與樣板，不決定規則能不能命中；沒有專屬樣板的管轄區用通用樣板。
     - 持股與金額門檻從條文文字解析，不寫死。
     """
 
@@ -175,43 +206,15 @@ class RuleBasedObligationExtractor:
     def jurisdiction_for(self, source_document_id: str) -> str:
         return self.jurisdictions.get(source_document_id) or infer_jurisdiction(source_document_id)
 
-    # -- 規則 -----------------------------------------------------------------
-
-    def _match_rule(self, own: str, ctx: str, jurisdiction: str) -> Optional[str]:
-        """依序檢查規則，回傳第一條命中且該管轄區有樣板的規則名稱。"""
-        is_pep = "politically exposed" in ctx or re.search(r"\bpeps?\b", ctx) is not None
-        candidates = []
-        if "anonymous" in own or "fictitious" in own:
-            candidates.append("prohibit_anonymous")
-        if "unable to complete" in ctx and "shall not commence" in ctx:
-            candidates.append("cdd_incomplete")
-        if is_pep and "approved by" in own:
-            candidates.append("pep_approval")
-        if is_pep and re.search(r"\bprohibit", ctx):
-            candidates.append("pep_prohibition")
-        if is_pep and ("enhanced cdd" in ctx or "enhanced due diligence" in ctx):
-            candidates.append("pep_edd")
-        if (("beneficial owner" in ctx or re.search(r"\bubos?\b", ctx) or "controlling ownership interest" in ctx)
-                and re.search(r"\b(identify|identifying|identification|inquire|threshold)\b", ctx)):
-            candidates.append("identify_ubo")
-        # MAS 6.14B 以「identified under paragraph 6.14」指稱實質受益人，要求驗證其身分
-        if re.search(r"identified under paragraph 6\.14\b", ctx):
-            candidates.append("identify_ubo")
-        if jurisdiction == "Global" and "identifying the customer and verifying" in ctx:
-            candidates.append("verify_customer")
-        if jurisdiction == "Singapore" and (
-            "identify each customer" in ctx
-            or "verify the identity of the customer" in ctx
-            or "obtain at least the following information" in ctx
-        ):
-            candidates.append("verify_customer")
-        if TRIGGER_STATEMENT.search(ctx):
-            candidates.append("cdd_triggers")
-
-        for rule in candidates:
-            if (rule, jurisdiction) in PROFILES:
-                return rule
-        return None
+    def classify(self, clauses: List[Clause]) -> Dict[str, Set[str]]:
+        """每條條文的義務類型。條文依文件分組後逐份判斷，交叉引用只在同一份文件內解析。"""
+        by_document: Dict[str, List[Clause]] = {}
+        for clause in clauses:
+            by_document.setdefault(clause.source_document_id, []).append(clause)
+        types: Dict[str, Set[str]] = {}
+        for document_clauses in by_document.values():
+            types.update(frames.classify(document_clauses, _paragraph_of))
+        return types
 
     def _rule_conditions(self, rule: str, own: str) -> List[str]:
         if rule == "cdd_triggers":
@@ -221,30 +224,44 @@ class RuleBasedObligationExtractor:
             return [f"controlling_ownership_interest_above_{pct}_percent"] if pct else []
         return []
 
+    def matches_for(self, clause: Clause, rules: Iterable[str]) -> Tuple[List[ClauseMatch], Optional[str]]:
+        """把一條條文的義務類型轉成 ClauseMatch；沒有類型時回傳未命中的原因。"""
+        jurisdiction = self.jurisdiction_for(clause.source_document_id)
+        own = clause.normalized_text.lower()
+        rules = [r for r in frames.TYPES if r in set(rules)]
+        if not rules:
+            if any(indicator in own for indicator in OBLIGATION_INDICATORS):
+                return [], "MISSING_CORE_ELEMENTS"
+            return [], "NON_OBLIGATION_TEXT"
+        confident = [r for r in rules if profile_for(r, jurisdiction).confidence >= self.confidence_threshold]
+        if not confident:
+            return [], "LOW_CONFIDENCE"
+        return [ClauseMatch(r, jurisdiction, clause.clause_id, self._rule_conditions(r, own)) for r in confident], None
+
     def match_clause(self, clause: Clause, context: str = "") -> Tuple[Optional[ClauseMatch], Optional[str]]:
         """
-        嘗試把單一條文對應到規則。
-        成功回傳 (ClauseMatch, None)；失敗回傳 (None, failure_reason)。
+        單一條文的便利介面：`context` 是上層段落的文字（例如 6.3 的導言），當成這條條文的上層條文一起判斷。
+        回傳第一個命中的類型。
         """
-        own = clause.normalized_text.lower()
-        ctx = f"{context.lower()} {own}".strip()
-        jurisdiction = self.jurisdiction_for(clause.source_document_id)
+        matches, reason = self.match_clause_all(clause, context)
+        return (matches[0], None) if matches else (None, reason)
 
-        rule = self._match_rule(own, ctx, jurisdiction)
-        if not rule:
-            if any(indicator in ctx for indicator in OBLIGATION_INDICATORS):
-                return None, "MISSING_CORE_ELEMENTS"
-            return None, "NON_OBLIGATION_TEXT"
-
-        if PROFILES[(rule, jurisdiction)].confidence < self.confidence_threshold:
-            return None, "LOW_CONFIDENCE"
-
-        return ClauseMatch(rule, jurisdiction, clause.clause_id, self._rule_conditions(rule, own)), None
+    def match_clause_all(self, clause: Clause, context: str = "") -> Tuple[List[ClauseMatch], Optional[str]]:
+        document: List[Clause] = []
+        if context.strip():
+            parent = Clause(clause_id="__context__", source_document_id=clause.source_document_id,
+                            section_ref=clause.section_ref, parent_clause_id=None,
+                            raw_text=context, normalized_text=context.lower(), citations=["__context__"])
+            document.append(parent)
+            clause = clause.model_copy(update={"parent_clause_id": "__context__"})
+        document.append(clause)
+        types = frames.classify(document, _paragraph_of)
+        return self.matches_for(clause, types.get(clause.clause_id, set()))
 
     def build_obligation(self, matches: List[ClauseMatch]) -> Obligation:
         """把同一規則、同一管轄區的命中合併成一個強型別 Obligation。"""
         first = matches[0]
-        profile = PROFILES[(first.rule, first.jurisdiction)]
+        profile = profile_for(first.rule, first.jurisdiction)
 
         source_clause_ids: List[str] = []
         conditions: List[str] = list(profile.base_conditions)
@@ -277,7 +294,7 @@ class RuleBasedObligationExtractor:
         )
 
     def extract_obligation(self, clause: Clause, context: str = "") -> Tuple[Optional[Obligation], Optional[str]]:
-        """單一條文的便利介面：命中時回傳只含這一條出處的 Obligation。"""
+        """單一條文的便利介面：命中時回傳只含這一條出處的 Obligation（第一個類型）。"""
         match, reason = self.match_clause(clause, context)
         if not match:
             return None, reason
@@ -286,8 +303,8 @@ class RuleBasedObligationExtractor:
 
 def build_contexts(clauses: List[Clause]) -> Dict[str, str]:
     """
-    為每條條文組出比對用的上下文：沿 parent_clause_id 往上收集段落層級的上層條文，
-    略過章節標題（'#'、'##' 開頭的條文），避免「Enhanced Customer Due Diligence」這類章名污染判斷。
+    為每條條文組出上層段落的文字：沿 parent_clause_id 往上收集，略過章節標題（'#'、'##' 開頭的條文）。
+    給 match_clause 這類單條介面使用；整份文件請用 extract_obligations，它會一起判斷條列與交叉引用。
     """
     by_id = {c.clause_id: c for c in clauses}
     contexts: Dict[str, str] = {}
@@ -308,19 +325,19 @@ def extract_obligations(
     extractor: Optional[RuleBasedObligationExtractor] = None,
 ) -> Tuple[List[Obligation], List[Dict[str, Any]]]:
     """
-    依文件順序逐條比對，合併同一規則與管轄區的命中。
+    整份文件一起判斷，依文件順序合併同一規則與管轄區的命中。
     回傳 (義務列表, 未命中而送入低信心審查佇列的條文)。
     """
     extractor = extractor or RuleBasedObligationExtractor()
-    contexts = build_contexts(clauses)
+    types = extractor.classify(clauses)
 
     grouped: Dict[Tuple[str, str], List[ClauseMatch]] = {}
     review_queue: List[Dict[str, Any]] = []
     for clause in clauses:
-        match, reason = extractor.match_clause(clause, contexts.get(clause.clause_id, ""))
-        if match:
+        matches, reason = extractor.matches_for(clause, types.get(clause.clause_id, set()))
+        for match in matches:
             grouped.setdefault((match.rule, match.jurisdiction), []).append(match)
-        else:
+        if not matches:
             review_queue.append({
                 "clause_id": clause.clause_id,
                 "section_ref": clause.section_ref,
