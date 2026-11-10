@@ -1,10 +1,14 @@
 # CDD-GraphWiki
 
+[![CI](https://github.com/DancinAndrew/CDD-GraphWiki/actions/workflows/ci.yml/badge.svg)](https://github.com/DancinAndrew/CDD-GraphWiki/actions/workflows/ci.yml)
+
 **What it is:** a proof-of-concept anti-money laundering (AML) customer due diligence (CDD) workflow. It parses verbatim excerpts of FATF Recommendation 10 and MAS Notice 626, plus a fictional bank policy, into 54 schema-validated clauses and links them in a knowledge graph with obligations, conflicts and customer contexts. A rule-based extractor finds all 12 obligations in my hand-labelled gold set, with the right source clauses. The system flags 3 conflicts between sources, such as 25% versus 10% beneficial ownership thresholds. It generates CDD/EDD checklists that cite their source clauses for 5 synthetic customer profiles, and routes high-risk cases to human review with a SHA-256 hash chain audit log.
+
+**Held-out test:** to see whether the rules generalise, the full official MAS Notice 626 (167 paragraphs, 419 clause records) was converted from the PDF, and the 157 paragraphs not used to write the rules were labelled against a written guideline. The labels were committed before the rules were run on them. On those paragraphs the rules found 1 of 18 labelled obligations (paragraph level, precision 0.14). A local open-weight LLM (qwen3.5:9b, temperature 0) given the same guideline found 16 of 18 but with precision 0.40. The keyword rules overfit their development text and the LLM over-labels neighbouring duties, so neither replaces the human review step.
 
 **My role:** individual final project for the IT Risk Management course at National Central University (May–June 2026). I designed and built the data contracts, gold dataset, extraction and decision rules, evaluation, API and dashboard.
 
-**How to run:** `docker compose -f deployment/docker-compose.yml up --build` starts the dashboard at `http://localhost:3000`. `PYTHONPATH=backend python -m src.pipeline` rebuilds `data/processed` and prints every number below. `PYTHONPATH=backend pytest backend/tests` runs the 79 tests.
+**How to run:** `docker compose -f deployment/docker-compose.yml up --build` starts the dashboard at `http://localhost:3000`. `PYTHONPATH=backend python -m src.pipeline` rebuilds `data/processed` and prints every number below. `PYTHONPATH=backend pytest backend/tests` runs the 89 tests. `PYTHONPATH=backend python -m src.heldout.evaluate` and `PYTHONPATH=backend python -m src.heldout.llm_compare score` recompute the held-out scores.
 
 | Number | Where it comes from |
 | --- | --- |
@@ -13,8 +17,12 @@
 | 3 conflicts: ownership 25% vs 10%, occasional transactions USD/EUR 15,000 vs S$20,000, PEPs allowed vs prohibited | [`data/processed/conflicts.yaml`](data/processed/conflicts.yaml) |
 | 5 checklists for 5 synthetic profiles, 4 routed to human review | [`data/processed/checklists.yaml`](data/processed/checklists.yaml) |
 | All numbers in one file | [`data/processed/summary.json`](data/processed/summary.json) |
+| Held-out (157 MAS Notice 626 paragraphs not used to write the rules): rules find 1/18 labelled obligations, precision 0.14 | [`data/heldout/results/rules_report.txt`](data/heldout/results/rules_report.txt) |
+| Same paragraphs, local LLM qwen3.5:9b: 16/18, precision 0.40; all 108 clause IDs it returned exist | [`data/heldout/results/llm_qwen3_5_9b_report.txt`](data/heldout/results/llm_qwen3_5_9b_report.txt) |
 
-The gold set in [`data/gold/`](data/gold/) is my own annotation of these sources, so 12/12 shows that the rules cover the annotated obligations, not that they generalise to unseen regulations. The MAS excerpt is checked line by line against the official PDF in [`data/sources/official/`](data/sources/official/) by the test suite.
+The development gold set in [`data/gold/`](data/gold/) is my own annotation of these sources and the rules were written against it, so 12/12 shows that the rules cover the annotated obligations; the held-out rows show they do not generalise. The LLM chose clause IDs from the one paragraph it was sent, so its valid citations do not show it would cite correctly without that list. The MAS texts are checked line by line against the official PDF in [`data/sources/official/`](data/sources/official/) by the test suite.
+
+![Demo: pick a synthetic customer, read the checklist and the clauses it cites, open the review queue, then trace the checklist in the knowledge graph](images/00-demo.gif)
 
 ---
 
@@ -88,7 +96,7 @@ CDD-GraphWiki 展示了在這些情境中可以轉移套用的工作流程概念
 - **法規圖譜視覺化：** 以 D3 製作的互動式圖，連結來源文件、條文、義務、衝突、客戶和生成的檢查清單。
 - **Neo4j 圖資料庫支援：** 可選的圖資料庫同步，以及用 Cypher 進行 UBO 股權穿透追蹤／循環偵測。
 - **PDF 匯入工作流程：** PDF 上傳、文字萃取、LLM 輔助的條文切塊、結構化義務萃取、YAML 合併、快取刷新，以及圖譜／檢查清單更新。若沒有接上真實 LLM（或呼叫失敗退回 mock 模式），匯入會失敗，不會把合成資料寫進知識庫。
-- **評估與治理產出物：** 黃金資料集（gold dataset）、評估工具（evaluation harness）、OpenSpec 需求、ADR，以及系統路線圖文件。
+- **評估與治理產出物：** 黃金資料集（gold dataset）、評估工具（evaluation harness）、未用於開發的 held-out 測試與 LLM 對照、OpenSpec 需求、ADR，以及系統路線圖文件。評估工具內的 `ScriptedRAGBaseline` 是刻意寫入錯誤的測試 fixture，用來確認評估工具抓得到錯判與幻覺引用，不是真實系統的分數。
 
 ## Demo 與視覺素材
 
@@ -239,9 +247,42 @@ npm run dev -- --host 0.0.0.0 --port 3000
 ```bash
 PYTHONPATH=backend python -m src.pipeline
 PYTHONPATH=backend pytest backend/tests
+
+# 未用於開發的測試（held-out）：規則與 LLM 在 MAS Notice 626 全文上的表現
+PYTHONPATH=backend python -m src.heldout.evaluate          # 規則式萃取器
+PYTHONPATH=backend python -m src.heldout.llm_compare score # 用快取的 LLM 回答重新計分，不需要模型
+ollama pull qwen3.5:9b && PYTHONPATH=backend python -m src.heldout.llm_compare run  # 重新呼叫模型（選用）
 ```
 
+GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評估，並確認輸出和 commit 的檔案完全相同。
+
 管線會依序執行：解析來源 → 萃取義務並與金標比對 → 偵測衝突並套用人工裁決 → 為 5 個合成客戶產生檢查清單，把結果寫進 `data/processed/` 並印出摘要。輸出是確定性的，重跑兩次檔案內容完全相同。測試會先把管線跑到暫存目錄，稽核日誌也寫到暫存檔，不會改動 repo 裡的資料。
+
+## 未用於開發的測試（held-out）
+
+12/12 是在寫規則時看過的資料上得到的，不能說明規則能不能用在新的條文上。為了檢驗這點：
+
+1. **全文：** 用 [`backend/src/heldout/convert.py`](backend/src/heldout/convert.py) 把官方 MAS Notice 626 PDF 轉成 Markdown，共 167 個編號段落、419 筆條文紀錄。測試會逐行比對 PDF 原文，跨頁的段落也一樣。
+2. **切出測試資料：** 寫規則時用過的 10 個段落（6.3、6.5、6.6、6.9、6.13、6.14、6.14B、6.35、8.2、8.3）整段排除，剩下的 157 段是測試資料。
+3. **先標註、先 commit：** 依 [`標註準則`](data/heldout/ANNOTATION_GUIDELINE.md) 標出哪些條文屬於系統建模的 8 種義務類型，標註（[`gold_labels.yaml`](data/heldout/gold_labels.yaml)）在規則跑這些段落之前就 commit 了，git 歷史可以看到順序。共 16 段、42 筆條文帶有類型。
+4. **原封不動地跑規則**，再用同一份準則讓本機的開源模型 qwen3.5:9b（Ollama，temperature 0，固定 seed）逐段標註；模型的原始回答都存在 [`data/heldout/llm_runs/`](data/heldout/llm_runs/)，沒有模型也能重新計分。
+
+| | 段落層級：找到 | 段落層級：精確率 | 條文層級：精確率／召回率 |
+| --- | --- | --- | --- |
+| 規則式萃取器 | 1／18 | 0.14 | 0.41／0.32 |
+| qwen3.5:9b | 16／18 | 0.40 | 0.30／0.56 |
+
+**規則為什麼失準**（細節見 [`rules_report.txt`](data/heldout/results/rules_report.txt)）：
+- 規則綁定開發段落的句型。例如 CDD 觸發規則要找「measures as required by paragraphs … when」，6.31 寫成「shall – (a) perform CDD measures as if …」就漏掉；10.3 的代理銀行條款剛好含有這個句型，反而誤判。
+- 規則依管轄區設定。禁止匿名帳戶只有 FATF 的設定，所以 MAS 第 6.1 段明明寫著禁止，也抓不到。
+- 規則不處理否定與放寬。第 6.16 段「shall not be required to inquire」（豁免查詢受益人）被判成要查詢受益人，一段就多出 10 筆誤判。
+- 每筆條文最多只給一種類型，所以第 6.32 段「同時驗證客戶與受益人」最多只能對一半。
+
+**LLM 的問題在另一邊**（[`llm_qwen3_5_9b_report.txt`](data/heldout/results/llm_qwen3_5_9b_report.txt)）：它找得到大部分義務，但會把相近的責任也標進來。例如代表客戶行事的人（6.10）被當成客戶身分驗證、關聯方（6.8）被當成受益人識別；名單篩檢的時點（6.40）被當成 CDD 觸發；非 PEP 的高風險客戶加強審查（8.7）也被當成 PEP 義務。
+
+結論：關鍵字規則可以解釋，但只對寫規則時看過的文字有效；小型 LLM 召回率高，但精確率不到一半。兩者都需要人工審查把關，這也是系統把高風險清單送人工審查的理由。
+
+這個測試的限制：標註只有一位標註者，沒有測量標註者間的一致性；段落層級只有 18 項，數字的波動會很大；LLM 只測了一個 9B 的本機模型，沒有測更大的託管模型；LLM 回傳的條文 ID 只能從送給它的那一段裡選，所以 0 筆無效 ID 不代表它在開放情境下不會捏造引用。
 
 ## 專案目錄導覽
 
@@ -250,6 +291,7 @@ PYTHONPATH=backend pytest backend/tests
 - [`data/sources/`](data/sources/) - 管線讀取的三份來源：FATF R.10 與 MAS Notice 626 的官方原文逐字摘錄，以及虛構的銀行內部政策；[`official/`](data/sources/official/) 放 MAS Notice 626 官方 PDF
 - [`data/gold/`](data/gold/) - 人工標註的黃金資料集：條文（parser 輸出經人工檢查後凍結）、義務、衝突、客戶情境與預期檢查清單
 - [`data/reviews/`](data/reviews/) - 衝突的人工裁決紀錄
+- [`data/heldout/`](data/heldout/) - 未用於開發的測試：MAS Notice 626 全文（由官方 PDF 轉出）、標註準則、先於規則執行 commit 的金標、規則與 LLM 的評估結果，以及 LLM 的原始回答
 - [`data/processed/`](data/processed/) - `python -m src.pipeline` 產生的結果與 `summary.json`，以及只能追加的稽核日誌 `audit_log.json`
 - [`schemas/`](schemas/) - JSON Schema 契約與範例
 - [`docs/`](docs/) - 產品規格、路線圖、ADR、論文筆記、簡報支援素材和視覺素材
@@ -271,7 +313,7 @@ PYTHONPATH=backend pytest backend/tests
 
 - 這是課程專案的原型，不是正式的法律意見，也不是已部署的合規平台。
 - 主要的 demo 語料偏向 AML／CDD，不是產品合規的語料。
-- 語料只是 FATF R.10 與 MAS Notice 626 的部分段落摘錄，加上一份虛構的銀行政策；金標是我自己的標註，規則是對照這份金標寫的，12/12 不代表能套用到沒看過的法規。
+- 決策用的語料只是 FATF R.10 與 MAS Notice 626 的部分段落摘錄，加上一份虛構的銀行政策；規則是對照這份金標寫的。在 MAS Notice 626 其餘 157 段上，規則只找到 18 項義務中的 1 項（見上方 held-out 測試）。
 - 衝突偵測目前只涵蓋三類衝突（持股門檻、偶發交易門檻、PEP 允許與禁止）。
 - CDD 決策層刻意設計得受限且以規則驅動，以換取可解釋性：決策分支是寫好的規則，引用則由義務的出處推導。
 - PDF 匯入用 LLM 切條文，條文 ID 格式和 parser 不同；重跑管線會以 `data/sources/` 重建知識庫，透過匯入主控台加入的文件不會保留。
@@ -290,6 +332,7 @@ PYTHONPATH=backend pytest backend/tests
 ## 修訂紀錄
 
 - **2026-11（課程結束後的修補）：** 移除兩條 PDF 匯入時 LLM 退回 mock 模式產生的合成條文；把 MAS 與 FATF 來源改成官方原文的逐字摘錄（修正 SGD 5,000 應為 S$20,000，以及 25% 門檻出自 FATF 而非 MAS Notice 626）；補上 MAS 第 6.14B 段（驗證受益人）與第 6.35 段（無法完成 CDD 時不得建立業務關係），銀行政策的 PEP 禁令與核准要求拆成兩條義務；萃取規則改成依文字判斷、不再指定條文 ID；衝突與檢查清單的引用改由解析出的條文推導，人工裁決只套用在當時裁決的條文上；評估加入出處檢查；PDF 匯入先驗證再寫檔；新增一鍵重建管線，測試不再改寫 repo 資料。課程繳交版本見 git 歷史中 2026-06 的 commit。
+- **2026-11（held-out 測試）：** 把官方 MAS Notice 626 全文轉成可解析的 Markdown；在規則沒看過的 157 段上先標註、先 commit，再跑規則，並用本機開源 LLM 做對照；新增 GitHub Actions，每次 push 都重跑測試、管線與評估並比對輸出；README 加上示範動畫；評估工具裡手寫的對照組改名為 `ScriptedRAGBaseline`，避免被誤認為真實系統。
 
 ## 免責聲明
 

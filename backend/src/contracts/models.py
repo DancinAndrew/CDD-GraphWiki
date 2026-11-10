@@ -233,7 +233,7 @@ class ComparisonReport(BaseModel):
     匯總系統與 Baseline 評估對比結果。
     """
     cdd_wiki_metrics: Dict[str, EvaluationMetrics] = Field(..., description="Metrics for CDD-GraphWiki")
-    baseline_metrics: Dict[str, EvaluationMetrics] = Field(..., description="Metrics for Vector-RAG Baseline")
+    baseline_metrics: Dict[str, EvaluationMetrics] = Field(..., description="Metrics for the scripted RAG-style baseline fixture (hand-written errors, not a real system)")
     diagnostics: List[DiagnosticReport] = Field(default_factory=list, description="Detailed diagnostic tree reports")
 
 

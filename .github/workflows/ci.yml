@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+      - name: Run tests
+        run: PYTHONPATH=backend pytest backend/tests -q
+      - name: Rebuild data/processed and check it matches the commit
+        run: |
+          PYTHONPATH=backend python -m src.pipeline
+          git diff --exit-code -- data/processed
+      - name: Rebuild the held-out corpus and scores and check they match the commit
+        run: |
+          PYTHONPATH=backend python -m src.heldout.convert
+          PYTHONPATH=backend python -m src.heldout.evaluate
+          PYTHONPATH=backend python -m src.heldout.llm_compare score
+          git diff --exit-code -- data/heldout
+      - name: No untracked files were produced
+        run: test -z "$(git status --porcelain)" || (git status --porcelain && exit 1)
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Type-check and build
+        run: npm run build

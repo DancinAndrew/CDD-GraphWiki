@@ -1,7 +1,7 @@
-from .baseline import VectorRAGBaseline
+from .baseline import ScriptedRAGBaseline
 from .harness import EvaluationHarness
 
 __all__ = [
-    "VectorRAGBaseline",
+    "ScriptedRAGBaseline",
     "EvaluationHarness"
 ]

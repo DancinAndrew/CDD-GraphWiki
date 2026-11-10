@@ -2,15 +2,16 @@ from typing import List, Dict, Any, Literal
 from src.contracts.models import CustomerContext, CDDChecklist
 
 
-class VectorRAGBaseline:
+class ScriptedRAGBaseline:
     """
-    向量檢索 RAG 模擬器 (Baseline)。
+    手寫的 RAG 式對照組（測試用 fixture，不是實際跑出的系統）。
     模擬傳統基於 Naive fixed-size chunking 與 Vector similarity 檢索的 Chatbot 邏輯。
     因為缺乏強型別圖語意、決策織入與衝突分析，它在對複雜客戶情境推理時容易出錯：
     - 在 required_documents 中漏判關鍵高風險文件（如 Senior Management Approval Form 或 Source of Wealth Declaration & Evidence）。
     - 對於 ubo_status 未明且過度嵌套的 Cayman corporate 客戶，其 RAG 檢索往往抓不到完整階層資訊，導致決策錯誤（預期為 EDD 卻錯判為 standard_cdd）。
     - 在 citations 中容易產生幻覺，亂編不存在的條文 ID（如 mas_notice_626_8_enhanced_cdd_99_9、myanmar_prohibitions_s_77_7）。
-    這個 baseline 是手寫的模擬器，用來示範評估工具如何抓出錯誤，不是實際跑出的向量檢索系統。
+    這個 baseline 是手寫的模擬器，每個錯誤都是刻意寫進去的，用來測試評估工具能不能抓出錯判與幻覺引用；
+    它的分數不代表任何真實 RAG 系統的表現。真實模型的比較見 src/heldout/llm_compare.py。
     """
 
     def generate_checklist(self, customer: CustomerContext) -> CDDChecklist:
