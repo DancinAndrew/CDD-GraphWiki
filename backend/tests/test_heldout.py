@@ -206,3 +206,12 @@ def test_uk_rule_scores_match_the_committed_report(tmp_path):
     for version in ("rules_v1", "rules_v2"):
         assert (tmp_path / f"{version}_report.txt").read_text() == (UK_RESULTS / f"{version}_report.txt").read_text()
     assert summary["rules_v1"]["paragraph"]["overall"]["tp"] == 0  # v1 has no profile for the United Kingdom
+
+
+def test_uk_llm_scores_can_be_recomputed_offline_from_cached_answers(tmp_path):
+    run = REPO_ROOT / "data" / "heldout" / "llm_runs" / "uk_mlr_2017" / f"{llm_compare.model_slug(llm_compare.DEFAULT_MODEL)}.jsonl"
+    summary = llm_compare.score_cached(DATA_DIR, "uk_mlr_2017", str(run), str(tmp_path))
+    assert summary == json.loads((UK_RESULTS / f"llm_{run.stem}_summary.json").read_text())
+    assert summary["requests"]["paragraphs_sent"] == 137
+    # the one clause ID the model made up, following the naming pattern for "(zb)" in regulation 27(8)
+    assert summary["requests"]["invalid_clause_ids"] == ["27(8): uk_mlr_2017_27_cdd_27_8_zb"]

@@ -4,11 +4,11 @@
 
 **What it is:** a proof-of-concept anti-money laundering (AML) customer due diligence (CDD) workflow. It parses verbatim excerpts of FATF Recommendation 10 and MAS Notice 626, plus a fictional bank policy, into 54 schema-validated clauses and links them in a knowledge graph with obligations, conflicts and customer contexts. A rule-based extractor finds all 13 obligations in my hand-labelled gold set, with the right source clauses. The system flags 3 conflicts between sources, such as 25% versus 10% beneficial ownership thresholds. It generates CDD/EDD checklists that cite their source clauses for 5 synthetic customer profiles, and routes high-risk cases to human review with a SHA-256 hash chain audit log.
 
-**Held-out test:** to see whether the rules generalise, the full official MAS Notice 626 (167 paragraphs, 419 clause records) was converted from the PDF, and the 157 paragraphs not used to write the rules were labelled against a written guideline. The labels were committed before the rules were run on them. On those paragraphs the rules found 1 of 18 labelled obligations (paragraph level, precision 0.14). A local open-weight LLM (qwen3.5:9b, temperature 0) given the same guideline found 16 of 18 but with precision 0.40. The keyword rules overfit their development text and the LLM over-labels neighbouring duties, so neither replaces the human review step.
+**Held-out tests:** the first rules (v1) matched every development obligation but found only 1 of 18 obligations in the 157 other paragraphs of the official MAS Notice 626, labelled and committed before the rules were run. The rules were rebuilt (v2) around how a requirement is phrased: which verb a modal governs, permissions and exemptions, who must be identified, and how list items relate to their lead-in. v2 was frozen before a second regulation was fetched and labelled: Part 3 of the UK Money Laundering Regulations 2017, which neither version had seen. There v2 found 15 of 32 labelled obligations at precision 0.88; v1 found none, and at most 3 when told to treat the text as FATF or MAS. A local open-weight LLM (qwen3.5:9b) given the same written guideline found 26 of 32, but at precision 0.43. The rules miss half and the LLM over-labels, so neither replaces the human review step.
 
 **My role:** individual final project for the IT Risk Management course at National Central University (May–June 2026). I designed and built the data contracts, gold dataset, extraction and decision rules, evaluation, API and dashboard.
 
-**How to run:** `docker compose -f deployment/docker-compose.yml up --build` starts the dashboard at `http://localhost:3000`. `PYTHONPATH=backend python -m src.pipeline` rebuilds `data/processed` and prints every number below. `PYTHONPATH=backend pytest backend/tests` runs the 97 tests. `PYTHONPATH=backend python -m src.heldout.evaluate` and `PYTHONPATH=backend python -m src.heldout.llm_compare score` recompute the held-out scores.
+**How to run:** `docker compose -f deployment/docker-compose.yml up --build` starts the dashboard at `http://localhost:3000`. `PYTHONPATH=backend python -m src.pipeline` rebuilds `data/processed` and prints every number below. `PYTHONPATH=backend pytest backend/tests` runs the 102 tests. `PYTHONPATH=backend python -m src.heldout.evaluate` and `PYTHONPATH=backend python -m src.heldout.llm_compare score` recompute the held-out scores.
 
 | Number | Where it comes from |
 | --- | --- |
@@ -17,10 +17,10 @@
 | 3 conflicts: ownership 25% vs 10%, occasional transactions USD/EUR 15,000 vs S$20,000, PEPs allowed vs prohibited | [`data/processed/conflicts.yaml`](data/processed/conflicts.yaml) |
 | 5 checklists for 5 synthetic profiles, 4 routed to human review | [`data/processed/checklists.yaml`](data/processed/checklists.yaml) |
 | All numbers in one file | [`data/processed/summary.json`](data/processed/summary.json) |
-| Held-out (157 MAS Notice 626 paragraphs not used to write the rules): rules find 1/18 labelled obligations, precision 0.14 | [`data/heldout/results/mas_notice_626/rules_v1_report.txt`](data/heldout/results/mas_notice_626/rules_v1_report.txt) |
-| Same paragraphs, local LLM qwen3.5:9b: 16/18, precision 0.40; all 108 clause IDs it returned exist | [`data/heldout/results/mas_notice_626/llm_qwen3_5_9b_report.txt`](data/heldout/results/mas_notice_626/llm_qwen3_5_9b_report.txt) |
+| Held-out MAS Notice 626 (157 paragraphs, labels committed before v1 ran): v1 1/18 (precision 0.14); v2 18/18 (0.95, but v2 was designed after studying these errors); LLM 16/18 (0.40) | [`data/heldout/results/mas_notice_626/`](data/heldout/results/mas_notice_626/) |
+| Held-out UK MLR 2017 Part 3 (137 paragraphs, labels committed after v2 was frozen): v1 0/32; v2 15/32 (0.88); LLM 26/32 (0.43), 1 of 173 returned clause IDs invented | [`data/heldout/results/uk_mlr_2017/`](data/heldout/results/uk_mlr_2017/) |
 
-The development gold set in [`data/gold/`](data/gold/) is my own annotation of these sources and the rules were written against it, so 13/13 shows that the rules cover the annotated obligations; the held-out rows show they do not generalise. The LLM chose clause IDs from the one paragraph it was sent, so its valid citations do not show it would cite correctly without that list. The MAS texts are checked line by line against the official PDF in [`data/sources/official/`](data/sources/official/) by the test suite.
+The development gold set in [`data/gold/`](data/gold/) is my own annotation of these sources and the rules were written against it, so 13/13 shows that the rules cover the annotated obligations; the held-out rows show how far they generalise. The LLM chose clause IDs from the one paragraph it was sent, so its few invalid citations do not show it would cite correctly without that list. The MAS texts are checked line by line against the official PDF in [`data/sources/official/`](data/sources/official/) by the test suite.
 
 ![Demo: pick a synthetic customer, read the checklist and the clauses it cites, open the review queue, then trace the checklist in the knowledge graph](images/00-demo.gif)
 
@@ -88,7 +88,7 @@ CDD-GraphWiki 展示了在這些情境中可以轉移套用的工作流程概念
 ## 主要功能
 
 - **結構化的合規資料契約：** 以 JSON Schema 和 Pydantic 模型定義來源文件、條文、義務、客戶情境、衝突、檢查清單、圖節點和稽核日誌。
-- **規則式義務萃取：** 規則比對條文與它的上層段落，持股與金額門檻直接從條文文字解析（例如 `25%`、`USD/EUR 15,000`、`S$20,000`），不依賴特定條文 ID。評估同時檢查義務是否對應到正確的條文與管轄區。
+- **規則式義務萃取（第 2 版）：** 規則判斷的是句子的結構，不是特定字串（[`frames.py`](backend/src/extraction/frames.py)）：動作要由 shall／must 這類助動詞要求、或是條列開頭的動詞才算義務；「may」和「shall not be required to」這類放寬句不算；要被識別的是客戶還是實質受益人決定義務類型；條列項目依導言的性質決定要不要承接類型；一條條文可以同時屬於多種義務。持股與金額門檻直接從條文文字解析（例如 `25%`、`USD/EUR 15,000`、`S$20,000`），不依賴特定條文 ID 或管轄區。評估同時檢查義務是否對應到正確的條文與管轄區。
 - **衝突偵測：** 比較不同來源對同一類義務的門檻或立場，目前涵蓋三類（持股門檻、偶發交易門檻、PEP 允許與禁止）。衝突會引用實際寫出數字或禁止字樣的條文。如何調和衝突是人的決定，記錄在 [`data/reviews/conflict_adjudications.yaml`](data/reviews/conflict_adjudications.yaml)；沒有裁決紀錄的衝突會讓相關檢查清單送人工審查。
 - **CDD／EDD 決策：** 以規則為基礎，從結構化的客戶情境生成檢查清單，包含所需文件、風險觸發條件、引用出處、衝突，以及人工審查標記。引用一律是適用義務的錨點條文 ID，可以在圖譜上一路追回原文。
 - **人工介入審查：** 針對高風險或不明確的案件提供審查佇列，審查者的決策與註記都透過 FastAPI 驗證後記錄下來。
@@ -260,29 +260,45 @@ GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評�
 
 ## 未用於開發的測試（held-out）
 
-開發資料上的滿分是在寫規則時看過的資料上得到的，不能說明規則能不能用在新的條文上。為了檢驗這點：
+開發資料上的滿分是在寫規則時看過的資料上得到的，不能說明規則能不能用在新的條文上。所以這裡做了兩輪測試，每一輪都是「先把答案標好並 commit，之後才讓規則作答」，git 歷史可以看到順序。標註依同一份 [`標註準則`](data/heldout/ANNOTATION_GUIDELINE.md)，只標系統建模的 8 種義務類型。
 
-1. **全文：** 用 [`backend/src/heldout/convert.py`](backend/src/heldout/convert.py) 把官方 MAS Notice 626 PDF 轉成 Markdown，共 167 個編號段落、419 筆條文紀錄。測試會逐行比對 PDF 原文，跨頁的段落也一樣。
-2. **切出測試資料：** 寫規則時用過的 10 個段落（6.3、6.5、6.6、6.9、6.13、6.14、6.14B、6.35、8.2、8.3）整段排除，剩下的 157 段是測試資料。
-3. **先標註、先 commit：** 依 [`標註準則`](data/heldout/ANNOTATION_GUIDELINE.md) 標出哪些條文屬於系統建模的 8 種義務類型，標註（[`gold_labels.yaml`](data/heldout/gold_labels.yaml)）在規則跑這些段落之前就 commit 了，git 歷史可以看到順序。共 16 段、42 筆條文帶有類型。
-4. **原封不動地跑規則**，再用同一份準則讓本機的開源模型 qwen3.5:9b（Ollama，temperature 0，固定 seed）逐段標註；模型的原始回答都存在 [`data/heldout/llm_runs/`](data/heldout/llm_runs/)，沒有模型也能重新計分。
+**第一輪：MAS Notice 626 其餘 157 段**
+1. 用 [`convert.py`](backend/src/heldout/convert.py) 把官方 PDF 轉成 167 段、419 筆條文；測試逐行比對 PDF 原文，跨頁的段落也一樣。
+2. 寫規則時用過的 10 段（6.3、6.5、6.6、6.9、6.13、6.14、6.14B、6.35、8.2、8.3）整段排除，剩下 157 段；標註（[`gold_labels.yaml`](data/heldout/gold_labels.yaml)）先 commit，共 16 段、18 項義務。
+3. 第 1 版規則只找到 1 項。原因：規則綁定開發段落的句型（6.31 換個寫法就漏掉，10.3 剛好含有相同句型反而誤判）、只認得特定管轄區（MAS 6.1 明寫禁止匿名帳戶也抓不到）、不懂否定與放寬（6.16「shall not be required to inquire」一段就多出 10 筆誤判）、每條條文只給一種類型。
 
-| | 段落層級：找到 | 段落層級：精確率 | 條文層級：精確率／召回率 |
-| --- | --- | --- | --- |
-| 規則式萃取器 | 1／18 | 0.14 | 0.41／0.32 |
-| qwen3.5:9b | 16／18 | 0.40 | 0.30／0.56 |
+**改寫規則（第 2 版，[`frames.py`](backend/src/extraction/frames.py)）**：針對上面的錯誤類型，而不是個別段落。
+- 要求要有句法依據：助動詞（shall、must、should、is required to）真的管到這個動作，或條列開頭就是動詞。「failure to verify a UBO」不算要求驗證。
+- 「may obtain」「shall not be required to」「in lieu of」這類放寬或豁免的句子不算義務。
+- 看要被識別的是誰：客戶（含匯款的匯款人、收款人）→ 客戶身分驗證；實質受益人 → 受益人識別；代表客戶行事的人、關聯方 → 都不算。「person identified under paragraph 6.14」這類交叉引用會回頭查 6.14 在講誰。
+- 條列看導言的性質：條件清單、「the following measures／information」的項目承接導言的類型；「the bank shall –」底下以動詞開頭的項目是各自獨立的責任；「except where」之後的是例外。
+- 一條條文可以同時屬於多種義務；沒有專屬設定的管轄區也照樣判斷。
 
-**規則為什麼失準**（細節見 [`rules_v1_report.txt`](data/heldout/results/mas_notice_626/rules_v1_report.txt)）：
-- 規則綁定開發段落的句型。例如 CDD 觸發規則要找「measures as required by paragraphs … when」，6.31 寫成「shall – (a) perform CDD measures as if …」就漏掉；10.3 的代理銀行條款剛好含有這個句型，反而誤判。
-- 規則依管轄區設定。禁止匿名帳戶只有 FATF 的設定，所以 MAS 第 6.1 段明明寫著禁止，也抓不到。
-- 規則不處理否定與放寬。第 6.16 段「shall not be required to inquire」（豁免查詢受益人）被判成要查詢受益人，一段就多出 10 筆誤判。
-- 每筆條文最多只給一種類型，所以第 6.32 段「同時驗證客戶與受益人」最多只能對一半。
+第 2 版在開發資料上維持滿分，還找到一條原本漏標的義務（銀行政策 1.1），衝突與檢查清單完全不變。它在 MAS 157 段上找到 18／18，但這是看過錯誤之後改出來的，**不算未看過資料的成績**。
 
-**LLM 的問題在另一邊**（[`llm_qwen3_5_9b_report.txt`](data/heldout/results/mas_notice_626/llm_qwen3_5_9b_report.txt)）：它找得到大部分義務，但會把相近的責任也標進來。例如代表客戶行事的人（6.10）被當成客戶身分驗證、關聯方（6.8）被當成受益人識別；名單篩檢的時點（6.40）被當成 CDD 觸發；非 PEP 的高風險客戶加強審查（8.7）也被當成 PEP 義務。
+**第二輪：英國《Money Laundering Regulations 2017》第 3 部（兩版規則都沒看過）**
+1. 第 2 版規則先 commit 凍結（`98332e9`），之後才從 legislation.gov.uk 下載官方 XML（2026-06-30 起生效的修訂版），用 [`convert_uk.py`](backend/src/heldout/convert_uk.py) 轉成 137 款、443 筆條文；測試逐行比對 XML 原文。
+2. 標註（[`gold_labels_uk_mlr_2017.yaml`](data/heldout/gold_labels_uk_mlr_2017.yaml)）先 commit（`5a89252`），共 30 款、32 項義務，才第一次讓規則和 LLM 作答。
 
-結論：關鍵字規則可以解釋，但只對寫規則時看過的文字有效；小型 LLM 召回率高，但精確率不到一半。兩者都需要人工審查把關，這也是系統把高風險清單送人工審查的理由。
+| 段落層級：找到幾項（精確率） | MAS 157 段 | 英國第 3 部（未看過） |
+| --- | --- | --- |
+| 第 1 版規則 | 1／18（0.14） | 0／32；當成 FATF 或 MAS 處理最多 3／32 |
+| 第 2 版規則 | 18／18（0.95，已看過錯誤） | **15／32（0.88）** |
+| 本機 LLM qwen3.5:9b | 16／18（0.40） | 26／32（0.43） |
 
-這個測試的限制：標註只有一位標註者，沒有測量標註者間的一致性；段落層級只有 18 項，數字的波動會很大；LLM 只測了一個 9B 的本機模型，沒有測更大的託管模型；LLM 回傳的條文 ID 只能從送給它的那一段裡選，所以 0 筆無效 ID 不代表它在開放情境下不會捏造引用。
+完整報告：[`MAS`](data/heldout/results/mas_notice_626/)、[`英國`](data/heldout/results/uk_mlr_2017/)。模型的原始回答存在 [`data/heldout/llm_runs/`](data/heldout/llm_runs/)，沒有模型也能重新計分。
+
+**第 2 版在英國法規上漏掉什麼**（[`rules_v2_report.txt`](data/heldout/results/uk_mlr_2017/rules_v2_report.txt)）：禁止匿名帳戶 1／1、CDD 觸發 8／13、客戶身分驗證 3／4、受益人識別 3／8、PEP 加強審查 0／4、無法完成 CDD 須停止 0／2。漏掉的主要是四種寫法：
+- 要求被拆在導言與條列兩層：31(1) 的「unable to apply CDD」在導言，「must not carry out any transaction」在 (a)；規則只在同一條條文內判斷。
+- 字面仍太窄：PEP 規則要求出現「enhanced」，英國 35(5) 寫的是「in addition to the measures required by regulation 33」；金額門檻要求句中有「transaction」，27(7E) 寫的是「transfer」。
+- 主詞藏在條件裡：「Where the customer is a body corporate — (a) obtain and verify the name of the body corporate」。
+- 需要領域知識：信託受益人就是實質受益人、找不到受益人時視為受益人的高階主管。
+
+**LLM 的問題在另一邊**（[`llm_qwen3_5_9b_report.txt`](data/heldout/results/uk_mlr_2017/llm_qwen3_5_9b_report.txt)）：它在英國法規上找到 26／32，比規則多，但精確率只有 0.43。只要是加強審查都標成 PEP 義務（33(3A) 高風險國家、34(1) 代理銀行）；保單受益人（29(3)–(5)）、代表客戶行事的人（28(10)）和「may」放寬條款（30(3)、30(4)）都標成客戶身分驗證，雖然準則明寫不算；空殼銀行（34(2)）和匿名預付卡（38(4A)）被當成匿名帳戶。它也第一次捏造了一個不存在的條文 ID（`27_8_zb`，照命名規則自己拼出來的）。規則和 LLM 都漏掉的，集中在需要判斷的標註（30A 公司登記資料、30(7) 信託受益人、28(9)），這幾項換一位標註者也可能不同。
+
+**結論**：改寫後的規則在沒看過的法規上，精確率維持在 0.88，找到的義務從最多 3／32 提高到 15／32，而且每一個判斷都能指出是哪條句型規則。規則精確但漏掉一半，LLM 找得多但一半以上是錯的，兩者錯在不同地方；所以系統保留人工審查。把兩者串起來（例如規則先判、LLM 補漏、再交人工）是可以研究的下一步，目前沒有做。
+
+**這個測試的限制**：兩份標註都只有一位標註者，沒有測量標註者間的一致性；項目數不多（18 項、32 項），數字的波動會很大；英國第 3 部有幾項標註需要判斷（例如 30A 的公司登記資料、30(7) 的信託受益人），換一位標註者可能不同；LLM 只測了一個 9B 的本機模型；LLM 回傳的條文 ID 只能從送給它的那一段裡選，所以無效 ID 很少不代表它在開放情境下不會捏造引用。
 
 ## 專案目錄導覽
 
@@ -291,7 +307,7 @@ GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評�
 - [`data/sources/`](data/sources/) - 管線讀取的三份來源：FATF R.10 與 MAS Notice 626 的官方原文逐字摘錄，以及虛構的銀行內部政策；[`official/`](data/sources/official/) 放 MAS Notice 626 官方 PDF
 - [`data/gold/`](data/gold/) - 人工標註的黃金資料集：條文（parser 輸出經人工檢查後凍結）、義務、衝突、客戶情境與預期檢查清單
 - [`data/reviews/`](data/reviews/) - 衝突的人工裁決紀錄
-- [`data/heldout/`](data/heldout/) - 未用於開發的測試：MAS Notice 626 全文（由官方 PDF 轉出）、標註準則、先於規則執行 commit 的金標、規則與 LLM 的評估結果，以及 LLM 的原始回答
+- [`data/heldout/`](data/heldout/) - 未用於開發的測試：MAS Notice 626 全文（由官方 PDF 轉出）與英國《Money Laundering Regulations 2017》第 3 部（由 legislation.gov.uk 的 XML 轉出）、標註準則、先於規則執行 commit 的兩份金標、新舊規則與 LLM 的評估結果，以及 LLM 的原始回答
 - [`data/processed/`](data/processed/) - `python -m src.pipeline` 產生的結果與 `summary.json`，以及只能追加的稽核日誌 `audit_log.json`
 - [`schemas/`](schemas/) - JSON Schema 契約與範例
 - [`docs/`](docs/) - 產品規格、路線圖、ADR、論文筆記、簡報支援素材和視覺素材
@@ -313,7 +329,7 @@ GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評�
 
 - 這是課程專案的原型，不是正式的法律意見，也不是已部署的合規平台。
 - 主要的 demo 語料偏向 AML／CDD，不是產品合規的語料。
-- 決策用的語料只是 FATF R.10 與 MAS Notice 626 的部分段落摘錄，加上一份虛構的銀行政策；規則是對照這份金標寫的。在 MAS Notice 626 其餘 157 段上，規則只找到 18 項義務中的 1 項（見上方 held-out 測試）。
+- 決策用的語料只是 FATF R.10 與 MAS Notice 626 的部分段落摘錄，加上一份虛構的銀行政策。規則式萃取在沒看過的英國法規上只找到約一半的義務（32 項中 15 項，見上方 held-out 測試），漏掉的多半是要求被拆在導言與條列兩層、字面不同或需要領域知識的寫法。
 - 衝突偵測目前只涵蓋三類衝突（持股門檻、偶發交易門檻、PEP 允許與禁止）。
 - CDD 決策層刻意設計得受限且以規則驅動，以換取可解釋性：決策分支是寫好的規則，引用則由義務的出處推導。
 - PDF 匯入用 LLM 切條文，條文 ID 格式和 parser 不同；重跑管線會以 `data/sources/` 重建知識庫，透過匯入主控台加入的文件不會保留。
@@ -333,6 +349,7 @@ GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評�
 
 - **2026-11（課程結束後的修補）：** 移除兩條 PDF 匯入時 LLM 退回 mock 模式產生的合成條文；把 MAS 與 FATF 來源改成官方原文的逐字摘錄（修正 SGD 5,000 應為 S$20,000，以及 25% 門檻出自 FATF 而非 MAS Notice 626）；補上 MAS 第 6.14B 段（驗證受益人）與第 6.35 段（無法完成 CDD 時不得建立業務關係），銀行政策的 PEP 禁令與核准要求拆成兩條義務；萃取規則改成依文字判斷、不再指定條文 ID；衝突與檢查清單的引用改由解析出的條文推導，人工裁決只套用在當時裁決的條文上；評估加入出處檢查；PDF 匯入先驗證再寫檔；新增一鍵重建管線，測試不再改寫 repo 資料。課程繳交版本見 git 歷史中 2026-06 的 commit。
 - **2026-11（held-out 測試）：** 把官方 MAS Notice 626 全文轉成可解析的 Markdown；在規則沒看過的 157 段上先標註、先 commit，再跑規則，並用本機開源 LLM 做對照；新增 GitHub Actions，每次 push 都重跑測試、管線與評估並比對輸出；README 加上示範動畫；評估工具裡手寫的對照組改名為 `ScriptedRAGBaseline`，避免被誤認為真實系統。
+- **2026-11（規則第 2 版與第二份 held-out 測試）：** 依第一輪的錯誤類型重寫規則（句子結構、放寬句、主詞、條列關係、多重類型），舊版凍結在 [`extractor_v1.py`](backend/src/extraction/extractor_v1.py) 供對照；新規則先 commit 凍結，之後才下載英國《Money Laundering Regulations 2017》第 3 部、先標註再測試。新規則在開發資料上找到一條原本漏標的義務（銀行政策 1.1 客戶身分驗證），金標因此從 12 條變成 13 條。
 
 ## 免責聲明
 
