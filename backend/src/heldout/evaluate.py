@@ -46,6 +46,9 @@ HELDOUT_SETS: Dict[str, HeldOutSpec] = {
     "mas_notice_626": HeldOutSpec(
         "mas_notice_626", "gold_labels.yaml", "mas_notice_626", "Singapore", "MAS Notice 626",
         "Singapore AML/CFT rules for banks"),
+    "uk_mlr_2017": HeldOutSpec(
+        "uk_mlr_2017", "gold_labels_uk_mlr_2017.yaml", "uk_mlr_2017", "United Kingdom",
+        "Part 3 of the UK Money Laundering Regulations 2017", "UK AML/CTF rules on customer due diligence"),
 }
 DEFAULT_SET = "mas_notice_626"
 

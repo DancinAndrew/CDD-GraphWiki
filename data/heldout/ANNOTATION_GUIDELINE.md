@@ -1,9 +1,13 @@
 # Held-out annotation guideline
 
-This guideline defines the labels in [`gold_labels.yaml`](gold_labels.yaml). The labels were written and
-committed **before** the rule-based extractor was run on these paragraphs; the git history shows the order.
+This guideline defines the labels in [`gold_labels.yaml`](gold_labels.yaml) (MAS Notice 626) and
+[`gold_labels_uk_mlr_2017.yaml`](gold_labels_uk_mlr_2017.yaml) (UK Money Laundering Regulations 2017). Each set
+of labels was written and committed **before** the rules it tests were run on its text; the git history shows
+the order.
 
-## Corpus and held-out set
+## Corpora and held-out sets
+
+**MAS Notice 626** (labels committed in `aaa389c`, before rules v1 were run on it)
 
 - Corpus: the full text of MAS Notice 626 in [`sources/mas_notice_626.md`](sources/mas_notice_626.md),
   converted from the official PDF by `backend/src/heldout/convert.py` (167 numbered paragraphs).
@@ -11,7 +15,18 @@ committed **before** the rule-based extractor was run on these paragraphs; the g
   paragraphs in the development excerpt (`data/sources/mas_notice_626.md`) that the rules were written
   against. Every clause of these paragraphs, including sub-paragraphs left out of the excerpt, is excluded.
 - Held-out set: every other clause of the Notice that has text. Section-heading records carry no text and are
-  not scored.
+  not scored. Rules v2 were designed after studying the v1 errors here, so for v2 this set is no longer unseen.
+
+**UK Money Laundering Regulations 2017, Part 3** (labels committed after rules v2 were frozen in `98332e9`)
+
+- Corpus: regulations 27 to 38 (customer due diligence) in [`sources/uk_mlr_2017.md`](sources/uk_mlr_2017.md),
+  converted from the legislation.gov.uk XML by `backend/src/heldout/convert_uk.py` (137 numbered paragraphs).
+  Contains public sector information licensed under the Open Government Licence v3.0.
+- No development paragraphs: the whole text is held out, for rules v1, rules v2 and the LLM alike.
+- Notes on applying the types to this text: "relevant person" is the regulated firm; beneficiaries of a trust
+  are its beneficial owners (regulation 6), beneficiaries of a life insurance policy are not; collecting the
+  company register's beneficial ownership information (regulation 30A) is part of identifying beneficial
+  owners; deeming provisions ("is to be treated as identifying") are read as interpretation and not labelled.
 
 ## Unit of annotation
 
