@@ -11,11 +11,16 @@ from src.decision.engine import CDDChecklistEngine
 from src.audit.logger import AuditLogger
 from src.audit.manager import ReviewCaseManager
 from src.graph.store import get_neo4j_session
+from src.paths import find_data_dir
 
-# 定義本地持久化路徑
-GOLD_DIR = "data/gold"
-PROCESSED_DIR = "data/processed"
-AUDIT_LOG_FILE = os.path.join(PROCESSED_DIR, "audit_log.json")
+# 定義本地持久化路徑（皆可用環境變數覆寫，測試會把它們指到暫存目錄）
+DATA_DIR = find_data_dir()
+GOLD_DIR = os.environ.get("CDD_GOLD_DIR", os.path.join(DATA_DIR, "gold"))
+PROCESSED_DIR = os.environ.get("CDD_PROCESSED_DIR", os.path.join(DATA_DIR, "processed"))
+ADJUDICATIONS_FILE = os.environ.get(
+    "CDD_ADJUDICATIONS_FILE", os.path.join(DATA_DIR, "reviews", "conflict_adjudications.yaml")
+)
+AUDIT_LOG_FILE = os.environ.get("CDD_AUDIT_LOG_FILE", os.path.join(PROCESSED_DIR, "audit_log.json"))
 
 # 單例模式實體
 _engine = None
@@ -67,52 +72,48 @@ def clear_knowledge_base_cache():
     print("🧹 已清除法規知識庫記憶體緩存")
 
 
+def check_referential_integrity(kb: dict) -> None:
+    """
+    確認每個義務、衝突的出處條文都存在於條文庫中；有懸空引用就直接報錯，
+    不讓圖譜或解釋路徑默默漏掉邊。
+    """
+    clause_ids = {c.clause_id for c in kb["clauses"]}
+    dangling = [
+        (ob.obligation_id, cid) for ob in kb["obligations"] for cid in ob.source_clause_ids if cid not in clause_ids
+    ] + [
+        (cf.conflict_id, cid) for cf in kb["conflicts"] for cid in cf.source_clause_ids if cid not in clause_ids
+    ]
+    if dangling:
+        raise ValueError(f"Knowledge base has references to unknown clauses: {dangling[:5]}")
+
+
 def load_knowledge_base():
     """
-    加載法規知識數據庫（優先從 data/processed 載入以支持增量 Ingestion，否則 fallback 至 data/gold）。
+    加載法規知識數據庫。
+    若 data/processed 已有完整的四個檔案（來源文件、條文、義務、衝突），整組從 processed 讀取，
+    避免和 data/gold 混用；否則整組改用 data/gold。客戶情境是輸入資料，固定從 data/gold 讀取。
     """
     global _cached_documents, _cached_clauses, _cached_obligations, _cached_customers, _cached_conflicts
-    
+
     if not _cached_documents:
-        # 決定各類別檔案的路徑
-        doc_file = os.path.join(PROCESSED_DIR, "source_documents.yaml") if os.path.exists(
-            os.path.join(PROCESSED_DIR, "source_documents.yaml")
-        ) else os.path.join(GOLD_DIR, "source_documents.yaml")
+        kb_files = ["source_documents.yaml", "clauses.yaml", "obligations.yaml", "conflicts.yaml"]
+        has_full_processed = all(os.path.exists(os.path.join(PROCESSED_DIR, name)) for name in kb_files)
+        base_dir = PROCESSED_DIR if has_full_processed else GOLD_DIR
 
-        clause_file = os.path.join(PROCESSED_DIR, "clauses.yaml") if os.path.exists(
-            os.path.join(PROCESSED_DIR, "clauses.yaml")
-        ) else os.path.join(GOLD_DIR, "clauses.yaml")
+        def read(dir_path: str, filename: str):
+            with open(os.path.join(dir_path, filename), "r", encoding="utf-8") as f:
+                return yaml.safe_load(f) or []
 
-        obs_file = os.path.join(PROCESSED_DIR, "obligations.yaml") if os.path.exists(
-            os.path.join(PROCESSED_DIR, "obligations.yaml")
-        ) else os.path.join(GOLD_DIR, "obligations.yaml")
+        # 先全部讀進區域變數並驗證，成功後才寫入快取，失敗時不會留下半套快取
+        documents = [SourceDocument(**doc) for doc in read(base_dir, "source_documents.yaml")]
+        clauses = [Clause(**cl) for cl in read(base_dir, "clauses.yaml")]
+        obligations = [Obligation(**ob) for ob in read(base_dir, "obligations.yaml")]
+        conflicts = [Conflict(**conf) for conf in read(base_dir, "conflicts.yaml")]
+        customers = [CustomerContext(**c) for c in read(GOLD_DIR, "customer_contexts.yaml")]
+        check_referential_integrity({"clauses": clauses, "obligations": obligations, "conflicts": conflicts})
 
-        cust_file = os.path.join(PROCESSED_DIR, "customer_contexts.yaml") if os.path.exists(
-            os.path.join(PROCESSED_DIR, "customer_contexts.yaml")
-        ) else os.path.join(GOLD_DIR, "customer_contexts.yaml")
-
-        conflict_file = os.path.join(PROCESSED_DIR, "conflicts.yaml") if os.path.exists(
-            os.path.join(PROCESSED_DIR, "conflicts.yaml")
-        ) else os.path.join(GOLD_DIR, "conflicts.yaml")
-
-        # 讀取檔案
-        with open(doc_file, "r", encoding="utf-8") as f:
-            raw_docs = yaml.safe_load(f) or []
-        with open(clause_file, "r", encoding="utf-8") as f:
-            raw_clauses = yaml.safe_load(f) or []
-        with open(obs_file, "r", encoding="utf-8") as f:
-            raw_obs = yaml.safe_load(f) or []
-        with open(cust_file, "r", encoding="utf-8") as f:
-            raw_custs = yaml.safe_load(f) or []
-        with open(conflict_file, "r", encoding="utf-8") as f:
-            raw_confs = yaml.safe_load(f) or []
-
-        # 轉化為強型別 Pydantic 模型
-        _cached_documents = [SourceDocument(**doc) for doc in raw_docs]
-        _cached_clauses = [Clause(**cl) for cl in raw_clauses]
-        _cached_obligations = [Obligation(**ob) for ob in raw_obs]
-        _cached_customers = [CustomerContext(**c) for c in raw_custs]
-        _cached_conflicts = [Conflict(**conf) for conf in raw_confs]
+        _cached_documents, _cached_clauses, _cached_obligations = documents, clauses, obligations
+        _cached_conflicts, _cached_customers = conflicts, customers
 
     return {
         "documents": _cached_documents,
@@ -121,4 +122,3 @@ def load_knowledge_base():
         "customers": _cached_customers,
         "conflicts": _cached_conflicts
     }
-

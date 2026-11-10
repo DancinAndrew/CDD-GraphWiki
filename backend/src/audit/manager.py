@@ -105,11 +105,8 @@ class ReviewCaseManager:
                 # 執行覆寫
                 checklist.decision = reviewer_decision
                 checklist.human_review_required = False
-                
-                # 追加人工覆寫 Citation 溯源痕跡，保障 provenance 鏈條完整
-                override_citation = f"Human Decision Override by {reviewer_id} at {case.timestamp.isoformat()}: {reviewer_decision}"
-                if override_citation not in checklist.citations:
-                    checklist.citations.append(override_citation)
+                # 覆寫紀錄只寫入稽核日誌（下方 case_reviewed 事件），citations 維持只放條文 ID，
+                # 讓每個引用都能解析回原文
         
         # 3. 記錄到 AuditLogger 中
         self.logger.log_event(

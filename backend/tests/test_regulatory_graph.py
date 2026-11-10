@@ -80,7 +80,7 @@ def test_regulatory_graph_build_and_weave():
     assert isinstance(graph, RegulatoryGraph)
     # 驗證節點存在性
     assert "mas_notice_626" in graph.nodes
-    assert "mas626_clause_04" in graph.nodes
+    assert "mas_notice_626_8_enhanced_cdd_8_3" in graph.nodes
     assert "ob_pep_edd_mas" in graph.nodes
     assert "cust_individual_pep" in graph.nodes
     assert "chk_individual_pep" in graph.nodes
@@ -92,18 +92,18 @@ def test_regulatory_graph_build_and_weave():
     assert graph.nodes["pep_without_senior_mgmt_signoff"].node_type == "RiskTrigger"
 
     # 驗證邊關係連接正確
-    derived_edge = next(e for e in graph.edges if e.source_id == "mas626_clause_04" and e.target_id == "mas_notice_626")
+    derived_edge = next(e for e in graph.edges if e.source_id == "mas_notice_626_8_enhanced_cdd_8_3" and e.target_id == "mas_notice_626")
     assert derived_edge.edge_type == "derived_from"
 
     requires_edge = next(e for e in graph.edges if e.source_id == "ob_pep_edd_mas" and e.target_id == "senior_management_approval")
     assert requires_edge.edge_type == "requires_evidence"
 
     # 3. 驗證 Weaving 特效：對應決策路徑節點與邊的 decision_path 是否為 True
-    assert graph.nodes["mas626_clause_04"].properties["decision_path"] is True
+    assert graph.nodes["mas_notice_626_8_enhanced_cdd_8_3"].properties["decision_path"] is True
     assert graph.nodes["mas_notice_626"].properties["decision_path"] is True
     
     # 驗證決策標記邊
-    active_edge = next(e for e in graph.edges if e.source_id == "ob_pep_edd_mas" and e.target_id == "mas626_clause_04")
+    active_edge = next(e for e in graph.edges if e.source_id == "ob_pep_edd_mas" and e.target_id == "mas_notice_626_8_enhanced_cdd_8_3")
     assert active_edge.properties["decision_path"] is True
     assert active_edge.properties["decision_target"] == "Senior Management Approval Form"
 
@@ -150,13 +150,13 @@ def test_regulatory_graph_multi_hop_query():
     assert has_evidence_path is True
 
     # 2. 測試追溯上游與下游
-    # 義務 ob_pep_edd_mas 的上游應該有條款 mas626_clause_04
+    # 義務 ob_pep_edd_mas 的上游應該有條款 mas_notice_626_8_enhanced_cdd_8_3
     upstream = GraphQuery.get_upstream_sources(graph, "ob_pep_edd_mas")
     upstream_ids = [n.node_id for n in upstream]
-    assert "mas626_clause_04" in upstream_ids
+    assert "mas_notice_626_8_enhanced_cdd_8_3" in upstream_ids
 
-    # 條款 mas626_clause_04 的下游應該有義務 ob_pep_edd_mas
-    downstream = GraphQuery.get_downstream_targets(graph, "mas626_clause_04")
+    # 條款 mas_notice_626_8_enhanced_cdd_8_3 的下游應該有義務 ob_pep_edd_mas
+    downstream = GraphQuery.get_downstream_targets(graph, "mas_notice_626_8_enhanced_cdd_8_3")
     downstream_ids = [n.node_id for n in downstream]
     assert "ob_pep_edd_mas" in downstream_ids
 

@@ -11,6 +11,31 @@ interface Customer {
   risk_score: number;
 }
 
+interface CitationDetail {
+  clause_id: string;
+  source_document_id: string;
+  document_title: string;
+  section_ref: string;
+  raw_text: string;
+}
+
+// 「MAS Notice 626: Prevention of ...」→「MAS Notice 626」
+const shortDocTitle = (title: string) => title.split(':')[0].trim();
+
+// 「6 Customer Due Diligence > 6.3 > (b)」→「6.3 (b)」（去掉章名）
+const shortSectionRef = (ref: string) => {
+  const parts = ref.split('>').map((p) => p.trim());
+  return parts.length > 1 ? parts.slice(1).join(' ') : parts[0];
+};
+
+// 只有條文 ID、沒有細節時，依 ID 前綴判斷來源文件
+const sourceFromClauseId = (clauseId: string) => {
+  if (clauseId.startsWith('mas_')) return 'MAS Notice 626';
+  if (clauseId.startsWith('fatf_')) return 'FATF Recommendation 10';
+  if (clauseId.startsWith('mock_internal_policy')) return 'Global Bank AML and KYC Compliance Policy';
+  return '來源未知';
+};
+
 interface CDDChecklist {
   checklist_id: string;
   customer_id: string;
@@ -20,6 +45,7 @@ interface CDDChecklist {
   applied_clauses?: string[];
   required_documents?: string[];
   citations?: string[];
+  citation_details?: CitationDetail[];
   conflict_detected?: boolean;
   explanation?: string;
 }
@@ -280,7 +306,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({
                     <span>
                       {checklist.human_review_required 
                         ? '需人工合規官覆寫：系統檢測到高風險特徵，已自動路由至審批隊列。' 
-                        : '合規狀態：已完成人工審查核准覆寫。'}
+                        : '合規狀態：目前沒有待處理的人工審查。'}
                     </span>
                   </div>
 
@@ -301,14 +327,19 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({
                   <div style={styles.subSection}>
                     <h4 style={styles.subTitle}>📜 條款級法規依據溯源 (Provenance)</h4>
                     <div style={styles.provenanceList}>
-                      {(checklist.citations || checklist.applied_clauses || []).map((clause, idx) => (
-                        <div key={idx} style={styles.provenanceItem}>
-                          <span style={styles.clauseCode}>{clause}</span>
-                          <span style={styles.clauseSource}>
-                            {clause.includes('MAS') ? '新加坡金管局 MAS Notice 626' : 'FATF 國際洗錢防制建議 10'}
-                          </span>
-                        </div>
-                      ))}
+                      {checklist.citation_details && checklist.citation_details.length > 0
+                        ? checklist.citation_details.map((detail) => (
+                            <div key={detail.clause_id} style={styles.provenanceItem} title={detail.raw_text}>
+                              <span style={styles.clauseCode}>{shortSectionRef(detail.section_ref)}</span>
+                              <span style={styles.clauseSource}>{shortDocTitle(detail.document_title)}</span>
+                            </div>
+                          ))
+                        : (checklist.citations || checklist.applied_clauses || []).map((clause, idx) => (
+                            <div key={idx} style={styles.provenanceItem}>
+                              <span style={styles.clauseCode}>{clause}</span>
+                              <span style={styles.clauseSource}>{sourceFromClauseId(clause)}</span>
+                            </div>
+                          ))}
                     </div>
                   </div>
                 </div>

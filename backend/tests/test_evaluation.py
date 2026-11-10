@@ -319,17 +319,8 @@ def test_comparison_report_generation():
     conflicts = [Conflict(**item) for item in raw_conflicts]
     gold_checklists = [CDDChecklist(**item) for item in raw_gold_checklists]
 
-    # 收集 valid citations 集合
-    valid_cits: Set[str] = set()
-    for c in raw_clauses:
-        valid_cits.add(c["section_ref"])
-        if "citations" in c and c["citations"]:
-            for cit in c["citations"]:
-                valid_cits.add(cit)
-    
-    # 也加入 mock 內部政策引用
-    valid_cits.add("Global Bank Policy Section 3.2.1")
-    valid_cits.add("Global Bank Policy Section 4.5.3")
+    # 有效引用 = 解析出的條文 ID（清單引用的是條文 ID，不是自由文字）
+    valid_cits: Set[str] = {c["clause_id"] for c in raw_clauses}
 
     # 1. 運行推理系統
     engine = CDDChecklistEngine()

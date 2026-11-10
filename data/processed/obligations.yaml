@@ -1,6 +1,6 @@
 - obligation_id: ob_prohibit_anonymous
   source_clause_ids:
-  - fatf_rec10_introduction
+  - fatf_rec10_rec_10_anonymous_accounts
   jurisdiction: Global
   actor: financial_institution
   action: prohibit
@@ -13,27 +13,52 @@
   - anonymous_account_creation_attempt
   confidence: 0.95
   review_status: approved
+- obligation_id: ob_cdd_on_relationship
+  source_clause_ids:
+  - fatf_rec10_rec_10_when_cdd_is_required
+  - fatf_rec10_rec_10_when_cdd_is_required_i
+  - fatf_rec10_rec_10_when_cdd_is_required_ii
+  - fatf_rec10_rec_10_when_cdd_is_required_iii
+  - fatf_rec10_rec_10_when_cdd_is_required_iv
+  jurisdiction: Global
+  actor: financial_institution
+  action: perform_cdd
+  object: customer
+  applies_to: {}
+  conditions:
+  - establishing_business_relations
+  - occasional_transaction_above_15000_usd_eur
+  - suspicion_of_money_laundering
+  - doubts_about_veracity_of_data
+  exceptions: []
+  required_evidence:
+  - cdd_checklist_completed
+  review_flags: []
+  confidence: 0.92
+  review_status: approved
 - obligation_id: ob_verify_customer_identity
   source_clause_ids:
-  - mas626_cdd_mock_001
-  jurisdiction: Singapore
-  actor: bank
-  action: verify
+  - fatf_rec10_rec_10_cdd_measures_a
+  jurisdiction: Global
+  actor: financial_institution
+  action: identify_and_verify
   object: customer_identity
-  applies_to:
-    customer_type: any
-  conditions: []
+  applies_to: {}
+  conditions:
+  - cdd_triggered
   exceptions: []
   required_evidence:
   - reliable_independent_source_documents
   review_flags:
-  - unreliable_documents
-  - inconsistent_identity_information
-  confidence: 0.98
-  review_status: pending_human_review
+  - unverifiable_identity_documents
+  confidence: 0.94
+  review_status: approved
 - obligation_id: ob_identify_ubo_25
   source_clause_ids:
-  - fatf_rec10_cdd_measures_10_2_core_requirements_b
+  - fatf_rec10_rec_10_cdd_measures_b
+  - fatf_rec10_interpretive_note_to_rec_10_p_5_b_b
+  - fatf_rec10_interpretive_note_to_rec_10_p_5_b_b_i
+  - fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40
   jurisdiction: Global
   actor: financial_institution
   action: identify_and_verify
@@ -51,28 +76,13 @@
   - complex_multi_layer_ownership
   confidence: 0.93
   review_status: approved
-- obligation_id: ob_cdd_on_relationship
-  source_clause_ids:
-  - fatf_rec10_cdd_measures_10_2_core_requirements_d
-  jurisdiction: Global
-  actor: financial_institution
-  action: perform_cdd
-  object: customer
-  applies_to: {}
-  conditions:
-  - establishing_business_relationship
-  - occasional_transaction_above_15000_usd_eur
-  - suspicion_of_money_laundering
-  - doubts_about_veracity_of_data
-  exceptions: []
-  required_evidence:
-  - cdd_checklist_completed
-  review_flags: []
-  confidence: 0.92
-  review_status: approved
 - obligation_id: ob_cdd_on_relationship_mas
   source_clause_ids:
-  - mas_notice_626_s_6_cdd
+  - mas_notice_626_6_cdd_6_3
+  - mas_notice_626_6_cdd_6_3_a
+  - mas_notice_626_6_cdd_6_3_b
+  - mas_notice_626_6_cdd_6_3_f
+  - mas_notice_626_6_cdd_6_3_g
   jurisdiction: Singapore
   actor: bank
   action: perform_cdd
@@ -89,9 +99,84 @@
   review_flags: []
   confidence: 0.96
   review_status: approved
+- obligation_id: ob_verify_customer_mas
+  source_clause_ids:
+  - mas_notice_626_6_cdd_6_5
+  - mas_notice_626_6_cdd_6_6
+  - mas_notice_626_6_cdd_6_6_a
+  - mas_notice_626_6_cdd_6_6_a_i
+  - mas_notice_626_6_cdd_6_6_a_ii
+  - mas_notice_626_6_cdd_6_6_a_iii
+  - mas_notice_626_6_cdd_6_6_a_iv
+  - mas_notice_626_6_cdd_6_6_a_v
+  - mas_notice_626_6_cdd_6_9
+  jurisdiction: Singapore
+  actor: bank
+  action: identify_and_verify
+  object: customer_identity
+  applies_to: {}
+  conditions:
+  - cdd_triggered
+  exceptions: []
+  required_evidence:
+  - full_name
+  - unique_id_number
+  - residential_address
+  - date_of_birth
+  - nationality
+  - reliable_independent_source_documents
+  review_flags:
+  - missing_mandatory_identification_fields
+  confidence: 0.95
+  review_status: approved
+- obligation_id: ob_identify_ubo_mas
+  source_clause_ids:
+  - mas_notice_626_6_cdd_6_13
+  - mas_notice_626_6_cdd_6_14
+  - mas_notice_626_6_cdd_6_14_a
+  - mas_notice_626_6_cdd_6_14_a_i
+  - mas_notice_626_6_cdd_6_14_a_ii
+  - mas_notice_626_6_cdd_6_14b
+  jurisdiction: Singapore
+  actor: bank
+  action: identify_and_verify
+  object: beneficial_owner
+  applies_to:
+    customer_type: legal_person
+  conditions: []
+  exceptions: []
+  required_evidence:
+  - ubo_declaration
+  - corporate_profile
+  review_flags:
+  - ubo_not_identified
+  - multi_jurisdictional_layers
+  confidence: 0.94
+  review_status: approved
+- obligation_id: ob_cdd_incomplete_mas
+  source_clause_ids:
+  - mas_notice_626_6_cdd_6_35
+  jurisdiction: Singapore
+  actor: bank
+  action: refuse_relationship
+  object: customer
+  applies_to: {}
+  conditions:
+  - cdd_measures_not_completed
+  exceptions: []
+  required_evidence:
+  - account_opening_rejection_record
+  - str_consideration_record
+  review_flags:
+  - cdd_incomplete
+  confidence: 0.95
+  review_status: approved
 - obligation_id: ob_pep_edd_mas
   source_clause_ids:
-  - mas_notice_626_s_6_cdd_6_2_edd_b
+  - mas_notice_626_8_enhanced_cdd_8_3
+  - mas_notice_626_8_enhanced_cdd_8_3_a
+  - mas_notice_626_8_enhanced_cdd_8_3_b
+  - mas_notice_626_8_enhanced_cdd_8_3_c
   jurisdiction: Singapore
   actor: bank
   action: perform_edd
@@ -110,49 +195,13 @@
   - insufficient_source_of_wealth_evidence
   confidence: 0.97
   review_status: approved
-- obligation_id: ob_verify_customer_mas
-  source_clause_ids:
-  - mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification_a
-  jurisdiction: Internal
-  actor: bank
-  action: identify_and_verify
-  object: customer_identity
-  applies_to: {}
-  conditions: []
-  exceptions: []
-  required_evidence:
-  - full_name
-  - unique_id_number
-  - residential_address
-  - date_of_birth
-  - nationality
-  review_flags:
-  - missing_mandatory_identification_fields
-  confidence: 0.95
-  review_status: approved
-- obligation_id: ob_identify_ubo_25_mas
-  source_clause_ids:
-  - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification
-  jurisdiction: Singapore
-  actor: bank
-  action: identify_and_verify
-  object: beneficial_owner
-  applies_to:
-    customer_type: legal_person
-  conditions:
-  - controlling_ownership_interest_above_25_percent
-  exceptions: []
-  required_evidence:
-  - ubo_declaration
-  - corporate_profile
-  review_flags:
-  - ubo_not_identified
-  - multi_jurisdictional_layers
-  confidence: 0.94
-  review_status: approved
 - obligation_id: ob_identify_ubo_10_gb
   source_clause_ids:
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification
   - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b_i
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b_ii
   jurisdiction: Internal
   actor: bank
   action: identify_and_verify
@@ -171,7 +220,7 @@
   review_status: approved
 - obligation_id: ob_pep_prohibitions_gb
   source_clause_ids:
-  - mock_internal_policy_s_1_customer_onboarding_standards_1_3_high_risk_reviews_and_escalations
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
   jurisdiction: Internal
   actor: bank
   action: restrict_relationship
@@ -182,66 +231,29 @@
   - pep_from_high_risk_jurisdiction
   exceptions: []
   required_evidence:
-  - head_of_compliance_approval
-  - two_levels_senior_mgmt_approval
+  - rejected_onboarding_record
   review_flags:
   - pep_from_high_risk_country
-  - pep_without_head_compliance_signoff
   confidence: 0.99
   review_status: approved
-- obligation_id: ob_identify_customer
+- obligation_id: ob_pep_approval_gb
   source_clause_ids:
-  - mas626_cdd_mock_001
-  jurisdiction: Singapore
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a
+  jurisdiction: Internal
   actor: bank
-  action: identify
-  object: customer
+  action: obtain_approval
+  object: pep
   applies_to:
-    customer_type: any
-  conditions: []
-  exceptions: []
-  required_evidence: []
-  review_flags: []
-  confidence: 0.95
-  review_status: pending_human_review
-- obligation_id: ob_identify_beneficial_owner
-  source_clause_ids:
-  - mas626_cdd_mock_002
-  jurisdiction: Singapore
-  actor: bank
-  action: identify
-  object: beneficial_owner
-  applies_to:
-    customer_type: legal_person
+    pep_exposure: true
   conditions:
-  - establishment of business relationship
-  - occasional transaction exceeding threshold
+  - pep_not_from_high_risk_jurisdiction
   exceptions: []
   required_evidence:
-  - ubo_declaration
-  - constitutional_documents
+  - head_of_compliance_approval
+  - two_levels_senior_mgmt_approval
+  - source_of_funds_verification
+  - source_of_wealth_verification
   review_flags:
-  - complex_ownership_structure
-  confidence: 0.95
-  review_status: pending_human_review
-- obligation_id: ob_verify_beneficial_owner_identity
-  source_clause_ids:
-  - mas626_cdd_mock_002
-  jurisdiction: Singapore
-  actor: bank
-  action: verify_identity
-  object: beneficial_owner
-  applies_to:
-    customer_type: legal_person
-  conditions:
-  - beneficial owner identified
-  - reasonable measures triggered
-  exceptions: []
-  required_evidence:
-  - identity_document
-  - ubo_verification_report
-  review_flags:
-  - discrepancy_in_ubo_info
-  - high_risk_jurisdiction
-  confidence: 0.95
-  review_status: pending_human_review
+  - pep_without_head_compliance_signoff
+  confidence: 0.97
+  review_status: approved

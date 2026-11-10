@@ -153,3 +153,39 @@ def test_semantic_relationship_integrity():
             for cid in obligation.source_clause_ids:
                 # 確保在 checklist 中引用了對應的條款，或能追溯回條款
                 assert cid in clauses, f"Checklist {chk_id} 關聯的 Obligation {oid} 所引用的條款 {cid} 不存在"
+
+
+def test_checklist_citations_are_anchor_clauses():
+    """每個清單引用都必須是某個適用義務的錨點條文（source_clause_ids 第一條），且存在於條文庫。"""
+    clauses = {item["clause_id"] for item in load_yaml("clauses.yaml")}
+    obligations = {item["obligation_id"]: Obligation(**item) for item in load_yaml("obligations.yaml")}
+    for item in load_yaml("checklists.yaml"):
+        chk = CDDChecklist(**item)
+        anchors = [obligations[ob_id].source_clause_ids[0] for ob_id in chk.applicable_obligations]
+        assert chk.citations == list(dict.fromkeys(anchors)), chk.checklist_id
+        assert set(chk.citations) <= clauses
+
+
+def test_adjudication_register_matches_gold_conflicts():
+    """人工裁決紀錄只能針對已知衝突，且內容要與金標衝突的裁決欄位一致。"""
+    register_path = os.path.join(GOLD_DIR, "..", "reviews", "conflict_adjudications.yaml")
+    with open(register_path, "r", encoding="utf-8") as f:
+        register = {a["conflict_id"]: a for a in yaml.safe_load(f)}
+    conflicts = {item["conflict_id"]: Conflict(**item) for item in load_yaml("conflicts.yaml")}
+    assert set(register) <= set(conflicts)
+    for conflict_id, entry in register.items():
+        assert conflicts[conflict_id].adjudication_status == entry["adjudication_status"]
+        assert conflicts[conflict_id].resolved_by == entry["resolved_by"]
+        assert conflicts[conflict_id].reconciliation_rule == entry["reconciliation_rule"]
+        # 裁決紀錄記下當時裁決的條文，與金標衝突引用的條文一致
+        assert set(entry["source_clause_ids"]) == set(conflicts[conflict_id].source_clause_ids)
+
+
+def test_no_mas_25_percent_claim_in_gold():
+    """官方 MAS Notice 626 沒有 25% 門檻；金標不能再把 25% 歸給 MAS。"""
+    for item in load_yaml("obligations.yaml"):
+        if item["jurisdiction"] == "Singapore":
+            assert not any("25_percent" in c for c in item["conditions"]), item["obligation_id"]
+    for item in load_yaml("clauses.yaml"):
+        if item["source_document_id"] == "mas_notice_626":
+            assert "25%" not in item["raw_text"]

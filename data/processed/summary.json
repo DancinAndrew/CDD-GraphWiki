@@ -1,0 +1,58 @@
+{
+  "clauses": 59,
+  "clauses_with_text": 54,
+  "heading_only_clause_records": [
+    "fatf_rec10_rec_10",
+    "fatf_rec10_interpretive_note_to_rec_10",
+    "fatf_rec10_interpretive_note_to_rec_10_p_5_b",
+    "mas_notice_626_6_cdd",
+    "mas_notice_626_8_enhanced_cdd"
+  ],
+  "clauses_by_source": {
+    "fatf_rec10": 17,
+    "mas_notice_626": 28,
+    "mock_internal_policy": 14
+  },
+  "obligations": 12,
+  "clauses_sent_to_review_queue": 16,
+  "conflicts": 3,
+  "conflict_ids": [
+    "conf_ubo_threshold",
+    "conf_pep_jurisdiction",
+    "conf_occasional_threshold"
+  ],
+  "customer_profiles": 5,
+  "checklists": 5,
+  "checklists_routed_to_human_review": 4,
+  "extraction_vs_gold": {
+    "extracted": 12,
+    "gold": 12,
+    "matched": 12,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "field_accuracy": 1.0,
+    "provenance_matches": 12,
+    "exact_source_matches": 12
+  },
+  "conflict_detection_vs_gold": {
+    "detected": 3,
+    "gold": 3,
+    "matched": 3,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0
+  },
+  "checklist_alignment_vs_gold": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "total_evaluated_fields": 30.0,
+    "aligned_fields": 30.0
+  },
+  "provenance_check": {
+    "references_checked": 64,
+    "unresolved_references": [],
+    "conflicts_citing_one_source": []
+  }
+}

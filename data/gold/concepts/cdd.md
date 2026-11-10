@@ -4,12 +4,12 @@
 
 ## 1. 適用場景與觸發閾值
 
-根據 **FATF 建議第 10 條** 與 **MAS Notice 626 Paragraph 6.2**，金融機構必須在以下情境下執行 CDD：
+根據 **FATF 建議第 10 條** 與 **MAS Notice 626 第 6.3 段**，金融機構必須在以下情境下執行 CDD：
 
 1. **建立業務關係 (Establishing Business Relations)**：例如開設帳戶、提供證券託管服務、簽署長期理財合約等。
 2. **進行特定偶發交易 (Occasional Transactions)**：
    - **國際標準 (FATF)**：交易金額高於 **USD/EUR 15,000** 時。
-   - **新加坡監管 (MAS)**：針對非開戶之偶發客戶，單筆或多筆關聯交易累計超過 **SGD 20,000** 時。
+   - **新加坡監管 (MAS)**：未與銀行建立業務關係的客戶，單筆交易價值超過 **S$20,000** 時（第 6.3(b) 段）。
 3. **可疑交易跡象**：一旦懷疑客戶涉及洗錢或資助恐怖主義，不論金額大小，必須立即觸發 CDD。
 4. **既有資料疑慮**：若懷疑先前取得的客戶身份識別資料真實性或充足性，必須重新執行 CDD。
 
@@ -29,7 +29,7 @@ flowchart LR
    - 收集法人客戶的：公司名稱、註冊號碼、註冊地址、公司章程、董事名冊。
    - **驗證**：必須使用可靠、獨立的第三方來源文件或政府資料庫（如新加坡的 MyInfo 或 ACRA 註冊資料）核對這些資料。
 2. **識別與驗證實質受益人 (UBO Identification & Verification)**：
-   - 穿透法人客戶，找出最終控制股權的自然人（>25% 股權閾值），並驗證其身份。
+   - 穿透法人客戶，找出最終擁有或控制它的自然人，並驗證其身份。FATF INR.10 註腳 40 以「超過 25%」為門檻範例；MAS Notice 626 本身沒有訂數字門檻。
 3. **瞭解並獲取業務性質與目的資訊 (Understanding Purpose & Nature)**：
    - 詢問並記錄客戶開戶的真實目的（如日常貿易結算、個人儲蓄、資產配置）與預期交易頻率與規模。
 4. **持續性盡職調查與交易 Scrutiny (Ongoing Monitoring)**：
@@ -41,5 +41,7 @@ flowchart LR
 
 ## 4. 溯源條款對照
 
-- **FATF Rec 10**: [Recommendation 10, Paragraph 2 & 3](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L9-L32)
-- **MAS Notice 626**: [Paragraph 6.2 & 6.6](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L45-L68)
+條文 ID 對應 `data/gold/clauses.yaml`（由 `data/sources/*.md` 解析而來）：
+
+- **FATF Rec 10**：`fatf_rec10_rec_10_when_cdd_is_required`（何時須執行 CDD）、`fatf_rec10_rec_10_cdd_measures_a`（識別與驗證客戶）
+- **MAS Notice 626**：`mas_notice_626_6_cdd_6_3`（第 6.3 段）、`mas_notice_626_6_cdd_6_5`、`mas_notice_626_6_cdd_6_6`（第 6.5–6.6 段）

@@ -1,40 +1,46 @@
 - conflict_id: conf_ubo_threshold
   conflict_type: Numerical
   source_clause_ids:
-  - mas626_clause_03
-  - mock_policy_clause_01
+  - fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a
   verifiability: retrieval-verifiable
-  description: Numerical discrepancy in Ultimate Beneficial Owner (UBO) ownership
-    threshold. MAS Notice 626 defines controlling interest as >25% shareholding, whereas
-    Global Bank Internal Policy mandates a stricter threshold of >=10%.
-  reconciliation_rule: Apply the stricter internal threshold of >=10% for internal
-    compliance, while ensuring regulatory minimum (>25%) is satisfied.
+  description: 'Ownership thresholds for identifying beneficial owners differ between
+    sources: FATF Recommendation 10 (Interpretive Note to Recommendation 10, Paragraph
+    5(b), Footnote 40) gives 25% as an example threshold; Global Bank AML and KYC
+    Compliance Policy (Section 1: Customer Onboarding Standards, 1.2 Beneficial Ownership
+    Verification, (a)) uses 10%. The 10% threshold is the stricter rule.'
+  reconciliation_rule: Apply the stricter internal threshold (10% or more of shares
+    or voting rights) when identifying beneficial owners; this also covers the FATF
+    example threshold (more than 25%).
   adjudication_status: resolved
   resolved_by: Compliance Committee Decision 2025-01
 - conflict_id: conf_pep_jurisdiction
   conflict_type: PolicyReversal
   source_clause_ids:
-  - mas626_clause_04
-  - mock_policy_clause_02
+  - mas_notice_626_8_enhanced_cdd_8_3
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
   verifiability: retrieval-verifiable
-  description: Conflict regarding PEP onboarding permissions. MAS Notice 626 permits
-    onboarding PEPs with senior management approval and EDD. Global Bank Policy strictly
-    prohibits onboarding PEPs specifically from high-risk jurisdictions.
+  description: 'MAS Notice 626 (8 Enhanced Customer Due Diligence, 8.3) allows business
+    relations with PEPs subject to enhanced CDD, whereas Global Bank AML and KYC Compliance
+    Policy (Section 1: Customer Onboarding Standards, 1.4 Politically Exposed Persons)
+    prohibits PEPs from high-risk jurisdictions.'
   reconciliation_rule: 'Apply the stricter prohibition: reject onboarding if the PEP
-    resides in or is associated with a high-risk jurisdiction, even if regulatory
-    authority allows it.'
+    resides in or is associated with a high-risk jurisdiction, even though MAS Notice
+    626 allows business relations with PEPs subject to enhanced CDD.'
   adjudication_status: resolved
   resolved_by: Global Head of AML
 - conflict_id: conf_occasional_threshold
   conflict_type: Numerical
   source_clause_ids:
-  - fatf_rec10_clause_02
-  - mas626_clause_01
+  - fatf_rec10_rec_10_when_cdd_is_required_ii
+  - mas_notice_626_6_cdd_6_3_b
   verifiability: retrieval-verifiable
-  description: Numerical difference in occasional transaction triggers. FATF Recommendation
-    10 recommends USD/EUR 15,000, whereas MAS Notice 626 mandates SGD 20,000 for banks
-    in Singapore.
-  reconciliation_rule: For banks operating under MAS jurisdiction in Singapore, apply
-    the SGD 20,000 threshold or its equivalent.
+  description: 'Occasional transaction thresholds that trigger CDD differ between
+    sources: FATF Recommendation 10 (Recommendation 10, When CDD is required, (ii))
+    uses USD/EUR 15,000; MAS Notice 626 (6 Customer Due Diligence, 6.3, (b)) uses
+    S$20,000.'
+  reconciliation_rule: For banks operating in Singapore, apply the S$20,000 threshold
+    in MAS Notice 626 paragraph 6.3(b), which implements the FATF designated threshold
+    locally.
   adjudication_status: resolved
   resolved_by: MAS Regulation

@@ -1,21 +1,25 @@
 CDD-GraphWiki Obligation Extraction Evaluation Report
 ==================================================
-Obligation ID: ob_prohibit_anonymous -> Match: [OK] Fields match ratio: 1.00
-Obligation ID: ob_cdd_on_relationship -> Match: [OK] Fields match ratio: 1.00
-Obligation ID: ob_verify_customer_identity -> Match: [OK] Fields match ratio: 1.00
-Obligation ID: ob_identify_ubo_25 -> Match: [OK] Fields match ratio: 1.00
-Obligation ID: ob_cdd_on_relationship_mas -> Match: [OK] Fields match ratio: 1.00
-Obligation ID: ob_verify_customer_mas -> Match: [OK] Fields match ratio: 1.00
-Obligation ID: ob_identify_ubo_25_mas -> Match: [OK] Fields match ratio: 1.00
-Obligation ID: ob_pep_edd_mas -> Match: [OK] Fields match ratio: 1.00
-Obligation ID: ob_identify_ubo_10_gb -> Match: [OK] Fields match ratio: 1.00
-Obligation ID: ob_pep_prohibitions_gb -> Match: [OK] Fields match ratio: 1.00
+Obligation ID: ob_prohibit_anonymous -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause fatf_rec10_rec_10_anonymous_accounts)
+Obligation ID: ob_cdd_on_relationship -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause fatf_rec10_rec_10_when_cdd_is_required)
+Obligation ID: ob_verify_customer_identity -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause fatf_rec10_rec_10_cdd_measures_a)
+Obligation ID: ob_identify_ubo_25 -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause fatf_rec10_rec_10_cdd_measures_b)
+Obligation ID: ob_cdd_on_relationship_mas -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause mas_notice_626_6_cdd_6_3)
+Obligation ID: ob_verify_customer_mas -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause mas_notice_626_6_cdd_6_5)
+Obligation ID: ob_identify_ubo_mas -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause mas_notice_626_6_cdd_6_13)
+Obligation ID: ob_pep_edd_mas -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause mas_notice_626_8_enhanced_cdd_8_3)
+Obligation ID: ob_identify_ubo_10_gb -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification)
+Obligation ID: ob_pep_prohibitions_gb -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons)
+Obligation ID: ob_pep_approval_gb -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a)
+Obligation ID: ob_cdd_incomplete_mas -> Match: [OK] Fields match ratio: 1.00 | Provenance: [OK] (anchor clause mas_notice_626_6_cdd_6_35)
 
 Evaluation Metrics Summary:
-- Extracted Obligations Count: 10
-- Gold Obligations Count: 10
-- Match Count: 10
+- Extracted Obligations Count: 12
+- Gold Obligations Count: 12
+- Match Count: 12
 - Precision (精準率): 1.00
 - Recall (召回率): 1.00
 - F1-Score: 1.00
 - Field-level Alignment Accuracy: 1.00
+- Provenance Match (anchor clause + jurisdiction): 12/12
+- Source Clause Set Exact Match: 12/12

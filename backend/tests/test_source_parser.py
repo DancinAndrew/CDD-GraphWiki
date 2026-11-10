@@ -5,15 +5,17 @@ from pathlib import Path
 from src.contracts.models import SourceDocument, Clause
 from src.ingestion.parser import SemanticHierarchicalSegmenter, run_pipeline
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
 @pytest.fixture(scope="module")
-def parsed_data():
+def parsed_data(tmp_path_factory):
     """
     執行 Ingestion Pipeline 並載入生成的文件進行測試。
     """
-    src_dir = "data/sources"
-    out_dir = "data/processed"
-    
-    # 確保輸出目錄與檔案在測試前被跑過
+    src_dir = os.path.join(REPO_ROOT, "data", "sources")
+    out_dir = str(tmp_path_factory.mktemp("parsed"))
+
+    # 解析到暫存目錄，不改寫 repo 裡的 data/processed
     run_pipeline(src_dir, out_dir)
     
     # 載入產出的 YAML 檔案
@@ -145,3 +147,45 @@ Different introductory text with some   extra spaces.
     ids_run2 = [c.clause_id for c in clauses_run2]
     
     assert ids_run1 == ids_run2, "IDs shifted under non-structural changes! Stable ID mechanism failed."
+
+
+def test_parser_output_matches_reviewed_gold_clauses(parsed_data):
+    """
+    金標條文是 parser 輸出經人工檢查後凍結的版本；parser 或來源一改動，這個測試就會提醒同步更新。
+    """
+    _, clauses = parsed_data
+    with open(REPO_ROOT / "data" / "gold" / "clauses.yaml", "r", encoding="utf-8") as f:
+        gold = yaml.safe_load(f)
+    assert clauses == gold
+
+
+def _squash(text: str) -> str:
+    """比對用：去掉所有空白並統一連字號，抵消 PDF 文字抽取的斷行與空格雜訊。"""
+    import re
+    return re.sub(r"\s+", "", text).replace("–", "-")
+
+
+def test_mas_excerpt_is_verbatim_from_official_pdf():
+    """
+    MAS 摘錄的每一行內文（標題與說明除外）都必須能在 repo 內的官方 PDF 文字中逐字找到。
+    """
+    from pypdf import PdfReader
+    pdf_path = REPO_ROOT / "data" / "sources" / "official" / "mas_notice_626.pdf"
+    official = _squash(" ".join(page.extract_text() or "" for page in PdfReader(str(pdf_path)).pages))
+
+    lines = (REPO_ROOT / "data" / "sources" / "mas_notice_626.md").read_text(encoding="utf-8").splitlines()
+    body = [ln.strip() for ln in lines if ln.strip() and not ln.lstrip().startswith(("#", ">"))]
+    assert len(body) >= 20
+    missing = [ln for ln in body if _squash(ln) not in official]
+    assert missing == [], f"Lines not found verbatim in the official MAS Notice 626 PDF: {missing}"
+
+
+def test_sources_state_the_thresholds_used_by_conflicts(parsed_data):
+    """衝突偵測用到的三個門檻，必須真的出現在解析出的條文裡。"""
+    _, clauses = parsed_data
+    text = {c["clause_id"]: c["raw_text"] for c in clauses}
+    assert "(e.g. 25%)" in text["fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40"]
+    assert "USD/EUR 15,000" in text["fatf_rec10_rec_10_when_cdd_is_required_ii"]
+    assert "S$20,000" in text["mas_notice_626_6_cdd_6_3_b"]
+    assert "10% or more" in text["mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a"]
+    assert not any("mock" in cid and cid.startswith("mas") for cid in text), "LLM mock clauses must not be in the corpus"

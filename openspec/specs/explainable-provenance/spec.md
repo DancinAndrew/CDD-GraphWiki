@@ -24,7 +24,7 @@ TBD - created by archiving change create-explainable-provenance-engine. Update P
 
 ### Requirement: Compliance Decision Explainer and Lineage
 系統 **SHALL** 實作 `ProvenanceEngine` 決策解釋器，能夠為 `CDDChecklist` 中的任何要求或風險標記，推理產出 100% 忠實的「合規解釋鏈」。
-* 對於 `CDDChecklist` 中的必備佐證文件（如 `"Source of Funds Declaration & Evidence"`），`ProvenanceEngine` **MUST** 自動回溯至引發它的客戶屬性特徵（如 `pep_exposure = True`）、適用的義務（如 `ob_pep_edd_mas`）以及源法源條文（如 `mas626_clause_04`）。
+* 對於 `CDDChecklist` 中的必備佐證文件（如 `"Source of Funds Declaration & Evidence"`），`ProvenanceEngine` **MUST** 自動回溯至引發它的客戶屬性特徵（如 `pep_exposure = True`）、適用的義務（如 `ob_pep_edd_mas`）以及源法源條文（如 MAS Notice 626 第 8.3 段 `mas_notice_626_8_enhanced_cdd_8_3`）。
 * 解釋鏈中的 `Clause` 節點 **MUST** 精確引述原始條文的明文（如 `raw_text` 或 `normalized_text`），確保解釋有理有據，杜絕生成模型幻覺。
 
 #### Scenario: Explaining PEP Senior Management Approval Requirement
@@ -33,7 +33,7 @@ TBD - created by archiving change create-explainable-provenance-engine. Update P
 * **THEN** 產出的 `ExplanationPath` **SHALL** 成功生成：
   * 其首個節點的 `node_type` 為 `customer_fact` 且屬性包含 `pep_exposure = True`。
   * 其必備包含適用義務 `ob_pep_edd_mas` 節點。
-  * 其包含條款 `mas626_clause_04` 節點，且該節點的屬性包含 `MAS Notice 626 Paragraph 7.2` 的 raw_text 明文。
+  * 其包含條款 `mas_notice_626_8_enhanced_cdd_8_3` 節點，且該節點的屬性包含 MAS Notice 626 第 8.3 段的 raw_text 明文。
 
 ---
 
@@ -45,5 +45,5 @@ TBD - created by archiving change create-explainable-provenance-engine. Update P
 #### Scenario: Generating Human-Readable Audit Report
 * **GIVEN** 一個結構化的 `ExplanationPath` 實例。
 * **WHEN** 調用 `ProvenanceEngine.generate_audit_report(explanation_paths)` 時。
-* **THEN** 系統 **SHALL** 返回一段格式完美的 Markdown 字串，其中包含清晰的引用引述（如 `> MAS Notice 626 Paragraph 7.2...`）與合規解釋脈絡。
+* **THEN** 系統 **SHALL** 返回一段格式完美的 Markdown 字串，其中包含清晰的引用引述（如 MAS Notice 626 第 8.3 段的原文）與合規解釋脈絡。
 

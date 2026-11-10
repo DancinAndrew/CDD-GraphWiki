@@ -1,108 +1,93 @@
-- clause_id: fatf_rec10_introduction
+- clause_id: fatf_rec10_rec_10
   source_document_id: fatf_rec10
-  section_ref: Introduction
+  section_ref: Recommendation 10
   parent_clause_id: null
-  raw_text: '## Introduction Financial institutions should be prohibited from keeping
-    anonymous accounts or accounts in fictitious names.'
-  normalized_text: '## introduction financial institutions should be prohibited from
-    keeping anonymous accounts or accounts in fictitious names.'
+  raw_text: '## Recommendation 10'
+  normalized_text: '## recommendation 10'
   citations:
-  - fatf_rec10_introduction
-- clause_id: fatf_rec10_cdd_measures
+  - fatf_rec10_rec_10
+- clause_id: fatf_rec10_rec_10_anonymous_accounts
   source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures
-  parent_clause_id: null
-  raw_text: '## Customer Due Diligence Measures Financial institutions should be required
-    to undertake customer due diligence (CDD) measures when:'
-  normalized_text: '## customer due diligence measures financial institutions should
-    be required to undertake customer due diligence (cdd) measures when:'
+  section_ref: Recommendation 10 > Anonymous accounts
+  parent_clause_id: fatf_rec10_rec_10
+  raw_text: '### Anonymous accounts Financial institutions should be prohibited from
+    keeping anonymous accounts or accounts in obviously fictitious names.'
+  normalized_text: '### anonymous accounts financial institutions should be prohibited
+    from keeping anonymous accounts or accounts in obviously fictitious names.'
   citations:
-  - fatf_rec10_cdd_measures
-- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers
+  - fatf_rec10_rec_10_anonymous_accounts
+- clause_id: fatf_rec10_rec_10_when_cdd_is_required
   source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers
-  parent_clause_id: fatf_rec10_cdd_measures
-  raw_text: '### 10.1 CDD Triggers The financial institution shall apply CDD measures
-    when:'
-  normalized_text: '### 10.1 cdd triggers the financial institution shall apply cdd
-    measures when:'
+  section_ref: Recommendation 10 > When CDD is required
+  parent_clause_id: fatf_rec10_rec_10
+  raw_text: '### When CDD is required Financial institutions should be required to
+    undertake customer due diligence (CDD) measures when:'
+  normalized_text: '### when cdd is required financial institutions should be required
+    to undertake customer due diligence (cdd) measures when:'
   citations:
-  - fatf_rec10_cdd_measures_10_1_cdd_triggers
-- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_a
+  - fatf_rec10_rec_10_when_cdd_is_required
+- clause_id: fatf_rec10_rec_10_when_cdd_is_required_i
   source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (a)
-  parent_clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers
-  raw_text: (a) Establishing business relationships.
-  normalized_text: (a) establishing business relationships.
+  section_ref: Recommendation 10 > When CDD is required > (i)
+  parent_clause_id: fatf_rec10_rec_10_when_cdd_is_required
+  raw_text: (i) establishing business relations;
+  normalized_text: (i) establishing business relations;
   citations:
-  - fatf_rec10_cdd_measures_10_1_cdd_triggers_a
-- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_b
+  - fatf_rec10_rec_10_when_cdd_is_required_i
+- clause_id: fatf_rec10_rec_10_when_cdd_is_required_ii
   source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (b)
-  parent_clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers
-  raw_text: '(b) Carrying out occasional transactions:'
-  normalized_text: '(b) carrying out occasional transactions:'
+  section_ref: Recommendation 10 > When CDD is required > (ii)
+  parent_clause_id: fatf_rec10_rec_10_when_cdd_is_required
+  raw_text: '(ii) carrying out occasional transactions: (i) above the applicable designated
+    threshold (USD/EUR 15,000); or (ii) that are payments or value transfers in the
+    circumstances covered by the Interpretive Note to Recommendation 16;'
+  normalized_text: '(ii) carrying out occasional transactions: (i) above the applicable
+    designated threshold (usd/eur 15,000); or (ii) that are payments or value transfers
+    in the circumstances covered by the interpretive note to recommendation 16;'
   citations:
-  - fatf_rec10_cdd_measures_10_1_cdd_triggers_b
-- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_b_i
+  - fatf_rec10_rec_10_when_cdd_is_required_ii
+- clause_id: fatf_rec10_rec_10_when_cdd_is_required_iii
   source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (b) > (i)
-  parent_clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_b
-  raw_text: (i) Above the designated threshold (USD/EUR 15,000); or
-  normalized_text: (i) above the designated threshold (usd/eur 15,000); or
+  section_ref: Recommendation 10 > When CDD is required > (iii)
+  parent_clause_id: fatf_rec10_rec_10_when_cdd_is_required
+  raw_text: (iii) there is a suspicion of money laundering or terrorist financing;
+    or
+  normalized_text: (iii) there is a suspicion of money laundering or terrorist financing;
+    or
   citations:
-  - fatf_rec10_cdd_measures_10_1_cdd_triggers_b_i
-- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_b_ii
+  - fatf_rec10_rec_10_when_cdd_is_required_iii
+- clause_id: fatf_rec10_rec_10_when_cdd_is_required_iv
   source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (b) > (ii)
-  parent_clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_b
-  raw_text: (ii) That are wire transfers in the circumstances covered by the Interpretative
-    Note to Recommendation 16.
-  normalized_text: (ii) that are wire transfers in the circumstances covered by the
-    interpretative note to recommendation 16.
-  citations:
-  - fatf_rec10_cdd_measures_10_1_cdd_triggers_b_ii
-- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_c
-  source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (c)
-  parent_clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers
-  raw_text: (c) There is a suspicion of money laundering or terrorist financing.
-  normalized_text: (c) there is a suspicion of money laundering or terrorist financing.
-  citations:
-  - fatf_rec10_cdd_measures_10_1_cdd_triggers_c
-- clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers_d
-  source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.1 CDD Triggers > (d)
-  parent_clause_id: fatf_rec10_cdd_measures_10_1_cdd_triggers
-  raw_text: (d) The financial institution has doubts about the veracity or adequacy
+  section_ref: Recommendation 10 > When CDD is required > (iv)
+  parent_clause_id: fatf_rec10_rec_10_when_cdd_is_required
+  raw_text: (iv) the financial institution has doubts about the veracity or adequacy
     of previously obtained customer identification data.
-  normalized_text: (d) the financial institution has doubts about the veracity or
+  normalized_text: (iv) the financial institution has doubts about the veracity or
     adequacy of previously obtained customer identification data.
   citations:
-  - fatf_rec10_cdd_measures_10_1_cdd_triggers_d
-- clause_id: fatf_rec10_cdd_measures_10_2_core_requirements
+  - fatf_rec10_rec_10_when_cdd_is_required_iv
+- clause_id: fatf_rec10_rec_10_cdd_measures
   source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.2 Core Requirements
-  parent_clause_id: fatf_rec10_cdd_measures
-  raw_text: '### 10.2 Core Requirements The CDD measures to be taken are as follows:'
-  normalized_text: '### 10.2 core requirements the cdd measures to be taken are as
-    follows:'
+  section_ref: Recommendation 10 > CDD measures
+  parent_clause_id: fatf_rec10_rec_10
+  raw_text: '### CDD measures The CDD measures to be taken are as follows:'
+  normalized_text: '### cdd measures the cdd measures to be taken are as follows:'
   citations:
-  - fatf_rec10_cdd_measures_10_2_core_requirements
-- clause_id: fatf_rec10_cdd_measures_10_2_core_requirements_a
+  - fatf_rec10_rec_10_cdd_measures
+- clause_id: fatf_rec10_rec_10_cdd_measures_a
   source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.2 Core Requirements > (a)
-  parent_clause_id: fatf_rec10_cdd_measures_10_2_core_requirements
+  section_ref: Recommendation 10 > CDD measures > (a)
+  parent_clause_id: fatf_rec10_rec_10_cdd_measures
   raw_text: (a) Identifying the customer and verifying that customer’s identity using
     reliable, independent source documents, data or information.
   normalized_text: (a) identifying the customer and verifying that customer’s identity
     using reliable, independent source documents, data or information.
   citations:
-  - fatf_rec10_cdd_measures_10_2_core_requirements_a
-- clause_id: fatf_rec10_cdd_measures_10_2_core_requirements_b
+  - fatf_rec10_rec_10_cdd_measures_a
+- clause_id: fatf_rec10_rec_10_cdd_measures_b
   source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.2 Core Requirements > (b)
-  parent_clause_id: fatf_rec10_cdd_measures_10_2_core_requirements
+  section_ref: Recommendation 10 > CDD measures > (b)
+  parent_clause_id: fatf_rec10_rec_10_cdd_measures
   raw_text: (b) Identifying the beneficial owner, and taking reasonable measures to
     verify the identity of the beneficial owner, such that the financial institution
     is satisfied that it knows who the beneficial owner is. For legal persons and
@@ -114,196 +99,401 @@
     arrangements this should include financial institutions understanding the ownership
     and control structure of the customer.
   citations:
-  - fatf_rec10_cdd_measures_10_2_core_requirements_b
-- clause_id: fatf_rec10_cdd_measures_10_2_core_requirements_c
+  - fatf_rec10_rec_10_cdd_measures_b
+- clause_id: fatf_rec10_rec_10_cdd_measures_c
   source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.2 Core Requirements > (c)
-  parent_clause_id: fatf_rec10_cdd_measures_10_2_core_requirements
+  section_ref: Recommendation 10 > CDD measures > (c)
+  parent_clause_id: fatf_rec10_rec_10_cdd_measures
   raw_text: (c) Understanding and, as appropriate, obtaining information on the purpose
     and intended nature of the business relationship.
   normalized_text: (c) understanding and, as appropriate, obtaining information on
     the purpose and intended nature of the business relationship.
   citations:
-  - fatf_rec10_cdd_measures_10_2_core_requirements_c
-- clause_id: fatf_rec10_cdd_measures_10_2_core_requirements_d
+  - fatf_rec10_rec_10_cdd_measures_c
+- clause_id: fatf_rec10_rec_10_cdd_measures_d
   source_document_id: fatf_rec10
-  section_ref: Customer Due Diligence Measures > 10.2 Core Requirements > (d)
-  parent_clause_id: fatf_rec10_cdd_measures_10_2_core_requirements
+  section_ref: Recommendation 10 > CDD measures > (d)
+  parent_clause_id: fatf_rec10_rec_10_cdd_measures
   raw_text: (d) Conducting ongoing due diligence on the business relationship and
     scrutiny of transactions undertaken throughout the course of that relationship
-    to ensure that the transactions being conducted are consistent with the financial
-    institution’s knowledge of the customer, their business and risk profile, including,
-    where necessary, the source of funds.
+    to ensure that the transactions being conducted are consistent with the institution’s
+    knowledge of the customer, their business and risk profile, including, where necessary,
+    the source of funds.
   normalized_text: (d) conducting ongoing due diligence on the business relationship
     and scrutiny of transactions undertaken throughout the course of that relationship
-    to ensure that the transactions being conducted are consistent with the financial
-    institution’s knowledge of the customer, their business and risk profile, including,
-    where necessary, the source of funds.
+    to ensure that the transactions being conducted are consistent with the institution’s
+    knowledge of the customer, their business and risk profile, including, where necessary,
+    the source of funds.
   citations:
-  - fatf_rec10_cdd_measures_10_2_core_requirements_d
-- clause_id: mas_notice_626_s_6_cdd
-  source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence'
+  - fatf_rec10_rec_10_cdd_measures_d
+- clause_id: fatf_rec10_interpretive_note_to_rec_10
+  source_document_id: fatf_rec10
+  section_ref: Interpretive Note to Recommendation 10
   parent_clause_id: null
-  raw_text: '## Section 6: Customer Due Diligence A bank shall not establish business
-    relations or undertake a transaction for a customer if the bank is unable to complete
-    the CDD measures required under this Section.'
-  normalized_text: '## section 6: customer due diligence a bank shall not establish
-    business relations or undertake a transaction for a customer if the bank is unable
-    to complete the cdd measures required under this section.'
+  raw_text: '## Interpretive Note to Recommendation 10'
+  normalized_text: '## interpretive note to recommendation 10'
   citations:
-  - mas_notice_626_s_6_cdd
-- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements
+  - fatf_rec10_interpretive_note_to_rec_10
+- clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b
+  source_document_id: fatf_rec10
+  section_ref: Interpretive Note to Recommendation 10 > Paragraph 5(b)
+  parent_clause_id: fatf_rec10_interpretive_note_to_rec_10
+  raw_text: '### Paragraph 5(b)'
+  normalized_text: '### paragraph 5(b)'
+  citations:
+  - fatf_rec10_interpretive_note_to_rec_10_p_5_b
+- clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b_b
+  source_document_id: fatf_rec10
+  section_ref: Interpretive Note to Recommendation 10 > Paragraph 5(b) > (b)
+  parent_clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b
+  raw_text: '(b) Identify the beneficial owners of the customer and take reasonable
+    measures to verify the identity of such persons, through the following information:'
+  normalized_text: '(b) identify the beneficial owners of the customer and take reasonable
+    measures to verify the identity of such persons, through the following information:'
+  citations:
+  - fatf_rec10_interpretive_note_to_rec_10_p_5_b_b
+- clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b_b_i
+  source_document_id: fatf_rec10
+  section_ref: Interpretive Note to Recommendation 10 > Paragraph 5(b) > (b) > (i)
+  parent_clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b_b
+  raw_text: '(i) For legal persons: (i.i) The identity of the natural persons (if
+    any – as ownership interests can be so diversified that there are no natural persons
+    (whether acting alone or together) exercising control of the legal person or arrangement
+    through ownership) who ultimately have a controlling ownership interest in a legal
+    person; and
+
+    (i.ii) to the extent that there is doubt under (i.i) as to whether the person(s)
+    with the controlling ownership interest are the beneficial owner(s) or where no
+    natural person exerts control through ownership interests, the identity of the
+    natural persons (if any) exercising control of the legal person or arrangement
+    through other means.
+
+    (i.iii) Where no natural person is identified under (i.i) or (i.ii) above, financial
+    institutions should identify and take reasonable measures to verify the identity
+    of the relevant natural person who holds the position of senior managing official.'
+  normalized_text: '(i) for legal persons: (i.i) the identity of the natural persons
+    (if any – as ownership interests can be so diversified that there are no natural
+    persons (whether acting alone or together) exercising control of the legal person
+    or arrangement through ownership) who ultimately have a controlling ownership
+    interest in a legal person; and (i.ii) to the extent that there is doubt under
+    (i.i) as to whether the person(s) with the controlling ownership interest are
+    the beneficial owner(s) or where no natural person exerts control through ownership
+    interests, the identity of the natural persons (if any) exercising control of
+    the legal person or arrangement through other means. (i.iii) where no natural
+    person is identified under (i.i) or (i.ii) above, financial institutions should
+    identify and take reasonable measures to verify the identity of the relevant natural
+    person who holds the position of senior managing official.'
+  citations:
+  - fatf_rec10_interpretive_note_to_rec_10_p_5_b_b_i
+- clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40
+  source_document_id: fatf_rec10
+  section_ref: Interpretive Note to Recommendation 10 > Paragraph 5(b) > Footnote
+    40
+  parent_clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b
+  raw_text: '#### Footnote 40 A controlling ownership interest depends on the ownership
+    structure of the company. It may be based on a threshold, e.g. any person owning
+    more than a certain percentage of the company (e.g. 25%).'
+  normalized_text: '#### footnote 40 a controlling ownership interest depends on the
+    ownership structure of the company. it may be based on a threshold, e.g. any person
+    owning more than a certain percentage of the company (e.g. 25%).'
+  citations:
+  - fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40
+- clause_id: mas_notice_626_6_cdd
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements'
-  parent_clause_id: mas_notice_626_s_6_cdd
-  raw_text: '### 6.1 General CDD Requirements A bank shall perform Customer Due Diligence
-    measures in the following circumstances:'
-  normalized_text: '### 6.1 general cdd requirements a bank shall perform customer
-    due diligence measures in the following circumstances:'
+  section_ref: 6 Customer Due Diligence
+  parent_clause_id: null
+  raw_text: '## 6 Customer Due Diligence'
+  normalized_text: '## 6 customer due diligence'
   citations:
-  - mas_notice_626_s_6_cdd_6_1_general_cdd_requirements
-- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_a
+  - mas_notice_626_6_cdd
+- clause_id: mas_notice_626_6_cdd_6_3
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
-    (a)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements
-  raw_text: (a) When the bank establishes business relations with a customer.
-  normalized_text: (a) when the bank establishes business relations with a customer.
+  section_ref: 6 Customer Due Diligence > 6.3
+  parent_clause_id: mas_notice_626_6_cdd
+  raw_text: '### 6.3 A bank shall perform the measures as required by paragraphs 6,
+    7 and 8 when -'
+  normalized_text: '### 6.3 a bank shall perform the measures as required by paragraphs
+    6, 7 and 8 when -'
   citations:
-  - mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_a
-- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_b
+  - mas_notice_626_6_cdd_6_3
+- clause_id: mas_notice_626_6_cdd_6_3_a
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
-    (b)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements
-  raw_text: '(b) When the bank undertakes any occasional transaction for a customer:'
-  normalized_text: '(b) when the bank undertakes any occasional transaction for a
-    customer:'
+  section_ref: 6 Customer Due Diligence > 6.3 > (a)
+  parent_clause_id: mas_notice_626_6_cdd_6_3
+  raw_text: (a) the bank establishes business relations with any customer;
+  normalized_text: (a) the bank establishes business relations with any customer;
   citations:
-  - mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_b
-- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_b_i
+  - mas_notice_626_6_cdd_6_3_a
+- clause_id: mas_notice_626_6_cdd_6_3_b
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
-    (b) > (i)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_b
-  raw_text: (i) That is equal to or exceeds SGD 5,000; or
-  normalized_text: (i) that is equal to or exceeds sgd 5,000; or
+  section_ref: 6 Customer Due Diligence > 6.3 > (b)
+  parent_clause_id: mas_notice_626_6_cdd_6_3
+  raw_text: (b) the bank undertakes any transaction of a value exceeding S$20,000,
+    other than any digital token transaction referred to in paragraph 6.3(c), for
+    any customer who has not otherwise established business relations with the bank;
+  normalized_text: (b) the bank undertakes any transaction of a value exceeding s$20,000,
+    other than any digital token transaction referred to in paragraph 6.3(c), for
+    any customer who has not otherwise established business relations with the bank;
   citations:
-  - mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_b_i
-- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_b_ii
+  - mas_notice_626_6_cdd_6_3_b
+- clause_id: mas_notice_626_6_cdd_6_3_f
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
-    (b) > (ii)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_b
-  raw_text: (ii) That is a wire transfer, regardless of the transaction amount.
-  normalized_text: (ii) that is a wire transfer, regardless of the transaction amount.
+  section_ref: 6 Customer Due Diligence > 6.3 > (f)
+  parent_clause_id: mas_notice_626_6_cdd_6_3
+  raw_text: (f) there is a suspicion of money laundering or terrorism financing, notwithstanding
+    that the bank would not otherwise be required by this Notice to perform the measures
+    as required by paragraphs 6, 7 and 8; or
+  normalized_text: (f) there is a suspicion of money laundering or terrorism financing,
+    notwithstanding that the bank would not otherwise be required by this notice to
+    perform the measures as required by paragraphs 6, 7 and 8; or
   citations:
-  - mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_b_ii
-- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_c
+  - mas_notice_626_6_cdd_6_3_f
+- clause_id: mas_notice_626_6_cdd_6_3_g
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
-    (c)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements
-  raw_text: (c) When there is suspicion of money laundering or terrorism financing.
-  normalized_text: (c) when there is suspicion of money laundering or terrorism financing.
+  section_ref: 6 Customer Due Diligence > 6.3 > (g)
+  parent_clause_id: mas_notice_626_6_cdd_6_3
+  raw_text: (g) the bank has doubts about the veracity or adequacy of any information
+    previously obtained.
+  normalized_text: (g) the bank has doubts about the veracity or adequacy of any information
+    previously obtained.
   citations:
-  - mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_c
-- clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_d
+  - mas_notice_626_6_cdd_6_3_g
+- clause_id: mas_notice_626_6_cdd_6_5
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.1 General CDD Requirements >
-    (d)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_1_general_cdd_requirements
-  raw_text: (d) When the bank has doubts about the veracity or adequacy of any information
-    or documentation previously obtained.
-  normalized_text: (d) when the bank has doubts about the veracity or adequacy of
-    any information or documentation previously obtained.
+  section_ref: 6 Customer Due Diligence > 6.5
+  parent_clause_id: mas_notice_626_6_cdd
+  raw_text: '### 6.5 A bank shall identify each customer.'
+  normalized_text: '### 6.5 a bank shall identify each customer.'
   citations:
-  - mas_notice_626_s_6_cdd_6_1_general_cdd_requirements_d
-- clause_id: mas_notice_626_s_6_cdd_6_2_edd
+  - mas_notice_626_6_cdd_6_5
+- clause_id: mas_notice_626_6_cdd_6_6
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence'
-  parent_clause_id: mas_notice_626_s_6_cdd
-  raw_text: '### 6.2 Enhanced Due Diligence A bank shall perform Enhanced Due Diligence
-    (EDD) measures in respect of any customer who:'
-  normalized_text: '### 6.2 enhanced due diligence a bank shall perform enhanced due
-    diligence (edd) measures in respect of any customer who:'
+  section_ref: 6 Customer Due Diligence > 6.6
+  parent_clause_id: mas_notice_626_6_cdd
+  raw_text: '### 6.6 For the purposes of paragraph 6.5, a bank shall obtain at least
+    the following information:'
+  normalized_text: '### 6.6 for the purposes of paragraph 6.5, a bank shall obtain
+    at least the following information:'
   citations:
-  - mas_notice_626_s_6_cdd_6_2_edd
-- clause_id: mas_notice_626_s_6_cdd_6_2_edd_a
+  - mas_notice_626_6_cdd_6_6
+- clause_id: mas_notice_626_6_cdd_6_6_a
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > (a)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_2_edd
-  raw_text: (a) Is identified as presenting a high risk of money laundering or terrorism
-    financing.
-  normalized_text: (a) is identified as presenting a high risk of money laundering
-    or terrorism financing.
+  section_ref: 6 Customer Due Diligence > 6.6 > (a)
+  parent_clause_id: mas_notice_626_6_cdd_6_6
+  raw_text: (a) where the customer is a natural person, his or her –
+  normalized_text: (a) where the customer is a natural person, his or her –
   citations:
-  - mas_notice_626_s_6_cdd_6_2_edd_a
-- clause_id: mas_notice_626_s_6_cdd_6_2_edd_b
+  - mas_notice_626_6_cdd_6_6_a
+- clause_id: mas_notice_626_6_cdd_6_6_a_i
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > (b)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_2_edd
-  raw_text: (b) Is a Politically Exposed Person (PEP), a family member or a close
-    associate of a PEP.
-  normalized_text: (b) is a politically exposed person (pep), a family member or a
-    close associate of a pep.
+  section_ref: 6 Customer Due Diligence > 6.6 > (a) > (i)
+  parent_clause_id: mas_notice_626_6_cdd_6_6_a
+  raw_text: (i) full name, including any aliases;
+  normalized_text: (i) full name, including any aliases;
   citations:
-  - mas_notice_626_s_6_cdd_6_2_edd_b
-- clause_id: mas_notice_626_s_6_cdd_6_2_edd_c
+  - mas_notice_626_6_cdd_6_6_a_i
+- clause_id: mas_notice_626_6_cdd_6_6_a_ii
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > (c)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_2_edd
-  raw_text: (c) In respect of whom there are complex or unusually large transactions,
-    or unusual patterns of transactions, which have no apparent economic or lawful
-    purpose.
-  normalized_text: (c) in respect of whom there are complex or unusually large transactions,
-    or unusual patterns of transactions, which have no apparent economic or lawful
-    purpose.
+  section_ref: 6 Customer Due Diligence > 6.6 > (a) > (ii)
+  parent_clause_id: mas_notice_626_6_cdd_6_6_a
+  raw_text: (ii) unique identification number (such as an identity card number, birth
+    certificate number or passport number;
+  normalized_text: (ii) unique identification number (such as an identity card number,
+    birth certificate number or passport number;
   citations:
-  - mas_notice_626_s_6_cdd_6_2_edd_c
-- clause_id: mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures
+  - mas_notice_626_6_cdd_6_6_a_ii
+- clause_id: mas_notice_626_6_cdd_6_6_a_iii
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > 6.2.1
-    High Risk Measures'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_2_edd
-  raw_text: '#### 6.2.1 High Risk Measures For high-risk customers, a bank shall perform
-    the following measures:'
-  normalized_text: '#### 6.2.1 high risk measures for high-risk customers, a bank
-    shall perform the following measures:'
+  section_ref: 6 Customer Due Diligence > 6.6 > (a) > (iii)
+  parent_clause_id: mas_notice_626_6_cdd_6_6_a
+  raw_text: (iii) residential address;
+  normalized_text: (iii) residential address;
   citations:
-  - mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures
-- clause_id: mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures_i
+  - mas_notice_626_6_cdd_6_6_a_iii
+- clause_id: mas_notice_626_6_cdd_6_6_a_iv
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > 6.2.1
-    High Risk Measures > (i)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures
-  raw_text: (i) Obtain approval from senior management to establish or continue the
-    business relationship.
-  normalized_text: (i) obtain approval from senior management to establish or continue
-    the business relationship.
+  section_ref: 6 Customer Due Diligence > 6.6 > (a) > (iv)
+  parent_clause_id: mas_notice_626_6_cdd_6_6_a
+  raw_text: (iv) date of birth;
+  normalized_text: (iv) date of birth;
   citations:
-  - mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures_i
-- clause_id: mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures_ii
+  - mas_notice_626_6_cdd_6_6_a_iv
+- clause_id: mas_notice_626_6_cdd_6_6_a_v
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > 6.2.1
-    High Risk Measures > (ii)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures
-  raw_text: (ii) Take reasonable measures to establish the customer’s source of wealth
-    and source of funds.
-  normalized_text: (ii) take reasonable measures to establish the customer’s source
-    of wealth and source of funds.
+  section_ref: 6 Customer Due Diligence > 6.6 > (a) > (v)
+  parent_clause_id: mas_notice_626_6_cdd_6_6_a
+  raw_text: (v) nationality; and
+  normalized_text: (v) nationality; and
   citations:
-  - mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures_ii
-- clause_id: mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures_iii
+  - mas_notice_626_6_cdd_6_6_a_v
+- clause_id: mas_notice_626_6_cdd_6_9
   source_document_id: mas_notice_626
-  section_ref: 'Section 6: Customer Due Diligence > 6.2 Enhanced Due Diligence > 6.2.1
-    High Risk Measures > (iii)'
-  parent_clause_id: mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures
-  raw_text: (iii) Conduct enhanced ongoing monitoring of the business relationship.
-  normalized_text: (iii) conduct enhanced ongoing monitoring of the business relationship.
+  section_ref: 6 Customer Due Diligence > 6.9
+  parent_clause_id: mas_notice_626_6_cdd
+  raw_text: '### 6.9 A bank shall verify the identity of the customer using reliable,
+    independent source data, documents or information.'
+  normalized_text: '### 6.9 a bank shall verify the identity of the customer using
+    reliable, independent source data, documents or information.'
   citations:
-  - mas_notice_626_s_6_cdd_6_2_edd_6_2_1_high_risk_measures_iii
+  - mas_notice_626_6_cdd_6_9
+- clause_id: mas_notice_626_6_cdd_6_13
+  source_document_id: mas_notice_626
+  section_ref: 6 Customer Due Diligence > 6.13
+  parent_clause_id: mas_notice_626_6_cdd
+  raw_text: '### 6.13 Subject to paragraph 6.16, a bank shall inquire if there exists
+    any beneficial owner in relation to a customer.'
+  normalized_text: '### 6.13 subject to paragraph 6.16, a bank shall inquire if there
+    exists any beneficial owner in relation to a customer.'
+  citations:
+  - mas_notice_626_6_cdd_6_13
+- clause_id: mas_notice_626_6_cdd_6_14
+  source_document_id: mas_notice_626
+  section_ref: 6 Customer Due Diligence > 6.14
+  parent_clause_id: mas_notice_626_6_cdd
+  raw_text: '### 6.14 Where there is one or more beneficial owners in relation to
+    a customer, the bank shall identify the beneficial owners. For the purposes of
+    identifying the beneficial owners, the bank shall –'
+  normalized_text: '### 6.14 where there is one or more beneficial owners in relation
+    to a customer, the bank shall identify the beneficial owners. for the purposes
+    of identifying the beneficial owners, the bank shall –'
+  citations:
+  - mas_notice_626_6_cdd_6_14
+- clause_id: mas_notice_626_6_cdd_6_14_a
+  source_document_id: mas_notice_626
+  section_ref: 6 Customer Due Diligence > 6.14 > (a)
+  parent_clause_id: mas_notice_626_6_cdd_6_14
+  raw_text: (a) for customers that are legal persons -
+  normalized_text: (a) for customers that are legal persons -
+  citations:
+  - mas_notice_626_6_cdd_6_14_a
+- clause_id: mas_notice_626_6_cdd_6_14_a_i
+  source_document_id: mas_notice_626
+  section_ref: 6 Customer Due Diligence > 6.14 > (a) > (i)
+  parent_clause_id: mas_notice_626_6_cdd_6_14_a
+  raw_text: (i) identify the natural persons (whether acting alone or together) who
+    ultimately own the legal person;
+  normalized_text: (i) identify the natural persons (whether acting alone or together)
+    who ultimately own the legal person;
+  citations:
+  - mas_notice_626_6_cdd_6_14_a_i
+- clause_id: mas_notice_626_6_cdd_6_14_a_ii
+  source_document_id: mas_notice_626
+  section_ref: 6 Customer Due Diligence > 6.14 > (a) > (ii)
+  parent_clause_id: mas_notice_626_6_cdd_6_14_a
+  raw_text: (ii) to the extent that there is doubt under subparagraph (i) as to whether
+    the natural persons who ultimately own the legal person are the beneficial owners
+    or where no natural persons ultimately own the legal person, identify the natural
+    persons (if any) who ultimately control the legal person or have ultimate effective
+    control of the legal person; and
+  normalized_text: (ii) to the extent that there is doubt under subparagraph (i) as
+    to whether the natural persons who ultimately own the legal person are the beneficial
+    owners or where no natural persons ultimately own the legal person, identify the
+    natural persons (if any) who ultimately control the legal person or have ultimate
+    effective control of the legal person; and
+  citations:
+  - mas_notice_626_6_cdd_6_14_a_ii
+- clause_id: mas_notice_626_6_cdd_6_14b
+  source_document_id: mas_notice_626
+  section_ref: 6 Customer Due Diligence > 6.14B
+  parent_clause_id: mas_notice_626_6_cdd
+  raw_text: '### 6.14B A bank shall take reasonable steps to verify the identity of
+    each person identified under paragraph 6.14 using reliable, independent source
+    data, documents or information.'
+  normalized_text: '### 6.14b a bank shall take reasonable steps to verify the identity
+    of each person identified under paragraph 6.14 using reliable, independent source
+    data, documents or information.'
+  citations:
+  - mas_notice_626_6_cdd_6_14b
+- clause_id: mas_notice_626_6_cdd_6_35
+  source_document_id: mas_notice_626
+  section_ref: 6 Customer Due Diligence > 6.35
+  parent_clause_id: mas_notice_626_6_cdd
+  raw_text: '### 6.35 Where the bank is unable to complete the measures as required
+    by paragraphs 6, 7 and 8, it shall not commence or continue business relations
+    with any customer or undertake any transaction for any customer. The bank shall
+    consider if the circumstances are suspicious so as to warrant the filing of an
+    STR.'
+  normalized_text: '### 6.35 where the bank is unable to complete the measures as
+    required by paragraphs 6, 7 and 8, it shall not commence or continue business
+    relations with any customer or undertake any transaction for any customer. the
+    bank shall consider if the circumstances are suspicious so as to warrant the filing
+    of an str.'
+  citations:
+  - mas_notice_626_6_cdd_6_35
+- clause_id: mas_notice_626_8_enhanced_cdd
+  source_document_id: mas_notice_626
+  section_ref: 8 Enhanced Customer Due Diligence
+  parent_clause_id: null
+  raw_text: '## 8 Enhanced Customer Due Diligence'
+  normalized_text: '## 8 enhanced customer due diligence'
+  citations:
+  - mas_notice_626_8_enhanced_cdd
+- clause_id: mas_notice_626_8_enhanced_cdd_8_2
+  source_document_id: mas_notice_626
+  section_ref: 8 Enhanced Customer Due Diligence > 8.2
+  parent_clause_id: mas_notice_626_8_enhanced_cdd
+  raw_text: '### 8.2 A bank shall implement appropriate internal risk management systems,
+    policies, procedures and controls to determine if a customer, any natural person
+    appointed to act on behalf of the customer, any connected party of the customer
+    or any beneficial owner of the customer is a politically exposed person, or a
+    family member or close associate of a politically exposed person.'
+  normalized_text: '### 8.2 a bank shall implement appropriate internal risk management
+    systems, policies, procedures and controls to determine if a customer, any natural
+    person appointed to act on behalf of the customer, any connected party of the
+    customer or any beneficial owner of the customer is a politically exposed person,
+    or a family member or close associate of a politically exposed person.'
+  citations:
+  - mas_notice_626_8_enhanced_cdd_8_2
+- clause_id: mas_notice_626_8_enhanced_cdd_8_3
+  source_document_id: mas_notice_626
+  section_ref: 8 Enhanced Customer Due Diligence > 8.3
+  parent_clause_id: mas_notice_626_8_enhanced_cdd
+  raw_text: '### 8.3 A bank shall, in addition to performing CDD measures (specified
+    in paragraph 6), perform at least the following enhanced CDD measures where a
+    customer or any beneficial owner of the customer is determined by the bank to
+    be a politically exposed person, or a family member or close associate of a politically
+    exposed person under paragraph 8.2:'
+  normalized_text: '### 8.3 a bank shall, in addition to performing cdd measures (specified
+    in paragraph 6), perform at least the following enhanced cdd measures where a
+    customer or any beneficial owner of the customer is determined by the bank to
+    be a politically exposed person, or a family member or close associate of a politically
+    exposed person under paragraph 8.2:'
+  citations:
+  - mas_notice_626_8_enhanced_cdd_8_3
+- clause_id: mas_notice_626_8_enhanced_cdd_8_3_a
+  source_document_id: mas_notice_626
+  section_ref: 8 Enhanced Customer Due Diligence > 8.3 > (a)
+  parent_clause_id: mas_notice_626_8_enhanced_cdd_8_3
+  raw_text: (a) obtain approval from the bank’s senior management to establish or
+    continue business relations with, or undertake any transaction without an account
+    being opened for the customer;
+  normalized_text: (a) obtain approval from the bank’s senior management to establish
+    or continue business relations with, or undertake any transaction without an account
+    being opened for the customer;
+  citations:
+  - mas_notice_626_8_enhanced_cdd_8_3_a
+- clause_id: mas_notice_626_8_enhanced_cdd_8_3_b
+  source_document_id: mas_notice_626
+  section_ref: 8 Enhanced Customer Due Diligence > 8.3 > (b)
+  parent_clause_id: mas_notice_626_8_enhanced_cdd_8_3
+  raw_text: (b) establish, by appropriate and reasonable means, the source of wealth
+    and source of funds of the customer and any beneficial owner of the customer;
+    and
+  normalized_text: (b) establish, by appropriate and reasonable means, the source
+    of wealth and source of funds of the customer and any beneficial owner of the
+    customer; and
+  citations:
+  - mas_notice_626_8_enhanced_cdd_8_3_b
+- clause_id: mas_notice_626_8_enhanced_cdd_8_3_c
+  source_document_id: mas_notice_626
+  section_ref: 8 Enhanced Customer Due Diligence > 8.3 > (c)
+  parent_clause_id: mas_notice_626_8_enhanced_cdd_8_3
+  raw_text: (c) conduct, during the course of business relations with the customer,
+    enhanced monitoring of business relations with the customer.
+  normalized_text: (c) conduct, during the course of business relations with the customer,
+    enhanced monitoring of business relations with the customer.
+  citations:
+  - mas_notice_626_8_enhanced_cdd_8_3_c
 - clause_id: mock_internal_policy_s_1_customer_onboarding_standards
   source_document_id: mock_internal_policy
   section_ref: 'Section 1: Customer Onboarding Standards'
@@ -446,23 +636,29 @@
     days.
   citations:
   - mock_internal_policy_s_1_customer_onboarding_standards_1_3_high_risk_reviews_and_escalations_b
-- clause_id: mas626_cdd_mock_001
-  source_document_id: mas_mas_notice_626_2026edition
-  section_ref: Section 6.1 (a)
-  parent_clause_id: null
-  raw_text: A bank shall identify the customer and verify the customer's identity
-    using reliable, independent source documents.
-  normalized_text: a bank shall identify the customer and verify the customer's identity
-    using reliable, independent source documents
+- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
+  source_document_id: mock_internal_policy
+  section_ref: 'Section 1: Customer Onboarding Standards > 1.4 Politically Exposed
+    Persons'
+  parent_clause_id: mock_internal_policy_s_1_customer_onboarding_standards
+  raw_text: '### 1.4 Politically Exposed Persons Global Bank strictly prohibits establishing
+    business relationships with Politically Exposed Persons (PEPs) from high-risk
+    jurisdictions.'
+  normalized_text: '### 1.4 politically exposed persons global bank strictly prohibits
+    establishing business relationships with politically exposed persons (peps) from
+    high-risk jurisdictions.'
   citations:
-  - MAS Notice 626 Section 6.1(a)
-- clause_id: mas626_cdd_mock_002
-  source_document_id: mas_mas_notice_626_2026edition
-  section_ref: Section 6.2 (b)
-  parent_clause_id: mas626_cdd_mock_001
-  raw_text: The bank shall identify the beneficial owner and take reasonable measures
-    to verify the identity of the beneficial owner.
-  normalized_text: the bank shall identify the beneficial owner and take reasonable
-    measures to verify the identity of the beneficial owner
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
+- clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a
+  source_document_id: mock_internal_policy
+  section_ref: 'Section 1: Customer Onboarding Standards > 1.4 Politically Exposed
+    Persons > (a)'
+  parent_clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
+  raw_text: (a) For all other PEPs, the relationship must be approved by the Head
+    of Compliance and signed off by at least two levels of independent senior management,
+    after the source of funds and source of wealth have been verified.
+  normalized_text: (a) for all other peps, the relationship must be approved by the
+    head of compliance and signed off by at least two levels of independent senior
+    management, after the source of funds and source of wealth have been verified.
   citations:
-  - MAS Notice 626 Section 6.2(b)
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a

@@ -10,18 +10,17 @@ from src.extraction.llm_extractor import (
 )
 from src.contracts.models import SourceDocument, Clause, Obligation
 
-def test_llm_client_fallback_mode():
+def test_llm_client_fallback_mode(monkeypatch):
     """
     驗證當沒有 GEMINI_API_KEY 時，LLMClient 能自動降級至 Mock 模式，並回傳結構化 mock 數據。
     """
     # 強制清空 API Key 環境變數以模擬離線/CI 測試環境
-    if "GEMINI_API_KEY" in os.environ:
-        del os.environ["GEMINI_API_KEY"]
-    if "NVIDIA_API_KEY" in os.environ:
-        del os.environ["NVIDIA_API_KEY"]
-        
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.delenv("NVIDIA_API_KEY", raising=False)
+
     client = LLMClient(api_key=None)
     assert client.is_mock is True, "LLMClient 應在無金鑰時自動Fallback至 Mock 模式"
+    assert client.mock_responses == 0
     
     # 測試智能段落切片的 Mock 結構回傳
     result_clauses = client.generate_structured(
@@ -43,6 +42,8 @@ def test_llm_client_fallback_mode():
     )
     
     assert isinstance(result_obs, ObligationsExtractionResult)
+    # 每次 mock 回應都會被記錄，匯入流程據此拒絕把合成資料寫進知識庫
+    assert client.mock_responses == 2
     assert len(result_obs.obligations) > 0
     for ob in result_obs.obligations:
         assert isinstance(ob, Obligation)

@@ -1,29 +1,21 @@
-- applicable_obligations:
-  - ob_cdd_on_relationship_mas
-  - ob_verify_customer_mas
-  checklist_id: chk_individual_low_risk
-  citations:
-  - MAS Notice 626 Paragraph 6.2
-  - MAS Notice 626 Paragraph 6.6
+- checklist_id: chk_individual_low_risk
   customer_id: cust_individual_low_risk
   decision: standard_cdd
-  human_review_required: false
   required_documents:
   - National Identity Card (NRIC)
   - Proof of Residential Address
   risk_triggers: []
-  unresolved_conflicts: []
-- applicable_obligations:
+  applicable_obligations:
   - ob_cdd_on_relationship_mas
   - ob_verify_customer_mas
-  - ob_identify_ubo_10_gb
-  checklist_id: chk_corp_standard
+  unresolved_conflicts: []
+  human_review_required: false
   citations:
-  - MAS Notice 626 Paragraph 6.13
-  - Global Bank Policy Section 3.2.1
+  - mas_notice_626_6_cdd_6_3
+  - mas_notice_626_6_cdd_6_5
+- checklist_id: chk_corp_standard
   customer_id: cust_corp_standard
   decision: standard_cdd
-  human_review_required: true
   required_documents:
   - Certificate of Incorporation
   - ACRA Company Profile
@@ -31,51 +23,59 @@
   - UBO 15% Shareholder Identity Document (NRIC/Passport)
   risk_triggers:
   - internal_ubo_threshold_triggered_10_percent
-  unresolved_conflicts: []
-- applicable_obligations:
+  applicable_obligations:
   - ob_cdd_on_relationship_mas
   - ob_verify_customer_mas
-  - ob_pep_edd_mas
-  checklist_id: chk_individual_pep
+  - ob_identify_ubo_mas
+  - ob_identify_ubo_10_gb
+  unresolved_conflicts: []
+  human_review_required: true
   citations:
-  - MAS Notice 626 Paragraph 7.2
+  - mas_notice_626_6_cdd_6_3
+  - mas_notice_626_6_cdd_6_5
+  - mas_notice_626_6_cdd_6_13
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification
+- checklist_id: chk_individual_pep
   customer_id: cust_individual_pep
   decision: enhanced_due_diligence
-  human_review_required: true
   required_documents:
   - National Identity Card (NRIC) or Passport
   - Proof of Address
   - Senior Management Approval Form
   - Source of Funds Declaration & Evidence
   - Source of Wealth Declaration & Evidence
+  - Head of Compliance Approval Form
   risk_triggers:
   - pep_exposure_detected
+  applicable_obligations:
+  - ob_cdd_on_relationship_mas
+  - ob_verify_customer_mas
+  - ob_pep_edd_mas
+  - ob_pep_approval_gb
   unresolved_conflicts: []
-- applicable_obligations:
-  - ob_pep_prohibitions_gb
-  checklist_id: chk_individual_high_risk_pep
+  human_review_required: true
   citations:
-  - Global Bank Policy Section 4.5.3
+  - mas_notice_626_6_cdd_6_3
+  - mas_notice_626_6_cdd_6_5
+  - mas_notice_626_8_enhanced_cdd_8_3
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a
+- checklist_id: chk_individual_high_risk_pep
   customer_id: cust_individual_high_risk_pep
   decision: enhanced_due_diligence
-  human_review_required: true
   required_documents:
   - Rejected Onboarding Notification
-  - Suspicious Transaction Report (STR) Draft
   risk_triggers:
   - pep_from_high_risk_jurisdiction
   - onboarding_prohibited_by_policy
+  applicable_obligations:
+  - ob_pep_prohibitions_gb
   unresolved_conflicts: []
-- applicable_obligations:
-  - ob_cdd_on_relationship_mas
-  - ob_identify_ubo_25_mas
-  checklist_id: chk_corp_unclear_ubo
+  human_review_required: true
   citations:
-  - MAS Notice 626 Paragraph 6.13
-  - FATF Recommendation 10, P3
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
+- checklist_id: chk_corp_unclear_ubo
   customer_id: cust_corp_unclear_ubo
   decision: enhanced_due_diligence
-  human_review_required: true
   required_documents:
   - Account Opening Rejection Notice
   - STR Evaluation File
@@ -83,4 +83,15 @@
   - unclear_ubo_status
   - excessive_layering_5
   - missing_source_of_funds_evidence
+  applicable_obligations:
+  - ob_cdd_on_relationship_mas
+  - ob_identify_ubo_mas
+  - ob_identify_ubo_10_gb
+  - ob_cdd_incomplete_mas
   unresolved_conflicts: []
+  human_review_required: true
+  citations:
+  - mas_notice_626_6_cdd_6_3
+  - mas_notice_626_6_cdd_6_13
+  - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification
+  - mas_notice_626_6_cdd_6_35

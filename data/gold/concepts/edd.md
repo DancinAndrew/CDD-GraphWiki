@@ -27,10 +27,11 @@
 
 > [!IMPORTANT]
 > - **拒絕交易權限**：如果客戶拒絕提供、或金融機構無法在合理時間內驗證完成 EDD 所需的關鍵證據（如 SoW/SoF 佐證文件），金融機構**必須 (MUST)** 停止開戶、暫停或終止該業務關係，並考慮向監管當局提交可疑交易報告 (STR/STR Form)。
-- **兩級簽核 (Double Sign-off)**：在 Global Bank 的實踐中，任何 PEP 客戶或高風險客戶的 onboard 必須經過 Compliance Manager 與 Business Head 的雙重共同核簽，單一經辦人員無權單獨核准。
+- **兩級簽核 (Double Sign-off)**：依 Global Bank 政策第 1.4(a) 條，非高風險地區的 PEP 須經 Head of Compliance 核准，並由至少兩層獨立的高級管理層簽核，單一經辦人員無權單獨核准。
 
 ## 4. 溯源條款對照
 
-- **FATF Rec 10**: [Recommendation 10, Paragraph 3 & Interpretive Note](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L21-L32)
-- **MAS Notice 626**: [Paragraph 7.2](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L81-L92)
-- **Global Bank Policy**: [Section 4.5.3](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L105-L116)
+條文 ID 對應 `data/gold/clauses.yaml`：
+
+- **MAS Notice 626**：`mas_notice_626_8_enhanced_cdd_8_3`（第 8.3 段，PEP 的加強 CDD 措施）
+- **Global Bank Policy**：`mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons`（第 1.4 條）、`mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a`（第 1.4(a) 條，雙重簽核）

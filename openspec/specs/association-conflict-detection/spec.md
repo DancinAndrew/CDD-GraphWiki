@@ -34,17 +34,17 @@ TBD - created by archiving change create-association-conflict-detection-prototyp
 
 ### Requirement: Numerical Conflict Detection
 系統 **SHALL** 實作 `ConflictDetector` 引擎，能夠自動分析載入的 `Obligation` 實體並檢測出數值型限制不一致的 `Numerical` 衝突。
-* 系統 **MUST** 能自動比對不同 Obligation 間對於同一 object 或條件的數值門檻差異，例如：
-  * MAS Notice 626 的 `ob_identify_ubo_25_mas` 控制股權閾值為 `>25%`。
-  * Global Bank Policy 的 `ob_identify_ubo_10_gb` 控制股權閾值為 `>=10%`。
+* 系統 **MUST** 能自動比對不同 Obligation 間對於同一 object 或條件的數值門檻差異（門檻由萃取器從條文文字解析），例如：
+  * FATF INR.10 註腳 40 的 `ob_identify_ubo_25` 以 `25%` 為控制股權的範例門檻（MAS Notice 626 的 `ob_identify_ubo_mas` 沒有數字門檻）。
+  * Global Bank Policy 1.2(a) 的 `ob_identify_ubo_10_gb` 控制股權閾值為 `>=10%`。
   * FATF Rec 10 的 `ob_cdd_on_relationship` 偶發交易閾值為 `USD/EUR 15,000`。
-  * MAS Notice 626 的 `ob_cdd_on_relationship_mas` 偶發交易閾值為 `SGD 20,000`。
+  * MAS Notice 626 第 6.3(b) 段的 `ob_cdd_on_relationship_mas` 偶發交易閾值為 `S$20,000`。
 * `ConflictDetector` **SHALL** 針對這些數值不一致自動產出符合 `Conflict` 資料合約的實體，包含完整的 `conflict_id`、`conflict_type="Numerical"`、`source_clause_ids` 以及 `description`。
 
 #### Scenario: Auto Detect Numerical Conflicts
-* **GIVEN** 包含 MAS `ob_identify_ubo_25_mas` 與 Global Bank `ob_identify_ubo_10_gb` 的 `Obligation` 列表。
-* **WHEN** 呼叫 `ConflictDetector.detect_conflicts(obligations)` 時。
-* **THEN** 系統 **SHALL** 自動識別並生成 `conf_ubo_threshold` 衝突，其類型為 `Numerical`，且 `source_clause_ids` 包含這兩個 Obligation 的源條款。
+* **GIVEN** 包含 FATF `ob_identify_ubo_25` 與 Global Bank `ob_identify_ubo_10_gb` 的 `Obligation` 列表，以及解析出的條文。
+* **WHEN** 呼叫 `ConflictDetector.detect_conflicts(obligations, clauses=clauses, documents=documents)` 時。
+* **THEN** 系統 **SHALL** 自動識別並生成 `conf_ubo_threshold` 衝突，其類型為 `Numerical`，且 `source_clause_ids` 為實際寫出 25% 與 10% 的兩條條文（FATF INR.10 註腳 40、Global Bank Policy 1.2(a)）。
 
 ---
 

@@ -1,5 +1,23 @@
 # CDD-GraphWiki
 
+**What it is:** a proof-of-concept anti-money laundering (AML) customer due diligence (CDD) workflow. It parses verbatim excerpts of FATF Recommendation 10 and MAS Notice 626, plus a fictional bank policy, into 54 schema-validated clauses and links them in a knowledge graph with obligations, conflicts and customer contexts. A rule-based extractor finds all 12 obligations in my hand-labelled gold set, with the right source clauses. The system flags 3 conflicts between sources, such as 25% versus 10% beneficial ownership thresholds. It generates CDD/EDD checklists that cite their source clauses for 5 synthetic customer profiles, and routes high-risk cases to human review with a SHA-256 hash chain audit log.
+
+**My role:** individual final project for the IT Risk Management course at National Central University (May–June 2026). I designed and built the data contracts, gold dataset, extraction and decision rules, evaluation, API and dashboard.
+
+**How to run:** `docker compose -f deployment/docker-compose.yml up --build` starts the dashboard at `http://localhost:3000`. `PYTHONPATH=backend python -m src.pipeline` rebuilds `data/processed` and prints every number below. `PYTHONPATH=backend pytest backend/tests` runs the 79 tests.
+
+| Number | Where it comes from |
+| --- | --- |
+| 54 clauses with text, plus 5 section-heading records (59 records: FATF 17, MAS 28, fictional bank policy 14) | [`data/processed/clauses.yaml`](data/processed/clauses.yaml), parsed from [`data/sources/`](data/sources/) |
+| 12/12 gold obligations found, each with the right anchor clause, jurisdiction and full set of source clauses | [`data/processed/evaluation_report.txt`](data/processed/evaluation_report.txt) |
+| 3 conflicts: ownership 25% vs 10%, occasional transactions USD/EUR 15,000 vs S$20,000, PEPs allowed vs prohibited | [`data/processed/conflicts.yaml`](data/processed/conflicts.yaml) |
+| 5 checklists for 5 synthetic profiles, 4 routed to human review | [`data/processed/checklists.yaml`](data/processed/checklists.yaml) |
+| All numbers in one file | [`data/processed/summary.json`](data/processed/summary.json) |
+
+The gold set in [`data/gold/`](data/gold/) is my own annotation of these sources, so 12/12 shows that the rules cover the annotated obligations, not that they generalise to unseen regulations. The MAS excerpt is checked line by line against the official PDF in [`data/sources/official/`](data/sources/official/) by the test suite.
+
+---
+
 CDD-GraphWiki 是一個為「科技風險管理」課程開發的專案，結合了 AI 輔助的風險工作流程，以及以圖（graph）為基礎的知識組織方式。
 
 它探討的是：如何把合規文件、風險義務、客戶／實體資訊、審查決策、稽核證據，組織成一條可追溯的工作流程，而不是做成一個通用的「上傳 PDF 然後聊天」的應用。
@@ -62,12 +80,14 @@ CDD-GraphWiki 展示了在這些情境中可以轉移套用的工作流程概念
 ## 主要功能
 
 - **結構化的合規資料契約：** 以 JSON Schema 和 Pydantic 模型定義來源文件、條文、義務、客戶情境、衝突、檢查清單、圖節點和稽核日誌。
-- **CDD／EDD 決策：** 以規則為基礎，從結構化的客戶情境生成檢查清單，包含所需文件、風險觸發條件、引用出處、衝突，以及人工審查標記。
+- **規則式義務萃取：** 規則比對條文與它的上層段落，持股與金額門檻直接從條文文字解析（例如 `25%`、`USD/EUR 15,000`、`S$20,000`），不依賴特定條文 ID。評估同時檢查義務是否對應到正確的條文與管轄區。
+- **衝突偵測：** 比較不同來源對同一類義務的門檻或立場，目前涵蓋三類（持股門檻、偶發交易門檻、PEP 允許與禁止）。衝突會引用實際寫出數字或禁止字樣的條文。如何調和衝突是人的決定，記錄在 [`data/reviews/conflict_adjudications.yaml`](data/reviews/conflict_adjudications.yaml)；沒有裁決紀錄的衝突會讓相關檢查清單送人工審查。
+- **CDD／EDD 決策：** 以規則為基礎，從結構化的客戶情境生成檢查清單，包含所需文件、風險觸發條件、引用出處、衝突，以及人工審查標記。引用一律是適用義務的錨點條文 ID，可以在圖譜上一路追回原文。
 - **人工介入審查：** 針對高風險或不明確的案件提供審查佇列，審查者的決策與註記都透過 FastAPI 驗證後記錄下來。
 - **防篡改稽核軌跡：** 用 SHA-256 雜湊鏈記錄推理過程、案件路由和審查者的覆寫。
 - **法規圖譜視覺化：** 以 D3 製作的互動式圖，連結來源文件、條文、義務、衝突、客戶和生成的檢查清單。
 - **Neo4j 圖資料庫支援：** 可選的圖資料庫同步，以及用 Cypher 進行 UBO 股權穿透追蹤／循環偵測。
-- **PDF 匯入工作流程：** PDF 上傳、文字萃取、LLM 輔助的條文切塊、結構化義務萃取、YAML 合併、快取刷新，以及圖譜／檢查清單更新。
+- **PDF 匯入工作流程：** PDF 上傳、文字萃取、LLM 輔助的條文切塊、結構化義務萃取、YAML 合併、快取刷新，以及圖譜／檢查清單更新。若沒有接上真實 LLM（或呼叫失敗退回 mock 模式），匯入會失敗，不會把合成資料寫進知識庫。
 - **評估與治理產出物：** 黃金資料集（gold dataset）、評估工具（evaluation harness）、OpenSpec 需求、ADR，以及系統路線圖文件。
 
 ## Demo 與視覺素材
@@ -96,7 +116,7 @@ CDD-GraphWiki 展示了在這些情境中可以轉移套用的工作流程概念
 
 ![合規儀表板](images/01-dashboard.png)
 
-首頁。最上方顯示一個快速摘要（有多少客戶、有多少案件需要人來看、有多少已經處理完）。你從左邊的清單挑一個客戶，系統就會自動產生一份檢查清單——列出這個客戶需要哪些文件和檢查，並標出每一項是出自哪一條官方法規。
+首頁。最上方顯示一個快速摘要（有多少客戶、有多少案件需要人來看、有多少已經處理完）。你從左邊的清單挑一個客戶，系統就會自動產生一份檢查清單——列出這個客戶需要哪些文件和檢查，並列出這份清單依據的條文（官方法規或銀行內部政策）。
 
 ### 2. 人工審查佇列（Human Review Queue）
 
@@ -157,7 +177,7 @@ React dashboard, D3 graph view, FastAPI endpoints, optional Neo4j queries
 - **後端：** Python、FastAPI、Pydantic、PyYAML、jsonschema
 - **匯入：** pypdf、PDF 文字萃取、結構化的條文與義務萃取
 - **圖：** 記憶體內的法規圖建構器、D3 視覺化、可選的 Neo4j Community Edition
-- **AI／LLM：** 支援 NVIDIA NIM、Gemini 後備方案、供測試與 demo 用的 mock 後備方案
+- **AI／LLM：** 支援 NVIDIA NIM、Gemini 後備方案；mock 模式只供測試，產出不會寫入知識庫
 - **資料：** YAML 黃金資料集、處理後資料集、JSON Schema 契約
 - **測試：** pytest 後端測試、評估工具、範例 schema
 - **部署：** Docker、Docker Compose
@@ -191,7 +211,7 @@ docker compose -f deployment/docker-compose.yml up --build
   - 帳號：`neo4j`
   - 密碼：`testpassword123`
 
-預設的 `.env.example` 裡放的是佔位用的 AI 金鑰。即使沒有真正的模型金鑰，核心 demo 資料和許多工作流程仍然可以檢視；但要做真正的 PDF 匯入（含 LLM 萃取）就需要設定好的供應商金鑰。
+預設的 `.env.example` 裡放的是佔位用的 AI 金鑰。即使沒有真正的模型金鑰，核心 demo 資料和所有規則式流程都能執行；只有 PDF 匯入（含 LLM 萃取）需要設定好的供應商金鑰。
 
 ### 方式 B：後端與前端分開執行
 
@@ -214,12 +234,23 @@ npm run dev -- --host 0.0.0.0 --port 3000
 
 基本 demo 不一定要 Neo4j。如果 Neo4j 不可用，API 會在數個圖工作流程上退回（fallback）到記憶體內的行為。
 
+### 重現所有數字與測試
+
+```bash
+PYTHONPATH=backend python -m src.pipeline
+PYTHONPATH=backend pytest backend/tests
+```
+
+管線會依序執行：解析來源 → 萃取義務並與金標比對 → 偵測衝突並套用人工裁決 → 為 5 個合成客戶產生檢查清單，把結果寫進 `data/processed/` 並印出摘要。輸出是確定性的，重跑兩次檔案內容完全相同。測試會先把管線跑到暫存目錄，稽核日誌也寫到暫存檔，不會改動 repo 裡的資料。
+
 ## 專案目錄導覽
 
 - [`backend/`](backend/) - FastAPI 服務、資料契約、決策引擎、稽核管理器、圖建構器、匯入、評估和測試
 - [`frontend/`](frontend/) - React 儀表板，包含合規總覽、審查佇列、稽核時間軸、法規圖譜、匯入主控台和使用者指南
-- [`data/gold/`](data/gold/) - 人工整理的黃金資料集，涵蓋來源文件、條文、義務、客戶、檢查清單和衝突
-- [`data/processed/`](data/processed/) - 生成或合併後的執行期資料，包含處理後的來源文件和稽核日誌
+- [`data/sources/`](data/sources/) - 管線讀取的三份來源：FATF R.10 與 MAS Notice 626 的官方原文逐字摘錄，以及虛構的銀行內部政策；[`official/`](data/sources/official/) 放 MAS Notice 626 官方 PDF
+- [`data/gold/`](data/gold/) - 人工標註的黃金資料集：條文（parser 輸出經人工檢查後凍結）、義務、衝突、客戶情境與預期檢查清單
+- [`data/reviews/`](data/reviews/) - 衝突的人工裁決紀錄
+- [`data/processed/`](data/processed/) - `python -m src.pipeline` 產生的結果與 `summary.json`，以及只能追加的稽核日誌 `audit_log.json`
 - [`schemas/`](schemas/) - JSON Schema 契約與範例
 - [`docs/`](docs/) - 產品規格、路線圖、ADR、論文筆記、簡報支援素材和視覺素材
 - [`openspec/`](openspec/) - 需求規格與封存的實作變更
@@ -240,7 +271,10 @@ npm run dev -- --host 0.0.0.0 --port 3000
 
 - 這是課程專案的原型，不是正式的法律意見，也不是已部署的合規平台。
 - 主要的 demo 語料偏向 AML／CDD，不是產品合規的語料。
-- CDD 決策層刻意設計得受限且以規則驅動，以換取可解釋性。
+- 語料只是 FATF R.10 與 MAS Notice 626 的部分段落摘錄，加上一份虛構的銀行政策；金標是我自己的標註，規則是對照這份金標寫的，12/12 不代表能套用到沒看過的法規。
+- 衝突偵測目前只涵蓋三類衝突（持股門檻、偶發交易門檻、PEP 允許與禁止）。
+- CDD 決策層刻意設計得受限且以規則驅動，以換取可解釋性：決策分支是寫好的規則，引用則由義務的出處推導。
+- PDF 匯入用 LLM 切條文，條文 ID 格式和 parser 不同；重跑管線會以 `data/sources/` 重建知識庫，透過匯入主控台加入的文件不會保留。
 - 真正的 PDF 匯入時，LLM 萃取仰賴設定好的供應商金鑰。
 - 在真正用於合規之前，還需要更嚴謹的檢索評估、人工標註、存取控制和正式的治理機制。
 
@@ -252,6 +286,10 @@ npm run dev -- --host 0.0.0.0 --port 3000
 - 強化衝突與落差的裁決，導入 NLI、LLM 輔助的矛盾偵測，以及明確的人工解決流程。
 - 加入角色式存取控制（RBAC）、審查者權限，以及正式部署的強化。
 - 建立更豐富的截圖／demo 素材資料夾，方便招募者與用人主管快速檢視。
+
+## 修訂紀錄
+
+- **2026-11（課程結束後的修補）：** 移除兩條 PDF 匯入時 LLM 退回 mock 模式產生的合成條文；把 MAS 與 FATF 來源改成官方原文的逐字摘錄（修正 SGD 5,000 應為 S$20,000，以及 25% 門檻出自 FATF 而非 MAS Notice 626）；補上 MAS 第 6.14B 段（驗證受益人）與第 6.35 段（無法完成 CDD 時不得建立業務關係），銀行政策的 PEP 禁令與核准要求拆成兩條義務；萃取規則改成依文字判斷、不再指定條文 ID；衝突與檢查清單的引用改由解析出的條文推導，人工裁決只套用在當時裁決的條文上；評估加入出處檢查；PDF 匯入先驗證再寫檔；新增一鍵重建管線，測試不再改寫 repo 資料。課程繳交版本見 git 歷史中 2026-06 的 commit。
 
 ## 免責聲明
 

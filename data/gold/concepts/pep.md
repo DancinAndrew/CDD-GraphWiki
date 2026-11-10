@@ -26,19 +26,21 @@ flowchart TD
 ```
 
 ### 核心合規檢查點
-- **管理層審批 (Senior Management Approval)**：在與 PEP 建立或繼續業務關係前，必須取得高級管理層的正式核准（MAS Notice 626 Paragraph 7.2）。
-- **資產與資金來源驗證 (SoW & SoF Verification)**：必須採取合理且積極的步驟，驗證該 PEP 客戶的整體的**財富來源 (Source of Wealth)** 以及交易所使用的**資金來源 (Source of Funds)**。
+- **管理層審批 (Senior Management Approval)**：在與 PEP 建立或繼續業務關係前，必須取得高級管理層的正式核准（MAS Notice 626 第 8.3(a) 段）。
+- **資產與資金來源驗證 (SoW & SoF Verification)**：必須以適當且合理的方式確立（establish）該 PEP 客戶整體的**財富來源 (Source of Wealth)** 以及**資金來源 (Source of Funds)**（MAS Notice 626 第 8.3(b) 段）；Global Bank 政策第 1.4(a) 條要求在核准前完成驗證。
 - **持續監控 (Enhanced Ongoing Scrutiny)**：必須對該業務關係實施加強型持續監控，包括提高交易審查頻率、對交易模式進行深度背景調查。
 
 ## 3. 政策衝突與防禦性措施
 
 在新加坡監管下，MAS 允許銀行在採取充分的風險緩釋措施（Senior Management 核准 + EDD）後，與 PEP 建立業務關係。
 
-然而，**Global Bank 內部政策** (Section 4.5.3) 實施了更為嚴苛的防火牆措施：
+然而，**Global Bank 內部政策**（第 1.4 條） 實施了更為嚴苛的防火牆措施：
 > [!WARNING]
-> Global Bank 嚴格禁止與來自「高風險管轄區」（例如受 FATF 灰名單或黑名單制裁之國家）的 PEP 建立或繼續任何業務關係。對於其他非高風險地區的 PEP，必須通過至少兩層的高級管理層簽核（含 Head of Compliance 的一票否決權）。
+> Global Bank 嚴格禁止與來自「高風險管轄區」（例如受 FATF 灰名單或黑名單制裁之國家）的 PEP 建立或繼續任何業務關係。對於其他非高風險地區的 PEP，必須由 Head of Compliance 核准、經至少兩層獨立的高級管理層簽核，並先完成資金與財富來源驗證。
 
 ## 4. 溯源條款對照
 
-- **MAS Notice 626**: [Paragraph 7.2](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L81-L92)
-- **Global Bank Policy**: [Section 4.5.3](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L105-L116)
+條文 ID 對應 `data/gold/clauses.yaml`：
+
+- **MAS Notice 626**：`mas_notice_626_8_enhanced_cdd_8_2`（第 8.2 段，判定是否為 PEP）、`mas_notice_626_8_enhanced_cdd_8_3`（第 8.3 段，加強 CDD 措施）
+- **Global Bank Policy**：`mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons`（第 1.4 條，禁止高風險管轄區 PEP）、`mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a`（第 1.4(a) 條，其他 PEP 的核准要求）

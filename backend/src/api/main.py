@@ -26,8 +26,11 @@ from src.api.dependencies import (
     load_knowledge_base,
     clear_knowledge_base_cache,
     GOLD_DIR,
-    PROCESSED_DIR
+    PROCESSED_DIR,
+    ADJUDICATIONS_FILE,
+    check_referential_integrity
 )
+from src.association.conflict_detector import ConflictDetector
 from src.graph.builder import GraphBuilder
 
 app = FastAPI(
@@ -87,7 +90,10 @@ def startup_event():
         from src.graph.store import neo4j_store
         from src.graph.sync import GraphSyncEngine
         print("🔗  正在初始化與同步 Neo4j 圖資料庫...")
-        neo4j_store.connect(max_retries=10, delay_seconds=2)
+        neo4j_store.connect(
+            max_retries=int(os.environ.get("CDD_NEO4J_RETRIES", "10")),
+            delay_seconds=float(os.environ.get("CDD_NEO4J_RETRY_DELAY", "2"))
+        )
         with neo4j_store.get_session() as session:
             GraphSyncEngine.sync_to_neo4j(session, kb)
         print("✓ Neo4j 全量圖譜數據與測試拓撲同步成功！")
@@ -98,6 +104,12 @@ def startup_event():
     engine = get_engine()
     logger = get_logger()
     manager = get_manager()
+
+    # 本次推理所用來源的指紋：各來源文件 content_hash 的 SHA-256
+    import hashlib
+    ingestion_hash = hashlib.sha256(
+        "|".join(sorted(d.content_hash or d.source_document_id for d in kb["documents"])).encode("utf-8")
+    ).hexdigest()[:16]
 
     # 2. 自動執行初審推理並加入隊列
     for cust in customers:
@@ -110,7 +122,7 @@ def startup_event():
             customer_id=cust.customer_id,
             checklist_id=checklist.checklist_id,
             decision=checklist.decision,
-            ingestion_hash="hash_ingest_pep_mas626",
+            ingestion_hash=ingestion_hash,
             graph_version="g_v1.0.0",
             rule_version="r_v2.1.0"
         )
@@ -121,9 +133,10 @@ def startup_event():
             # 檢查案件是否已經在 manager 中 (若 manager 已在本地 log 加載歷史日誌，案件可能已存在)
             existing_case = manager.cases.get(case_id)
             if not existing_case:
-                # 判斷觸發理由
-                reasons = []
-                if cust.pep_exposure:
+                # 判斷觸發理由：先記錄清單本身的風險觸發條件與未裁決衝突
+                reasons = list(checklist.risk_triggers)
+                reasons += [f"unresolved_conflict:{cf_id}" for cf_id in checklist.unresolved_conflicts]
+                if cust.pep_exposure and "pep_exposure_detected" not in reasons:
                     reasons.append("pep_exposure_detected")
                 if cust.ubo_status == "unclear":
                     reasons.append("unclear_ubo_layers")
@@ -156,10 +169,43 @@ def list_customers():
     return kb["customers"]
 
 
-@app.get("/api/v1/customers/{customer_id}/checklist", response_model=CDDChecklist)
+class CitationDetail(BaseModel):
+    """把檢查清單引用的條文 ID 解析成可讀的出處，供前端顯示。"""
+    clause_id: str
+    source_document_id: str
+    document_title: str
+    section_ref: str
+    raw_text: str
+
+
+class CDDChecklistView(CDDChecklist):
+    """API 回應：CDDChecklist 加上每個引用條文的出處細節。"""
+    citation_details: List[CitationDetail] = Field(default_factory=list)
+
+
+def build_citation_details(checklist: CDDChecklist, kb: Dict[str, Any]) -> List[CitationDetail]:
+    clauses = {c.clause_id: c for c in kb["clauses"]}
+    documents = {d.source_document_id: d for d in kb["documents"]}
+    details = []
+    for clause_id in checklist.citations:
+        clause = clauses.get(clause_id)
+        if not clause:
+            continue
+        doc = documents.get(clause.source_document_id)
+        details.append(CitationDetail(
+            clause_id=clause_id,
+            source_document_id=clause.source_document_id,
+            document_title=doc.title if doc else clause.source_document_id,
+            section_ref=clause.section_ref,
+            raw_text=clause.raw_text,
+        ))
+    return details
+
+
+@app.get("/api/v1/customers/{customer_id}/checklist", response_model=CDDChecklistView)
 def get_customer_checklist(customer_id: str):
     """
-    獲取指定客戶的 CDD Checklist 推理決策。
+    獲取指定客戶的 CDD Checklist 推理決策，並附上引用條文的原文與出處。
     """
     # 查找 checklist
     chk_id = f"chk_{customer_id.replace('cust_', '')}"
@@ -168,7 +214,11 @@ def get_customer_checklist(customer_id: str):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Checklist not found for customer: {customer_id}"
         )
-    return _checklists[chk_id]
+    checklist = _checklists[chk_id]
+    return CDDChecklistView(
+        **checklist.model_dump(),
+        citation_details=build_citation_details(checklist, load_knowledge_base())
+    )
 
 
 # ==========================================
@@ -512,6 +562,13 @@ def _run_pdf_ingestion_worker(
         obligations = pipeline.extractor.extract_obligations(clauses)
         log(f"LLM 義務抽取完成，共提取出 {len(obligations)} 個 Obligation 義務節點")
 
+        # 沒有接上真實 LLM（或呼叫失敗退回 mock）時，產出的是合成示範資料，不可寫進知識庫
+        if pipeline.llm_client.mock_responses > 0:
+            raise RuntimeError(
+                f"LLM 使用了 {pipeline.llm_client.mock_responses} 次 mock 合成回應（未設定金鑰或 API 呼叫失敗），"
+                "為避免把假條文寫進知識庫，本次匯入不寫入 data/processed。"
+            )
+
         # 4. 增量合併寫回本地 YAML 持久化
         task["status"] = "merging_data"
         log("開始執行本地 YAML 數據增量合併持久化...")
@@ -537,77 +594,74 @@ def _run_pdf_ingestion_worker(
             content_hash=content_hash
         )
 
-        # 執行增量合併與存檔
-        # A. 合併 SourceDocuments
-        doc_file = os.path.join(PROCESSED_DIR, "source_documents.yaml") if os.path.exists(
-            os.path.join(PROCESSED_DIR, "source_documents.yaml")
-        ) else os.path.join(GOLD_DIR, "source_documents.yaml")
-        with open(doc_file, "r", encoding="utf-8") as f:
-            docs = yaml.safe_load(f) or []
-        doc_map = {d["source_document_id"]: d for d in docs}
-        doc_map[new_doc.source_document_id] = new_doc.model_dump()
-        with open(os.path.join(PROCESSED_DIR, "source_documents.yaml"), "w", encoding="utf-8") as f:
-            yaml.dump(list(doc_map.values()), f, allow_unicode=True, sort_keys=False)
-
-        # B. 合併 Clauses
-        clause_file = os.path.join(PROCESSED_DIR, "clauses.yaml") if os.path.exists(
-            os.path.join(PROCESSED_DIR, "clauses.yaml")
-        ) else os.path.join(GOLD_DIR, "clauses.yaml")
-        with open(clause_file, "r", encoding="utf-8") as f:
-            existing_clauses = yaml.safe_load(f) or []
-        clause_map = {c["clause_id"]: c for c in existing_clauses}
+        # 在記憶體中合併：以目前的知識庫（processed 或 gold，整組一致）為基礎，加入新文件
+        base_kb = load_knowledge_base()
+        doc_map = {d.source_document_id: d for d in base_kb["documents"]}
+        doc_map[new_doc.source_document_id] = new_doc
+        clause_map = {c.clause_id: c for c in base_kb["clauses"]}
         for c in clauses:
-            clause_map[c.clause_id] = c.model_dump()
-        with open(os.path.join(PROCESSED_DIR, "clauses.yaml"), "w", encoding="utf-8") as f:
-            yaml.dump(list(clause_map.values()), f, allow_unicode=True, sort_keys=False)
+            clause_map[c.clause_id] = c
 
-        # C. 合併 Obligations
-        obs_file = os.path.join(PROCESSED_DIR, "obligations.yaml") if os.path.exists(
-            os.path.join(PROCESSED_DIR, "obligations.yaml")
-        ) else os.path.join(GOLD_DIR, "obligations.yaml")
-        with open(obs_file, "r", encoding="utf-8") as f:
-            existing_obs = yaml.safe_load(f) or []
-        ob_map = {o["obligation_id"]: o for o in existing_obs}
+        ob_map = {o.obligation_id: o for o in base_kb["obligations"]}
+        new_clause_ids = {c.clause_id for c in clauses}
         for ob in obligations:
-            ob_map[ob.obligation_id] = ob.model_dump()
-        with open(os.path.join(PROCESSED_DIR, "obligations.yaml"), "w", encoding="utf-8") as f:
-            yaml.dump(list(ob_map.values()), f, allow_unicode=True, sort_keys=False)
+            missing = [cid for cid in ob.source_clause_ids if cid not in clause_map]
+            if missing:
+                # LLM 引用了切片結果裡不存在的條文：丟棄這條義務，避免知識庫出現懸空出處
+                log(f"⚠️ 義務 {ob.obligation_id} 引用不存在的條文 {missing}，已略過")
+                continue
+            existing = ob_map.get(ob.obligation_id)
+            if existing and not set(existing.source_clause_ids).issubset(new_clause_ids):
+                # 同名義務已來自其他文件：改用帶文件 ID 的新名稱，不覆寫原本的出處
+                ob = ob.model_copy(update={"obligation_id": f"{ob.obligation_id}__{doc_id}"})
+                log(f"義務 ID 與既有義務重複，改名為 {ob.obligation_id} 以保留原本的出處")
+            ob_map[ob.obligation_id] = ob
 
-        log("本地 YAML 增量合併成功！")
+        merged_clauses = list(clause_map.values())
+        merged_obligations = list(ob_map.values())
+        merged_documents = list(doc_map.values())
 
-        # 5. 執行 Neo4j 資料同步
+        # 依合併後的義務重新偵測衝突並套用人工裁決紀錄
+        detector = ConflictDetector(ConflictDetector.load_adjudications(ADJUDICATIONS_FILE))
+        merged_conflicts = detector.detect_conflicts(merged_obligations, clauses=merged_clauses, documents=merged_documents)
+
+        # 先驗證，全部通過才寫檔；四個檔案以暫存檔＋os.replace 寫入，避免半套狀態
+        check_referential_integrity({
+            "clauses": merged_clauses, "obligations": merged_obligations, "conflicts": merged_conflicts,
+        })
+        _write_yaml_files_atomically(PROCESSED_DIR, {
+            "source_documents.yaml": [d.model_dump() for d in merged_documents],
+            "clauses.yaml": [c.model_dump() for c in merged_clauses],
+            "obligations.yaml": [o.model_dump() for o in merged_obligations],
+            "conflicts.yaml": [c.model_dump() for c in merged_conflicts],
+        })
+        log("本地 YAML 合併與驗證成功！")
+
+        # 5. 刷新 API 緩存（之後的 Neo4j 同步與清單推理都讀這份合併後的知識庫）
+        clear_knowledge_base_cache()
+        kb = load_knowledge_base()
+
         log("正在嘗試同步增量法規至 Neo4j 圖資料庫...")
         try:
             from src.graph.store import neo4j_store
             from src.graph.sync import GraphSyncEngine
             if not neo4j_store.driver:
                 neo4j_store.connect(max_retries=1, delay_seconds=0)
-            
             if neo4j_store.driver:
-                # 重新加載合併後的完整法規庫
-                clear_knowledge_base_cache()
-                updated_kb = load_knowledge_base()
                 with neo4j_store.get_session() as session:
-                    GraphSyncEngine.sync_to_neo4j(session, updated_kb)
+                    GraphSyncEngine.sync_to_neo4j(session, kb)
                 log("✓ Neo4j 增量法規同步成功！")
             else:
                 log("Neo4j 離線或未連線，跳過資料庫同步。")
         except Exception as ne:
             log(f"⚠️ Neo4j 同步失敗 (非阻斷): {str(ne)}。系統將降級在記憶體中運行。")
 
-        # 6. 清除緩存與熱加載決策推理
-        log("正在清除 API 法規緩存並熱加載重新推理所有客戶 Checklist...")
-        clear_knowledge_base_cache()
-        
-        # 重新調用一次 load_knowledge_base 以刷新 API 緩存
-        kb = load_knowledge_base()
-        updated_obs = kb["obligations"]
-        updated_conflicts = kb["conflicts"]
-        
+        # 6. 熱加載決策推理
+        log("正在重新推理所有客戶 Checklist...")
         engine = get_engine()
         global _checklists
         for cust in kb["customers"]:
-            checklist = engine.generate_checklist(cust, updated_obs, updated_conflicts)
+            checklist = engine.generate_checklist(cust, kb["obligations"], kb["conflicts"])
             _checklists[checklist.checklist_id] = checklist
             
         log("✓ 所有客戶的 CDD Checklist 熱加載推理完成！")
@@ -620,6 +674,23 @@ def _run_pdf_ingestion_worker(
         task["status"] = "failed"
         task["error"] = str(e)
         log(f"❌ 導入管線中斷失敗。錯誤訊息: {str(e)}")
+        # 匯入失敗時刪掉剛上傳的 PDF，data/processed 不留下任何東西
+        if os.path.exists(temp_file_path):
+            os.remove(temp_file_path)
+            log("已刪除本次上傳的 PDF。")
+
+
+def _write_yaml_files_atomically(directory: str, files: Dict[str, Any]) -> None:
+    """先把每個檔案寫到暫存檔，全部成功後再逐一 os.replace，避免寫到一半留下不一致的知識庫。"""
+    os.makedirs(directory, exist_ok=True)
+    staged = []
+    for name, data in files.items():
+        tmp_path = os.path.join(directory, f".{name}.tmp")
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            yaml.dump(data, f, allow_unicode=True, sort_keys=False)
+        staged.append((tmp_path, os.path.join(directory, name)))
+    for tmp_path, final_path in staged:
+        os.replace(tmp_path, final_path)
 
 @app.post("/api/v1/ingest/pdf", status_code=status.HTTP_202_ACCEPTED)
 def ingest_pdf(

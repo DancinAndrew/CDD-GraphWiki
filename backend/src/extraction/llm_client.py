@@ -63,6 +63,8 @@ class LLMClient:
         self.client = None
         self.is_mock = True
         self.provider = "mock"
+        # 記錄有幾次回應是 mock 合成資料（含真實 API 失敗後的降級），匯入流程據此拒絕寫入知識庫
+        self.mock_responses = 0
         
         # 3. 判斷並初始化底層客戶端引擎 (優先選用 NVIDIA NIM，次選 Gemini)
         if self.nvidia_api_key and self.nvidia_api_key != "mock":
@@ -215,6 +217,7 @@ class LLMClient:
         """
         在 Mock 模式下，根據目標型別與 Prompt 內的關鍵特徵，動態合成符合合約的 Mock 資料。
         """
+        self.mock_responses += 1
         schema_name = response_schema.__name__
         logger.info(f"[MockLLMClient] 正在為 Schema: {schema_name} 生成 Mock 數據")
         
@@ -292,7 +295,7 @@ class LLMClient:
                         "review_status": "approved"
                     },
                     {
-                        "obligation_id": "ob_identify_ubo_25_mas_mock",
+                        "obligation_id": "ob_identify_ubo_mas_mock",
                         "source_clause_ids": ["mas626_cdd_mock_002"],
                         "jurisdiction": "Singapore",
                         "actor": "bank",

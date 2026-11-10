@@ -37,7 +37,9 @@ class ProvenanceEngine:
         matched_ob_id = None
 
         # 根據 target_item 來決定對應的 Obligation ID
-        if "senior management" in target_lower or "senior_management" in target_lower:
+        if "head of compliance" in target_lower or "head_of_compliance" in target_lower:
+            matched_ob_id = "ob_pep_approval_gb"
+        elif "senior management" in target_lower or "senior_management" in target_lower:
             matched_ob_id = "ob_pep_edd_mas"
         elif "source of funds" in target_lower or "source_of_funds" in target_lower:
             matched_ob_id = "ob_pep_edd_mas"
@@ -58,8 +60,13 @@ class ProvenanceEngine:
             matched_ob_id = "ob_verify_customer_mas"
         elif "shareholder registry" in target_lower or "internal_ubo_threshold" in target_lower:
             matched_ob_id = "ob_identify_ubo_10_gb"
-        elif "account opening rejection" in target_lower or "str evaluation file" in target_lower or "unclear_ubo" in target_lower or "excessive_layering" in target_lower or "missing_source" in target_lower:
-            matched_ob_id = "ob_identify_ubo_25_mas"
+        elif "account opening rejection" in target_lower or "str evaluation file" in target_lower or "missing_source" in target_lower:
+            # 無法完成 CDD：MAS 6.35 不得建立業務關係並考慮申報 STR
+            matched_ob_id = "ob_cdd_incomplete_mas"
+        elif "excessive_layering" in target_lower:
+            matched_ob_id = "ob_identify_ubo_10_gb"
+        elif "unclear_ubo" in target_lower:
+            matched_ob_id = "ob_identify_ubo_mas"
         else:
             # Fallback：檢查 checklist.applicable_obligations 中是否有包含在 obligations 裡的
             for ob_id in checklist.applicable_obligations:
@@ -126,7 +133,7 @@ class ProvenanceEngine:
                 label=f"客戶特徵：內部持股比例門檻觸發 (major_shareholder_pct = {share_pct}%)",
                 properties={"major_shareholder_pct": share_pct}
             ))
-        elif ob.obligation_id in ["ob_identify_ubo_25_mas", "ob_identify_ubo_25"]:
+        elif ob.obligation_id in ["ob_identify_ubo_mas", "ob_identify_ubo_25", "ob_cdd_incomplete_mas"]:
             fact_nodes.append(ProvenanceNode(
                 node_id="fact_customer_type",
                 node_type="customer_fact",
@@ -241,9 +248,13 @@ class ProvenanceEngine:
         elif ob.obligation_id == "ob_pep_prohibitions_gb":
             desc = f"依據內部政策 {doc.title} 第 {clause.section_ref} 條款之規定，銀行嚴禁為來自高風險管轄區或實質受益人國家風險等級為高的政治敏感人物 (PEP) 辦理開戶。本案客戶符合該禁止項特徵，故系統推理判定必須輸出『{target_item}』並拒絕准入。"
         elif ob.obligation_id == "ob_identify_ubo_10_gb":
-            desc = f"本案為企業客戶。依據內部政策 {doc.title} 第 {clause.section_ref} 條款之持股比例閥值限制，當主要股東持股比例介於 10% 至 25% 之間時，必須進行 UBO 穿透識別。故系統推理判定必須獲取大股東身份證明文件與『{target_item}』。"
-        elif ob.obligation_id in ["ob_identify_ubo_25_mas", "ob_identify_ubo_25"]:
-            desc = f"本案企業客戶的實質受益人 (UBO) 狀態不明確或註冊於高風險島國，依據 {doc.title} 第 {clause.section_ref} 條款之規定，必須進行實質受益人識別與加強審查。由於無法完成身份核實，系統推理判定必須輸出『{target_item}』以進行拒絕或升級審查。"
+            desc = f"本案為企業客戶。依據內部政策 {doc.title} 第 {clause.section_ref} 條款之持股比例閥值限制，持股 10% 以上的自然人即須識別為實質受益人（比 FATF 註腳 40 舉例的 25% 更嚴格）。故系統推理判定必須獲取大股東身份證明文件與『{target_item}』。"
+        elif ob.obligation_id in ["ob_identify_ubo_mas", "ob_identify_ubo_25"]:
+            desc = f"本案為企業客戶，依據 {doc.title} 第 {clause.section_ref} 條款之規定，必須詢問並識別最終擁有或控制該法人的自然人（實質受益人），並驗證其身分。故系統推理判定必須徵集『{target_item}』。"
+        elif ob.obligation_id == "ob_cdd_incomplete_mas":
+            desc = f"本案企業客戶的實質受益人 (UBO) 無法釐清，CDD 措施無法完成。依據新加坡金融管理局 {doc.title} 第 {clause.section_ref} 條款，銀行不得建立或延續業務關係，並須考慮是否申報可疑交易報告 (STR)。故系統推理判定必須輸出『{target_item}』。"
+        elif ob.obligation_id == "ob_pep_approval_gb":
+            desc = f"本案為非高風險地區的政治敏感人物 (PEP)。依據內部政策 {doc.title} 第 {clause.section_ref} 條款，業務關係須經 Head of Compliance 核准並由至少兩層獨立高級管理層簽核，故系統推理判定必須徵集『{target_item}』。"
         elif ob.obligation_id == "ob_verify_customer_mas":
             desc = f"依據新加坡金融管理局 {doc.title} 第 {clause.section_ref} 條款之 CDD 客戶識別與核實基本義務，銀行必須獲取並核實客戶的基本身份資訊（如姓名、地址與身份證件）。故系統推理判定必須徵集『{target_item}』以完成基礎 CDD 檢核。"
         else:

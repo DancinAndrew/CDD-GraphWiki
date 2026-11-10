@@ -9,7 +9,8 @@ class VectorRAGBaseline:
     因為缺乏強型別圖語意、決策織入與衝突分析，它在對複雜客戶情境推理時容易出錯：
     - 在 required_documents 中漏判關鍵高風險文件（如 Senior Management Approval Form 或 Source of Wealth Declaration & Evidence）。
     - 對於 ubo_status 未明且過度嵌套的 Cayman corporate 客戶，其 RAG 檢索往往抓不到完整階層資訊，導致決策錯誤（預期為 EDD 卻錯判為 standard_cdd）。
-    - 在 citations 中容易產生幻覺，亂編不存在的條款（如 "MAS Notice 626 Paragraph 99.9"、"Myanmar Prohibitions Section 77.7"）。
+    - 在 citations 中容易產生幻覺，亂編不存在的條文 ID（如 mas_notice_626_8_enhanced_cdd_99_9、myanmar_prohibitions_s_77_7）。
+    這個 baseline 是手寫的模擬器，用來示範評估工具如何抓出錯誤，不是實際跑出的向量檢索系統。
     """
 
     def generate_checklist(self, customer: CustomerContext) -> CDDChecklist:
@@ -38,10 +39,10 @@ class VectorRAGBaseline:
                     risk_triggers = ["pep_exposure_detected"]
                     applicable_obligations = ["ob_pep_edd_mas"]
                     human_review_required = True
-                    # 產生幻覺 Citation：引用不存在的 Paragraph 99.9 或 77.7
+                    # 產生幻覺 Citation：引用不存在的條文 ID
                     citations = [
-                        "MAS Notice 626 Paragraph 99.9",
-                        "Myanmar Prohibitions Section 77.7"
+                        "mas_notice_626_8_enhanced_cdd_99_9",  # Hallucinated: paragraph 99.9 does not exist
+                        "myanmar_prohibitions_s_77_7"  # Hallucinated: no such source document
                     ]
                 else:
                     # 普通政要 EDD 情境 (cust_individual_pep)
@@ -61,8 +62,8 @@ class VectorRAGBaseline:
                     human_review_required = True
                     # 產生部分正確與部分幻覺引用
                     citations = [
-                        "MAS Notice 626 Paragraph 7.2",
-                        "MAS Notice 626 Paragraph 99.9"  # Hallucinated
+                        "mas_notice_626_8_enhanced_cdd_8_3",
+                        "mas_notice_626_8_enhanced_cdd_99_9"  # Hallucinated
                     ]
             else:
                 # 普通低風險個人情境 (cust_individual_low_risk)
@@ -79,8 +80,8 @@ class VectorRAGBaseline:
                 ]
                 human_review_required = False
                 citations = [
-                    "MAS Notice 626 Paragraph 6.2",
-                    "MAS Notice 626 Paragraph 6.66"  # Hallucinated 6.6 -> 6.66
+                    "mas_notice_626_6_cdd_6_3",
+                    "mas_notice_626_6_cdd_6_66"  # Hallucinated 6.6 -> 6.66
                 ]
 
         elif customer.customer_type == "corporate":
@@ -100,7 +101,7 @@ class VectorRAGBaseline:
                 human_review_required = False
                 # 產生嚴重的幻覺引用
                 citations = [
-                    "FATF Recommendation 10, P99"  # Hallucinated
+                    "fatf_rec10_rec_10_p_99"  # Hallucinated
                 ]
             else:
                 # 普通企業情境，需注意是否觸發內部審查閥值限制 (cust_corp_standard)
@@ -118,7 +119,7 @@ class VectorRAGBaseline:
                 ]
                 human_review_required = False
                 citations = [
-                    "MAS Notice 626 Paragraph 6.13"
+                    "mas_notice_626_6_cdd_6_13"
                 ]
 
         checklist_id = f"chk_baseline_{customer_id.replace('cust_', '')}"

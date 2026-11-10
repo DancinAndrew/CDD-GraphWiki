@@ -26,6 +26,8 @@ export const InteractiveGraph: React.FC = () => {
   const [selectedNode, setSelectedNode] = useState<any | null>(null);
   const [legendVisible, setLegendVisible] = useState(true);
   const [dataStats, setDataStats] = useState({ nodes: 0, links: 0 });
+  // 條文 ID → 圖譜標籤（例如「MAS Notice 626 6.3」），讓引用顯示可讀的出處
+  const [labelById, setLabelById] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setLoading(true);
@@ -33,6 +35,7 @@ export const InteractiveGraph: React.FC = () => {
       .then(res => res.json())
       .then((data: { nodes: any[]; links: any[] }) => {
         setDataStats({ nodes: data.nodes.length, links: data.links.length });
+        setLabelById(Object.fromEntries(data.nodes.map((n: any) => [n.node_id, n.label])));
         renderGraph(data.nodes, data.links);
         setLoading(false);
       })
@@ -382,7 +385,7 @@ export const InteractiveGraph: React.FC = () => {
                       <h4 style={styles.detailSecTitle}>🔗 法規合規條文引用</h4>
                       <div style={styles.citationList}>
                         {selectedNode.properties.citations.map((cit: string, idx: number) => (
-                          <span key={idx} style={styles.citationTag}>{cit}</span>
+                          <span key={idx} style={styles.citationTag} title={cit}>{labelById[cit] ?? cit}</span>
                         ))}
                       </div>
                     </div>

@@ -4,10 +4,10 @@
 
 ## 1. 核心法規要求
 
-根據 **FATF 建議第 10 條** 與 **新加坡金融管理局 (MAS) Notice 626 段落 6.13**，金融機構必須採取合理措施識別並驗證 UBO：
+根據 **FATF 建議第 10 條** 與 **新加坡金融管理局 (MAS) Notice 626 第 6.13–6.14 段（詢問並識別）與第 6.14B 段（採取合理步驟驗證）**，金融機構必須識別並驗證 UBO：
 
 - **控制股權閾值 (Controlling Ownership Interest)**：
-  - **國際與監管標準 (FATF / MAS)**：通常定義為直接或間接持有法人實體 **超過 25% (Shares/Voting Rights > 25%)** 的股權或表決權。
+  - **國際標準 (FATF)**：INR.10 註腳 40 說明控制股權可依門檻判定，並以 **超過 25%** 為例（e.g. 25%）。MAS Notice 626 本身只要求識別最終擁有或控制法人的自然人，沒有訂數字門檻；25% 的例子出現在另一份文件《Guidelines to MAS Notice 626》第 6-8-2 段，本專案沒有解析該文件。
   - **內部高風險防範標準 (Global Bank Policy)**：Global Bank 將此判定閾值收緊至 **10% (Shares/Voting Rights >= 10%)**，旨在對複雜股權結構進行更嚴密地穿透式審查。
 
 ## 2. UBO 判定三部曲 (順序判定原則)
@@ -16,7 +16,7 @@
 
 ```mermaid
 graph TD
-    A[第一步: 判定股權/控制權] --> B{是否有自然人持股 > 25%? <br> GB 政策為 >= 10%}
+    A[第一步: 判定股權/控制權] --> B{是否有自然人持股超過門檻? <br> FATF 範例為 25%，GB 政策為 10%}
     B -- 是 --> C[將該自然人判定為 UBO]
     B -- 否/不確定 --> D[第二步: 判定實質控制權]
     D --> E{是否有自然人透過其他手段<br>行使最終控制權? <br>例如股東協議、否決權}
@@ -31,6 +31,8 @@ graph TD
 
 ## 3. 溯源條款對照
 
-- **FATF Rec 10**: [Interpretive Note to Recommendation 10, Paragraph 5(b)(i)](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L33-L44)
-- **MAS Notice 626**: [Paragraph 6.13](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L69-L80)
-- **Global Bank Policy**: [Section 3.2.1](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L93-L104)
+條文 ID 對應 `data/gold/clauses.yaml`：
+
+- **FATF Rec 10**：`fatf_rec10_rec_10_cdd_measures_b`（R.10 (b)）、`fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40`（INR.10 註腳 40，25% 範例）
+- **MAS Notice 626**：`mas_notice_626_6_cdd_6_13`、`mas_notice_626_6_cdd_6_14`（第 6.13–6.14 段）、`mas_notice_626_6_cdd_6_14b`（第 6.14B 段，驗證）
+- **Global Bank Policy**：`mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a`（第 1.2(a) 條，10% 門檻）

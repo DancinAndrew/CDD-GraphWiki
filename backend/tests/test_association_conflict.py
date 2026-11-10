@@ -1,13 +1,13 @@
 import os
 import yaml
 from typing import List
-from src.contracts.models import Concept, Obligation, Conflict
+from src.contracts.models import Concept, Obligation, Conflict, Clause, SourceDocument
 from src.association.concept_mapper import ConceptLoader, ConceptMapper
 from src.association.conflict_detector import ConflictDetector
 
 # 定義測試路徑
 GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/gold"))
-PROCESSED_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/processed"))
+ADJUDICATIONS_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/reviews/conflict_adjudications.yaml"))
 
 
 
@@ -28,7 +28,10 @@ def test_concept_loader():
     assert "UBO" in ubo_concept.name or "實質受益人" in ubo_concept.name
     assert len(ubo_concept.description) > 10
     assert "beneficial owner" in ubo_concept.aliases
-    assert "mas626_clause_03" in ubo_concept.source_clause_ids
+    assert "mas_notice_626_6_cdd_6_13" in ubo_concept.source_clause_ids
+    gold_clause_ids = {c["clause_id"] for c in yaml.safe_load(open(os.path.join(GOLD_DIR, "clauses.yaml"), encoding="utf-8"))}
+    for concept in concepts:
+        assert set(concept.source_clause_ids) <= gold_clause_ids, f"{concept.concept_id} cites unknown clauses"
 
 
 def test_concept_mapper_alias_resolution():
@@ -69,7 +72,7 @@ def test_concept_mapper_alias_resolution():
     assert mapper.map_alias("") is None
 
 
-def test_conflict_detector_engine():
+def test_conflict_detector_engine(tmp_path):
     """
     驗證 ConflictDetector 引擎能自動檢出 3 大黃金衝突，且與 Ground Truth 完美對齊。
     """
@@ -82,9 +85,11 @@ def test_conflict_detector_engine():
     obligations = [Obligation(**item) for item in ob_data]
     assert len(obligations) >= 10
 
-    # 執行衝突偵測
-    detector = ConflictDetector()
-    detected_conflicts = detector.detect_conflicts(obligations)
+    # 執行衝突偵測：傳入條文與文件，衝突會引用實際寫出門檻或禁止字樣的條文；裁決紀錄由人工維護
+    clauses = [Clause(**c) for c in yaml.safe_load(open(os.path.join(GOLD_DIR, "clauses.yaml"), encoding="utf-8"))]
+    documents = [SourceDocument(**d) for d in yaml.safe_load(open(os.path.join(GOLD_DIR, "source_documents.yaml"), encoding="utf-8"))]
+    detector = ConflictDetector(ConflictDetector.load_adjudications(ADJUDICATIONS_FILE))
+    detected_conflicts = detector.detect_conflicts(obligations, clauses=clauses, documents=documents)
 
     # 應剛好自動檢出 3 大核心合規衝突
     assert len(detected_conflicts) == 3, f"應偵測出 3 個衝突，實得: {len(detected_conflicts)}"
@@ -107,6 +112,13 @@ def test_conflict_detector_engine():
     # 驗證 F1-score 必須為 完美對齊的 1.00
     assert f1_score == 1.0, f"衝突偵測比對 F1-score 未達到 1.0，實得: {f1_score}"
 
+    # 引用的條文集合也要和金標一致，而且每組衝突橫跨兩份不同的來源文件
+    gold_by_id = {c.conflict_id: c for c in gold_conflicts}
+    clause_doc = {c.clause_id: c.source_document_id for c in clauses}
+    for conf in detected_conflicts:
+        assert set(conf.source_clause_ids) == set(gold_by_id[conf.conflict_id].source_clause_ids)
+        assert len({clause_doc[cid] for cid in conf.source_clause_ids}) == 2
+
     # 驗證每個衝突的欄位完整性
     for conf in detected_conflicts:
         assert conf.conflict_id in ["conf_ubo_threshold", "conf_pep_jurisdiction", "conf_occasional_threshold"]
@@ -117,9 +129,8 @@ def test_conflict_detector_engine():
         assert conf.resolved_by is not None
         assert len(conf.description) > 10
 
-    # 序列化輸出至 processed 目錄下
-    os.makedirs(PROCESSED_DIR, exist_ok=True)
-    out_path = os.path.join(PROCESSED_DIR, "conflicts.yaml")
+    # 序列化輸出到暫存目錄（data/processed 由管線負責產生）
+    out_path = str(tmp_path / "conflicts.yaml")
     detector.save_conflicts_to_yaml(detected_conflicts, out_path)
     assert os.path.exists(out_path)
 
@@ -129,3 +140,45 @@ def test_conflict_detector_engine():
     assert len(processed_data) == 3
     for item in processed_data:
         Conflict(**item)  # 應能順利解構通過強型別校驗
+
+
+def test_conflict_without_adjudication_stays_pending():
+    """沒有人工裁決紀錄的衝突，維持 pending_human_review。"""
+    obligations = [Obligation(**item) for item in yaml.safe_load(open(os.path.join(GOLD_DIR, "obligations.yaml"), encoding="utf-8"))]
+    detected = ConflictDetector().detect_conflicts(obligations)
+    assert {c.conflict_id for c in detected} == {"conf_ubo_threshold", "conf_pep_jurisdiction", "conf_occasional_threshold"}
+    assert all(c.adjudication_status == "pending_human_review" and c.resolved_by is None for c in detected)
+
+
+def test_no_conflict_when_thresholds_agree():
+    """兩份來源的持股門檻相同時，不應標記衝突（偵測依數值比對，而非寫死）。"""
+    obligations = [Obligation(**item) for item in yaml.safe_load(open(os.path.join(GOLD_DIR, "obligations.yaml"), encoding="utf-8"))]
+    same = [o.model_copy(update={"conditions": ["controlling_ownership_interest_above_25_percent"]})
+            if o.obligation_id == "ob_identify_ubo_10_gb" else o for o in obligations]
+    ids = {c.conflict_id for c in ConflictDetector().detect_conflicts(same)}
+    assert "conf_ubo_threshold" not in ids
+
+
+def test_adjudication_does_not_cover_a_changed_conflict():
+    """
+    新增一份來源讓同一類衝突引用的條文改變時，舊的裁決不能沿用：衝突回到 pending_human_review。
+    """
+    obligations = [Obligation(**item) for item in yaml.safe_load(open(os.path.join(GOLD_DIR, "obligations.yaml"), encoding="utf-8"))]
+    clauses = [Clause(**c) for c in yaml.safe_load(open(os.path.join(GOLD_DIR, "clauses.yaml"), encoding="utf-8"))]
+    new_clause = Clause(clause_id="other_bank_policy_ubo", source_document_id="other_bank_policy", section_ref="UBO",
+                        raw_text="The bank shall apply an ownership threshold of 20% to identify UBOs.",
+                        normalized_text="the bank shall apply an ownership threshold of 20% to identify ubos.",
+                        citations=["other_bank_policy_ubo"])
+    new_ob = Obligation(obligation_id="ob_identify_ubo_20_other", source_clause_ids=[new_clause.clause_id],
+                        jurisdiction="Internal", actor="bank", action="identify_and_verify", object="beneficial_owner",
+                        conditions=["controlling_ownership_interest_above_20_percent"], confidence=0.9)
+    detector = ConflictDetector(ConflictDetector.load_adjudications(ADJUDICATIONS_FILE))
+    detected = {c.conflict_id: c for c in detector.detect_conflicts(obligations + [new_ob], clauses=clauses + [new_clause])}
+
+    ubo = detected["conf_ubo_threshold"]
+    assert "other_bank_policy_ubo" in ubo.source_clause_ids
+    assert ubo.adjudication_status == "pending_human_review" and ubo.resolved_by is None
+    assert "needs a new human decision" in ubo.description
+    # 其他兩組衝突的條文沒變，裁決照常套用
+    assert detected["conf_occasional_threshold"].adjudication_status == "resolved"
+    assert detected["conf_pep_jurisdiction"].adjudication_status == "resolved"

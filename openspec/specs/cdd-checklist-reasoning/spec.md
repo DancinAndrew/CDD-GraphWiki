@@ -38,10 +38,10 @@ TBD - created by archiving change create-cdd-checklist-reasoning-engine. Update 
 決策引擎 **SHALL** 根據決策分級與風險觸發點，編譯出必備合規佐證文件清單 (`required_documents`)，並自動關聯條款級溯源引用 (`citations`)。
 * 對於普通低風險個人客戶，佐證文件 **SHALL** 至少配備身分證件與地址證明。
 * 對於政策禁止開戶或高風險 UBO 客戶，佐證文件 **MUST** 自動變更為拒絕開戶通知及 STR 評估申報等防禦性合規記錄文件。
-* 輸出的 `citations` **MUST** 包含源法規 (如 MAS Notice 626 或 FATF) 的條款引用。
+* 輸出的 `citations` **MUST** 是適用義務的錨點條文 ID（`source_clause_ids` 第一條），可在條文庫與圖譜中解析回原文；來源可以是法規（MAS Notice 626、FATF）或銀行內部政策。
 
 #### Scenario: Prohibited PEP Onboarding Documentation
 * **GIVEN** 一個緬甸籍且有 PEP 曝險的高風險客戶情境。
 * **WHEN** 引擎執行推理判定時。
-* **THEN** 產出的 `required_documents` **SHALL** 精確包含 `["Rejected Onboarding Notification", "Suspicious Transaction Report (STR) Draft"]`，且其 `citations` 包含 `["Global Bank Policy Section 4.5.3"]`。
+* **THEN** 產出的 `required_documents` **SHALL** 精確包含 `["Rejected Onboarding Notification"]`，且其 `citations` 為 `["mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons"]`（Global Bank Policy 1.4）。
 

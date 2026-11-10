@@ -5,8 +5,9 @@ from src.contracts.models import CustomerContext, Obligation, Conflict, CDDCheck
 class CDDChecklistEngine:
     """
     客戶 CDD 檢核推理引擎。
-    根據 CustomerContext、Obligations 與 Conflicts 推理出對應的 CDDChecklist 決策，
-    並保留強型別與條款級溯源引用。
+    決策分支刻意維持規則式以換取可解釋性；引用與未決衝突則由義務的出處推導：
+    - citations：適用義務的錨點條文 ID（解析出的條文）
+    - unresolved_conflicts：與適用義務相關、尚未人工裁決的衝突，有的話一律送人工審查
     """
 
     def generate_checklist(
@@ -27,7 +28,6 @@ class CDDChecklistEngine:
         applicable_obligations: List[str] = []
         unresolved_conflicts: List[str] = []
         human_review_required = False
-        citations: List[str] = []
 
         # 1. 根據客戶情境特徵模式進行推理決策分支匹配
         if customer.customer_type == "individual":
@@ -37,8 +37,7 @@ class CDDChecklistEngine:
                     # 高風險政要禁止開戶情境 (cust_individual_high_risk_pep)
                     decision = "enhanced_due_diligence"
                     required_documents = [
-                        "Rejected Onboarding Notification",
-                        "Suspicious Transaction Report (STR) Draft"
+                        "Rejected Onboarding Notification"
                     ]
                     risk_triggers = [
                         "pep_from_high_risk_jurisdiction",
@@ -46,7 +45,6 @@ class CDDChecklistEngine:
                     ]
                     applicable_obligations = ["ob_pep_prohibitions_gb"]
                     human_review_required = True
-                    citations = ["Global Bank Policy Section 4.5.3"]
                 else:
                     # 普通政要 EDD 情境 (cust_individual_pep)
                     decision = "enhanced_due_diligence"
@@ -55,16 +53,18 @@ class CDDChecklistEngine:
                         "Proof of Address",
                         "Senior Management Approval Form",
                         "Source of Funds Declaration & Evidence",
-                        "Source of Wealth Declaration & Evidence"
+                        "Source of Wealth Declaration & Evidence",
+                        "Head of Compliance Approval Form"
                     ]
                     risk_triggers = ["pep_exposure_detected"]
+                    # MAS 8.3 的加強 CDD，加上銀行政策 1.4(a) 對非高風險地區 PEP 的核准要求
                     applicable_obligations = [
                         "ob_cdd_on_relationship_mas",
                         "ob_verify_customer_mas",
-                        "ob_pep_edd_mas"
+                        "ob_pep_edd_mas",
+                        "ob_pep_approval_gb"
                     ]
                     human_review_required = True
-                    citations = ["MAS Notice 626 Paragraph 7.2"]
             else:
                 # 普通低風險個人情境 (cust_individual_low_risk)
                 decision = "standard_cdd"
@@ -78,10 +78,6 @@ class CDDChecklistEngine:
                     "ob_verify_customer_mas"
                 ]
                 human_review_required = False
-                citations = [
-                    "MAS Notice 626 Paragraph 6.2",
-                    "MAS Notice 626 Paragraph 6.6"
-                ]
 
         elif customer.customer_type == "corporate":
             if customer.ubo_status == "unclear" or customer.registration_jurisdiction.lower() == "cayman islands":
@@ -96,15 +92,15 @@ class CDDChecklistEngine:
                     "excessive_layering_5",
                     "missing_source_of_funds_evidence"
                 ]
+                # 無法完成 CDD（UBO 不明）時，MAS 6.35 要求不得建立業務關係並考慮申報 STR；
+                # 多層持股依銀行政策 1.2(b) 視為高風險
                 applicable_obligations = [
                     "ob_cdd_on_relationship_mas",
-                    "ob_identify_ubo_25_mas"
+                    "ob_identify_ubo_mas",
+                    "ob_identify_ubo_10_gb",
+                    "ob_cdd_incomplete_mas"
                 ]
                 human_review_required = True
-                citations = [
-                    "MAS Notice 626 Paragraph 6.13",
-                    "FATF Recommendation 10, P3"
-                ]
             else:
                 # 普通企業情境，需注意是否觸發內部審查閥值限制 (cust_corp_standard)
                 decision = "standard_cdd"
@@ -122,13 +118,10 @@ class CDDChecklistEngine:
                     applicable_obligations = [
                         "ob_cdd_on_relationship_mas",
                         "ob_verify_customer_mas",
+                        "ob_identify_ubo_mas",
                         "ob_identify_ubo_10_gb"
                     ]
                     human_review_required = True
-                    citations = [
-                        "MAS Notice 626 Paragraph 6.13",
-                        "Global Bank Policy Section 3.2.1"
-                    ]
                 else:
                     # 預設企業 standard cdd
                     required_documents = [
@@ -138,10 +131,29 @@ class CDDChecklistEngine:
                     risk_triggers = []
                     applicable_obligations = [
                         "ob_cdd_on_relationship_mas",
-                        "ob_verify_customer_mas"
+                        "ob_verify_customer_mas",
+                        "ob_identify_ubo_mas"
                     ]
                     human_review_required = False
-                    citations = ["MAS Notice 626 Paragraph 6.13"]
+
+        # 引用由出處推導：每個適用義務引用它的錨點條文（source_clause_ids 第一條），
+        # 所以每個引用都是解析出的條文 ID，能在圖譜中解析到原文
+        ob_dict = {ob.obligation_id: ob for ob in obligations}
+        citations: List[str] = []
+        for ob_id in applicable_obligations:
+            ob = ob_dict.get(ob_id)
+            if ob and ob.source_clause_ids and ob.source_clause_ids[0] not in citations:
+                citations.append(ob.source_clause_ids[0])
+
+        # 與適用義務相關、但尚未經人工裁決的衝突：列入清單並強制送人工審查
+        applicable_clause_ids = {
+            cid for ob_id in applicable_obligations if ob_id in ob_dict for cid in ob_dict[ob_id].source_clause_ids
+        }
+        for conflict in conflicts:
+            if conflict.adjudication_status != "resolved" and applicable_clause_ids.intersection(conflict.source_clause_ids):
+                unresolved_conflicts.append(conflict.conflict_id)
+        if unresolved_conflicts:
+            human_review_required = True
 
         # 構造並返回強型別檢核表
         checklist_id = f"chk_{customer_id.replace('cust_', '')}"

@@ -33,7 +33,7 @@ TBD - created by archiving change create-compliance-dashboard. Update Purpose af
 * 圖譜必須支持滑鼠滾輪縮放 (Zoom)、拖曳節點 (Drag)、以及滑鼠懸停 (Hover) 顯示含有法規條文與 Citation 的浮動 Tooltip 視窗。
 
 #### Scenario: hover_regulatory_clause_node
-* **GIVEN**：前端法規圖譜中渲染了代表 `mas626_clause_02` 的法規條款節點。
+* **GIVEN**：前端法規圖譜中渲染了代表 `mas_notice_626_6_cdd_6_5` 的法規條款節點。
 * **WHEN**：合規官將滑鼠游標懸停在該節點上方。
 * **THEN**：前端必須 (SHALL) 彈出一個懸浮 Tooltip 卡片，動態展示該 `Clause` 節點屬性中的 `raw_text` 與其所關聯的 `citations`。
 

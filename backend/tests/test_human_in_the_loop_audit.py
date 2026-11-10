@@ -73,7 +73,7 @@ def test_review_case_manager_and_override_workflow():
         applicable_obligations=["ob_verify_customer_mas"],
         unresolved_conflicts=[],
         human_review_required=True,
-        citations=["MAS Notice 626 Paragraph 6.13"]
+        citations=["mas_notice_626_6_cdd_6_5"]
     )
     
     checklists = {checklist_id: mock_checklist}
@@ -116,7 +116,9 @@ def test_review_case_manager_and_override_workflow():
     # 5. 斷言關聯的 CDDChecklist 是否已被完美覆寫且解鎖
     assert mock_checklist.decision == "enhanced_due_diligence"
     assert mock_checklist.human_review_required is False
-    assert any("compliance_officer_alice" in cit for cit in mock_checklist.citations)
+    # 覆寫紀錄留在稽核日誌，citations 只保留原本的條文 ID
+    assert mock_checklist.citations == ["mas_notice_626_6_cdd_6_5"]
+    assert logger.entries[-1].operator == "compliance_officer_alice"
 
     # 6. 檢查審計日誌是否正確寫入
     assert len(logger.entries) == 2

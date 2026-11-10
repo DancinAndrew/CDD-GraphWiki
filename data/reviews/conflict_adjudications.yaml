@@ -1,0 +1,33 @@
+# Human adjudication register for detected conflicts.
+#
+# The ConflictDetector finds conflicts automatically by comparing the obligations
+# extracted from different sources. Deciding how a conflict is reconciled is a
+# human compliance decision, so it is recorded here together with the exact clauses
+# that were adjudicated. The decision is attached only when a detected conflict cites
+# the same clauses; a conflict with no entry, or whose clauses changed (for example
+# because a new policy was added), stays "pending_human_review", and every checklist
+# that relies on it is routed to the human review queue.
+
+- conflict_id: conf_ubo_threshold
+  source_clause_ids:
+    - fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a
+  adjudication_status: resolved
+  reconciliation_rule: "Apply the stricter internal threshold (10% or more of shares or voting rights) when identifying beneficial owners; this also covers the FATF example threshold (more than 25%)."
+  resolved_by: "Compliance Committee Decision 2025-01"
+
+- conflict_id: conf_occasional_threshold
+  source_clause_ids:
+    - fatf_rec10_rec_10_when_cdd_is_required_ii
+    - mas_notice_626_6_cdd_6_3_b
+  adjudication_status: resolved
+  reconciliation_rule: "For banks operating in Singapore, apply the S$20,000 threshold in MAS Notice 626 paragraph 6.3(b), which implements the FATF designated threshold locally."
+  resolved_by: "MAS Regulation"
+
+- conflict_id: conf_pep_jurisdiction
+  source_clause_ids:
+    - mas_notice_626_8_enhanced_cdd_8_3
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
+  adjudication_status: resolved
+  reconciliation_rule: "Apply the stricter prohibition: reject onboarding if the PEP resides in or is associated with a high-risk jurisdiction, even though MAS Notice 626 allows business relations with PEPs subject to enhanced CDD."
+  resolved_by: "Global Head of AML"

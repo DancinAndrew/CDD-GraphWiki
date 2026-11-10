@@ -27,17 +27,18 @@ class TestObligationExtractor:
         return RuleBasedObligationExtractor(confidence_threshold=0.75)
 
     def test_extractor_success_and_json_schema(self, extractor):
-        # 建立一個應能成功抽取的真實或 Mock Clause (例如 MAS 626 關於 CDD 的條款)
+        # MAS Notice 626 第 6.3(a) 段（逐字原文），上層段落是 CDD 觸發句
         clause = Clause(
-            clause_id="mas626_clause_01",
+            clause_id="mas_notice_626_6_cdd_6_3_a",
             source_document_id="mas_notice_626",
-            section_ref="Paragraph 4.1",
-            raw_text="A bank shall perform customer due diligence (CDD) measures when establishing business relations with a customer.",
-            normalized_text="a bank shall perform customer due diligence cdd measures when establishing business relations with a customer.",
-            citations=["MAS Notice 626 Para 4.1"]
+            section_ref="6 Customer Due Diligence > 6.3 > (a)",
+            raw_text="(a) the bank establishes business relations with any customer;",
+            normalized_text="(a) the bank establishes business relations with any customer;",
+            citations=["mas_notice_626_6_cdd_6_3_a"]
         )
+        context = "### 6.3 a bank shall perform the measures as required by paragraphs 6, 7 and 8 when -"
 
-        ob, reason = extractor.extract_obligation(clause)
+        ob, reason = extractor.extract_obligation(clause, context)
         assert ob is not None
         assert reason is None
         
@@ -92,16 +93,17 @@ class TestObligationExtractor:
         strict_extractor = RuleBasedObligationExtractor(confidence_threshold=0.99)
         
         clause = Clause(
-            clause_id="mas626_clause_01",
+            clause_id="mas_notice_626_6_cdd_6_3_a",
             source_document_id="mas_notice_626",
-            section_ref="Paragraph 4.1",
-            raw_text="A bank shall perform customer due diligence (CDD) measures when establishing business relations with a customer.",
-            normalized_text="a bank shall perform customer due diligence cdd measures when establishing business relations with a customer.",
-            citations=["MAS Notice 626 Para 4.1"]
+            section_ref="6 Customer Due Diligence > 6.3 > (a)",
+            raw_text="(a) the bank establishes business relations with any customer;",
+            normalized_text="(a) the bank establishes business relations with any customer;",
+            citations=["mas_notice_626_6_cdd_6_3_a"]
         )
+        context = "### 6.3 a bank shall perform the measures as required by paragraphs 6, 7 and 8 when -"
 
-        ob, reason = strict_extractor.extract_obligation(clause)
-        # confidence 計算為 (1.0 + 1.0 + 0.7) / 3 = 0.9，低於 0.99 應被拒絕
+        ob, reason = strict_extractor.extract_obligation(clause, context)
+        # MAS CDD 觸發規則的信心值是 0.96，低於 0.99 應被拒絕
         assert ob is None
         assert reason == "LOW_CONFIDENCE"
 
@@ -199,3 +201,73 @@ class TestObligationExtractor:
         assert "Recall (召回率): 1.00" in content
         assert "F1-Score: 0.80" in content
         assert "Field-level Alignment Accuracy: 0.83" in content
+
+
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+
+def _load(path):
+    with open(os.path.join(REPO_ROOT, path), "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+
+def test_thresholds_are_parsed_from_clause_text():
+    from src.extraction.extractor import parse_amount, parse_percent, trigger_conditions
+    assert parse_amount("above the applicable designated threshold (USD/EUR 15,000)") == (15000, "usd_eur")
+    assert parse_amount("any transaction of a value exceeding S$20,000, other than") == (20000, "sgd")
+    # 銀行政策同時提到 10% 與 25%：取「threshold of」後面的門檻
+    assert parse_percent("apply an ownership threshold of 10% or more (which is stricter than the regulatory baseline of 25%)") == 10
+    assert parse_percent("It may be based on a threshold, e.g. any person owning more than a certain percentage of the company (e.g. 25%).") == 25
+    assert trigger_conditions("(ii) carrying out occasional transactions: (i) above the applicable designated threshold (USD/EUR 15,000); or") == ["occasional_transaction_above_15000_usd_eur"]
+
+
+def test_rules_do_not_depend_on_clause_ids():
+    """同一段文字換一個條文 ID，抽取結果應完全相同（規則只看文字與管轄區）。"""
+    extractor = RuleBasedObligationExtractor()
+    text = "(a) The bank shall apply an ownership threshold of 10% or more (which is stricter than the regulatory baseline of 25%) to identify UBOs."
+    results = []
+    for cid in ["mock_internal_policy_x", "mock_internal_policy_renamed_clause"]:
+        clause = Clause(clause_id=cid, source_document_id="mock_internal_policy", section_ref="1.2 > (a)",
+                        raw_text=text, normalized_text=text.lower(), citations=[cid])
+        ob, _ = extractor.extract_obligation(clause)
+        results.append((ob.obligation_id, ob.jurisdiction, ob.conditions))
+    assert results[0] == results[1] == ("ob_identify_ubo_10_gb", "Internal", ["controlling_ownership_interest_above_10_percent"])
+
+
+def test_extraction_on_parsed_sources_matches_gold_with_provenance(tmp_path):
+    """在解析出的條文上跑抽取：12 條金標義務全部命中，且錨點條文、管轄區、出處集合都對。"""
+    from src.extraction.extractor import extract_obligations, load_jurisdictions
+    clauses = [Clause(**c) for c in _load("data/gold/clauses.yaml")]
+    extractor = RuleBasedObligationExtractor(jurisdictions=load_jurisdictions(os.path.join(REPO_ROOT, "data/gold/source_documents.yaml")))
+    obligations, _ = extract_obligations(clauses, extractor)
+
+    metrics = ObligationExtractionPipeline().evaluate_against_gold(
+        obligations, os.path.join(REPO_ROOT, "data/gold/obligations.yaml"), tmp_path / "report.txt")
+    assert metrics["matched"] == metrics["gold"] == metrics["extracted"] == 12
+    assert metrics["provenance_matches"] == 12
+    assert metrics["exact_source_matches"] == 12
+
+    by_id = {o.obligation_id: o for o in obligations}
+    # MAS Notice 626 沒有數字門檻：實質受益人義務不應帶 25% 條件
+    assert by_id["ob_identify_ubo_mas"].conditions == []
+    assert "controlling_ownership_interest_above_25_percent" in by_id["ob_identify_ubo_25"].conditions
+    assert all(o.jurisdiction == "Singapore" for o in obligations if o.obligation_id.endswith("_mas"))
+    # MAS 6.14B（驗證受益人身分）以交叉引用「identified under paragraph 6.14」歸入實質受益人義務
+    assert "mas_notice_626_6_cdd_6_14b" in by_id["ob_identify_ubo_mas"].source_clause_ids
+    # 銀行政策 1.4 的禁令與 1.4(a) 的核准要求是兩條不同的義務
+    assert by_id["ob_pep_prohibitions_gb"].source_clause_ids == ["mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons"]
+    assert by_id["ob_pep_approval_gb"].source_clause_ids == ["mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a"]
+    assert by_id["ob_cdd_incomplete_mas"].source_clause_ids == ["mas_notice_626_6_cdd_6_35"]
+
+
+def test_provenance_mismatch_is_reported(tmp_path):
+    """抽到正確 ID 但出處錯（例如把銀行政策條文標成 MAS 義務）時，報告要標成 MISMATCH。"""
+    gold = [Obligation(obligation_id="ob_x", source_clause_ids=["mas_clause"], jurisdiction="Singapore",
+                       actor="bank", action="identify_and_verify", object="beneficial_owner", confidence=0.9)]
+    gold_file = tmp_path / "gold.yaml"
+    with open(gold_file, "w", encoding="utf-8") as f:
+        yaml.dump([g.model_dump() for g in gold], f)
+    wrong = [gold[0].model_copy(update={"source_clause_ids": ["policy_clause"], "jurisdiction": "Internal"})]
+    metrics = ObligationExtractionPipeline().evaluate_against_gold(wrong, str(gold_file), tmp_path / "r.txt")
+    assert metrics["matched"] == 1 and metrics["provenance_matches"] == 0
+    assert "Provenance: [MISMATCH]" in (tmp_path / "r.txt").read_text(encoding="utf-8")

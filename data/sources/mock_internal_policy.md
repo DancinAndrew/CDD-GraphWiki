@@ -19,3 +19,7 @@ Global Bank shall identify and verify the identity of the Ultimate Beneficial Ow
 High-risk customers, including Politically Exposed Persons (PEPs) and entities with unclear beneficial ownership, are subject to mandatory periodic reviews.
 (a) High-risk customer files MUST be reviewed every 12 months (annual review) to ensure compliance documentation is up-to-date.
 (b) If a review reveals significant discrepancies or failure to verify a UBO, the case must be escalated to the Group AML Committee within 5 business days.
+
+### 1.4 Politically Exposed Persons
+Global Bank strictly prohibits establishing business relationships with Politically Exposed Persons (PEPs) from high-risk jurisdictions.
+(a) For all other PEPs, the relationship must be approved by the Head of Compliance and signed off by at least two levels of independent senior management, after the source of funds and source of wealth have been verified.

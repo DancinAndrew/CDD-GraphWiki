@@ -108,10 +108,10 @@ def test_explain_pep_senior_management_approval():
     ob_node = next(n for n in path.path_nodes if n.node_type == "obligation")
     assert ob_node.node_id == "ob_pep_edd_mas"
     
-    # 驗證包含條款 mas626_clause_04 節點並引述正確的明文
+    # 驗證包含 MAS Notice 626 第 8.3 段節點，並逐字引述官方原文
     clause_node = next(n for n in path.path_nodes if n.node_type == "clause")
-    assert clause_node.node_id == "mas626_clause_04"
-    assert "determine whether a customer or any beneficial owner is a politically exposed person" in clause_node.properties["raw_text"]
+    assert clause_node.node_id == "mas_notice_626_8_enhanced_cdd_8_3"
+    assert "perform at least the following enhanced CDD measures where a customer or any beneficial owner" in clause_node.properties["raw_text"]
 
     
     # 驗證包含源文件 mas_notice_626
@@ -166,9 +166,10 @@ def test_explain_high_risk_pep_rejection():
     ob_node = next(n for n in path.path_nodes if n.node_type == "obligation")
     assert ob_node.node_id == "ob_pep_prohibitions_gb"
     
-    # 驗證包含條款 mock_policy_clause_02
+    # 驗證包含銀行政策 1.4（禁止高風險國家 PEP）條文
     clause_node = next(n for n in path.path_nodes if n.node_type == "clause")
-    assert clause_node.node_id == "mock_policy_clause_02"
+    assert clause_node.node_id == "mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons"
+    assert "strictly prohibits" in clause_node.properties["raw_text"]
     
     # 驗證 description 繁體中文內部政策論述
     assert "嚴禁為來自高風險管轄區" in path.description
@@ -213,3 +214,29 @@ def test_generate_audit_report():
     assert "➔" in report
     assert "> **發行機構與文件**" in report
     assert "> **原始明文引述**" in report
+
+
+def test_explain_unclear_ubo_rejection_uses_mas_6_35():
+    """
+    UBO 不明的開曼企業：拒絕開戶通知要追溯到 MAS Notice 626 第 6.35 段
+    （無法完成 CDD 時不得建立業務關係並考慮申報 STR），而不是舊版誤植的「MAS 25%」條文。
+    """
+    customers = [CustomerContext(**item) for item in load_yaml("customer_contexts.yaml")]
+    obligations = [Obligation(**item) for item in load_yaml("obligations.yaml")]
+    clauses = [Clause(**item) for item in load_yaml("clauses.yaml")]
+    documents = [SourceDocument(**item) for item in load_yaml("source_documents.yaml")]
+    checklists = [CDDChecklist(**item) for item in load_yaml("checklists.yaml")]
+
+    cust = next(c for c in customers if c.customer_id == "cust_corp_unclear_ubo")
+    chk = next(k for k in checklists if k.customer_id == "cust_corp_unclear_ubo")
+    path = ProvenanceEngine().explain_item(
+        checklist=chk, target_item="Account Opening Rejection Notice", customer=cust,
+        obligations=obligations, clauses=clauses, documents=documents)
+
+    ob_node = next(n for n in path.path_nodes if n.node_type == "obligation")
+    clause_node = next(n for n in path.path_nodes if n.node_type == "clause")
+    assert ob_node.node_id == "ob_cdd_incomplete_mas"
+    assert clause_node.node_id == "mas_notice_626_6_cdd_6_35"
+    assert "shall not commence or continue business relations" in clause_node.properties["raw_text"]
+    assert "STR" in path.description
+    assert path.path_nodes[-1].node_id == "mas_notice_626"

@@ -12,13 +12,34 @@ FALLBACK_ALIASES = {
     "sofw": ["sofw", "source of funds", "source of wealth", "source of wealth verification", "source of funds verification", "sof", "sow"]
 }
 
-# 預設的條款級溯源，與 data/gold 中的 Markdown 對應
+# 預設的條款級溯源：每個概念對應到解析出的條文 ID（data/sources/*.md 經 parser 切分後的結果）
 FALLBACK_CLAUSES = {
-    "ubo": ["fatf_rec10_clause_04", "mas626_clause_03", "mock_policy_clause_01"],
-    "pep": ["mas626_clause_04", "mock_policy_clause_02"],
-    "cdd": ["fatf_rec10_clause_02", "fatf_rec10_clause_03", "mas626_clause_01", "mas626_clause_02"],
-    "edd": ["fatf_rec10_clause_03", "mas626_clause_04", "mock_policy_clause_02"],
-    "sofw": ["mas626_clause_04", "mock_policy_clause_02"]
+    "ubo": [
+        "fatf_rec10_rec_10_cdd_measures_b",
+        "fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40",
+        "mas_notice_626_6_cdd_6_13",
+        "mas_notice_626_6_cdd_6_14",
+        "mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a",
+    ],
+    "pep": [
+        "mas_notice_626_8_enhanced_cdd_8_2",
+        "mas_notice_626_8_enhanced_cdd_8_3",
+        "mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons",
+    ],
+    "cdd": [
+        "fatf_rec10_rec_10_when_cdd_is_required",
+        "fatf_rec10_rec_10_cdd_measures_a",
+        "mas_notice_626_6_cdd_6_3",
+        "mas_notice_626_6_cdd_6_5",
+    ],
+    "edd": [
+        "mas_notice_626_8_enhanced_cdd_8_3",
+        "mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons",
+    ],
+    "sofw": [
+        "mas_notice_626_8_enhanced_cdd_8_3_b",
+        "mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a",
+    ],
 }
 
 

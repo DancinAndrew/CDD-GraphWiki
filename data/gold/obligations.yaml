@@ -1,6 +1,10 @@
+# Gold obligations: my manual annotation of the parsed clauses in data/sources/*.md.
+# source_clause_ids lists every clause that states the obligation; the FIRST entry is the
+# anchor clause (the paragraph that states it), which checklists cite.
+
 - obligation_id: ob_prohibit_anonymous
   source_clause_ids:
-    - fatf_rec10_clause_01
+    - fatf_rec10_rec_10_anonymous_accounts
   jurisdiction: Global
   actor: financial_institution
   action: prohibit
@@ -16,14 +20,18 @@
 
 - obligation_id: ob_cdd_on_relationship
   source_clause_ids:
-    - fatf_rec10_clause_02
+    - fatf_rec10_rec_10_when_cdd_is_required
+    - fatf_rec10_rec_10_when_cdd_is_required_i
+    - fatf_rec10_rec_10_when_cdd_is_required_ii
+    - fatf_rec10_rec_10_when_cdd_is_required_iii
+    - fatf_rec10_rec_10_when_cdd_is_required_iv
   jurisdiction: Global
   actor: financial_institution
   action: perform_cdd
   object: customer
   applies_to: {}
   conditions:
-    - establishing_business_relationship
+    - establishing_business_relations
     - occasional_transaction_above_15000_usd_eur
     - suspicion_of_money_laundering
     - doubts_about_veracity_of_data
@@ -36,7 +44,7 @@
 
 - obligation_id: ob_verify_customer_identity
   source_clause_ids:
-    - fatf_rec10_clause_03
+    - fatf_rec10_rec_10_cdd_measures_a
   jurisdiction: Global
   actor: financial_institution
   action: identify_and_verify
@@ -54,7 +62,10 @@
 
 - obligation_id: ob_identify_ubo_25
   source_clause_ids:
-    - fatf_rec10_clause_04
+    - fatf_rec10_rec_10_cdd_measures_b
+    - fatf_rec10_interpretive_note_to_rec_10_p_5_b_b
+    - fatf_rec10_interpretive_note_to_rec_10_p_5_b_b_i
+    - fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40
   jurisdiction: Global
   actor: financial_institution
   action: identify_and_verify
@@ -62,6 +73,7 @@
   applies_to:
     customer_type: legal_person
   conditions:
+    # FATF INR.10 footnote 40 gives 25% as an example threshold ("e.g. 25%")
     - controlling_ownership_interest_above_25_percent
   exceptions: []
   required_evidence:
@@ -75,7 +87,11 @@
 
 - obligation_id: ob_cdd_on_relationship_mas
   source_clause_ids:
-    - mas626_clause_01
+    - mas_notice_626_6_cdd_6_3
+    - mas_notice_626_6_cdd_6_3_a
+    - mas_notice_626_6_cdd_6_3_b
+    - mas_notice_626_6_cdd_6_3_f
+    - mas_notice_626_6_cdd_6_3_g
   jurisdiction: Singapore
   actor: bank
   action: perform_cdd
@@ -95,7 +111,15 @@
 
 - obligation_id: ob_verify_customer_mas
   source_clause_ids:
-    - mas626_clause_02
+    - mas_notice_626_6_cdd_6_5
+    - mas_notice_626_6_cdd_6_6
+    - mas_notice_626_6_cdd_6_6_a
+    - mas_notice_626_6_cdd_6_6_a_i
+    - mas_notice_626_6_cdd_6_6_a_ii
+    - mas_notice_626_6_cdd_6_6_a_iii
+    - mas_notice_626_6_cdd_6_6_a_iv
+    - mas_notice_626_6_cdd_6_6_a_v
+    - mas_notice_626_6_cdd_6_9
   jurisdiction: Singapore
   actor: bank
   action: identify_and_verify
@@ -110,22 +134,29 @@
     - residential_address
     - date_of_birth
     - nationality
+    - reliable_independent_source_documents
   review_flags:
     - missing_mandatory_identification_fields
   confidence: 0.95
   review_status: approved
 
-- obligation_id: ob_identify_ubo_25_mas
+- obligation_id: ob_identify_ubo_mas
   source_clause_ids:
-    - mas626_clause_03
+    - mas_notice_626_6_cdd_6_13
+    - mas_notice_626_6_cdd_6_14
+    - mas_notice_626_6_cdd_6_14_a
+    - mas_notice_626_6_cdd_6_14_a_i
+    - mas_notice_626_6_cdd_6_14_a_ii
+    - mas_notice_626_6_cdd_6_14b
   jurisdiction: Singapore
   actor: bank
   action: identify_and_verify
   object: beneficial_owner
   applies_to:
     customer_type: legal_person
-  conditions:
-    - controlling_ownership_interest_above_25_percent
+  # MAS Notice 626 states no numeric ownership threshold (the 25% example is only in the
+  # separate Guidelines to MAS Notice 626, which this project does not parse)
+  conditions: []
   exceptions: []
   required_evidence:
     - ubo_declaration
@@ -138,7 +169,10 @@
 
 - obligation_id: ob_pep_edd_mas
   source_clause_ids:
-    - mas626_clause_04
+    - mas_notice_626_8_enhanced_cdd_8_3
+    - mas_notice_626_8_enhanced_cdd_8_3_a
+    - mas_notice_626_8_enhanced_cdd_8_3_b
+    - mas_notice_626_8_enhanced_cdd_8_3_c
   jurisdiction: Singapore
   actor: bank
   action: perform_edd
@@ -160,7 +194,11 @@
 
 - obligation_id: ob_identify_ubo_10_gb
   source_clause_ids:
-    - mock_policy_clause_01
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b_i
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b_ii
   jurisdiction: Internal
   actor: bank
   action: identify_and_verify
@@ -180,7 +218,7 @@
 
 - obligation_id: ob_pep_prohibitions_gb
   source_clause_ids:
-    - mock_policy_clause_02
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
   jurisdiction: Internal
   actor: bank
   action: restrict_relationship
@@ -191,10 +229,49 @@
     - pep_from_high_risk_jurisdiction
   exceptions: []
   required_evidence:
-    - head_of_compliance_approval
-    - two_levels_senior_mgmt_approval
+    - rejected_onboarding_record
   review_flags:
     - pep_from_high_risk_country
-    - pep_without_head_compliance_signoff
   confidence: 0.99
+  review_status: approved
+
+- obligation_id: ob_pep_approval_gb
+  source_clause_ids:
+    - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a
+  jurisdiction: Internal
+  actor: bank
+  action: obtain_approval
+  object: pep
+  applies_to:
+    pep_exposure: true
+  conditions:
+    - pep_not_from_high_risk_jurisdiction
+  exceptions: []
+  required_evidence:
+    - head_of_compliance_approval
+    - two_levels_senior_mgmt_approval
+    - source_of_funds_verification
+    - source_of_wealth_verification
+  review_flags:
+    - pep_without_head_compliance_signoff
+  confidence: 0.97
+  review_status: approved
+
+- obligation_id: ob_cdd_incomplete_mas
+  source_clause_ids:
+    - mas_notice_626_6_cdd_6_35
+  jurisdiction: Singapore
+  actor: bank
+  action: refuse_relationship
+  object: customer
+  applies_to: {}
+  conditions:
+    - cdd_measures_not_completed
+  exceptions: []
+  required_evidence:
+    - account_opening_rejection_record
+    - str_consideration_record
+  review_flags:
+    - cdd_incomplete
+  confidence: 0.95
   review_status: approved

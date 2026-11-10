@@ -6,7 +6,6 @@ from src.decision.engine import CDDChecklistEngine, ChecklistEvaluator
 
 # 定義黃金數據集與產出數據集目錄路徑
 GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/gold"))
-PROCESSED_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/processed"))
 
 
 
@@ -30,9 +29,7 @@ def test_cdd_checklist_engine_perfect_alignment():
     # 1. 載入輸入與預期數據
     raw_customers = load_yaml("customer_contexts.yaml")
     raw_obligations = load_yaml("obligations.yaml")
-    raw_conflicts = load_yaml("conflicts.yaml", dir_path=PROCESSED_DIR) if os.path.exists(
-        os.path.join(PROCESSED_DIR, "conflicts.yaml")
-    ) else load_yaml("conflicts.yaml", dir_path=GOLD_DIR)
+    raw_conflicts = load_yaml("conflicts.yaml")
     expected_checklists = load_yaml("checklists.yaml")
 
     # 2. 實例化強型別模型
@@ -116,18 +113,32 @@ def test_cdd_checklist_engine_perfect_alignment():
     assert metrics["total_evaluated_fields"] == 30.0
     assert metrics["aligned_fields"] == 30.0
 
-    # 6. 將自動推理產出的強型別數據序列化寫入 data/processed/checklists.yaml
-    if not os.path.exists(PROCESSED_DIR):
-        os.makedirs(PROCESSED_DIR)
-        
-    output_path = os.path.join(PROCESSED_DIR, "checklists.yaml")
-    
-    # 轉換成 yaml 可序列化的 dict 列表
-    serialized_data = []
+    # 6. 每個引用都是適用義務的錨點條文，且能在金標條文中找到
+    clause_ids = {c["clause_id"] for c in load_yaml("clauses.yaml")}
+    ob_dict = {ob.obligation_id: ob for ob in obligations}
     for chk in generated_checklists:
-        serialized_data.append(chk.model_dump())
-        
-    with open(output_path, "w", encoding="utf-8") as f:
-        yaml.safe_dump(serialized_data, f, allow_unicode=True, default_flow_style=False)
-        
-    assert os.path.exists(output_path)
+        anchors = [ob_dict[ob_id].source_clause_ids[0] for ob_id in chk.applicable_obligations]
+        assert chk.citations == list(dict.fromkeys(anchors))
+        assert set(chk.citations) <= clause_ids
+
+
+def test_unadjudicated_conflict_forces_human_review():
+    """
+    衝突若沒有人工裁決紀錄（pending_human_review），所有依賴相關義務的清單都要列出該衝突並送人工審查。
+    """
+    customers = {c["customer_id"]: CustomerContext(**c) for c in load_yaml("customer_contexts.yaml")}
+    obligations = [Obligation(**item) for item in load_yaml("obligations.yaml")]
+    conflicts = [Conflict(**item) for item in load_yaml("conflicts.yaml")]
+    pending = [c.model_copy(update={"adjudication_status": "pending_human_review", "resolved_by": None})
+               if c.conflict_id == "conf_occasional_threshold" else c for c in conflicts]
+
+    engine = CDDChecklistEngine()
+    low_risk = customers["cust_individual_low_risk"]
+
+    resolved_chk = engine.generate_checklist(low_risk, obligations, conflicts)
+    assert resolved_chk.unresolved_conflicts == []
+    assert resolved_chk.human_review_required is False
+
+    pending_chk = engine.generate_checklist(low_risk, obligations, pending)
+    assert pending_chk.unresolved_conflicts == ["conf_occasional_threshold"]
+    assert pending_chk.human_review_required is True

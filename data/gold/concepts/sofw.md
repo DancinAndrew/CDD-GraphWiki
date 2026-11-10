@@ -25,7 +25,7 @@ flowchart TD
 ```
 
 1. **標準 CDD 場景**：金融機構通常僅需在開戶表格中讓客戶「自我宣告」其預計交易的資金來源 (SoF)，無需強制索取第方證明文件。
-2. **EDD (高風險/PEP) 場景**：根據 **MAS Notice 626 Paragraph 7.2**，當客戶或其 UBO 屬於政治曝險人物 (PEP) 時，金融機構**必須 (MUST)** 採取合理措施，收集並驗證其 **SoW** 與 **SoF**。
+2. **EDD (高風險/PEP) 場景**：根據 **MAS Notice 626 第 8.3(b) 段**，當客戶或其 UBO 屬於政治曝險人物 (PEP) 時，金融機構**必須 (MUST)** 以適當且合理的方式確立（establish）其 **SoW** 與 **SoF**。Global Bank 政策第 1.4(a) 條則進一步要求在核准前完成驗證。
 
 ## 3. 防禦性合規查核要點 (Red Flags)
 
@@ -36,5 +36,7 @@ flowchart TD
 
 ## 4. 溯源條款對照
 
-- **MAS Notice 626**: [Paragraph 7.2(b)](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L81-L92)
-- **Global Bank Policy**: [Section 4.5.3](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/data/gold/clauses.yaml#L105-L116)
+條文 ID 對應 `data/gold/clauses.yaml`：
+
+- **MAS Notice 626**：`mas_notice_626_8_enhanced_cdd_8_3_b`（第 8.3(b) 段）
+- **Global Bank Policy**：`mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a`（第 1.4(a) 條）

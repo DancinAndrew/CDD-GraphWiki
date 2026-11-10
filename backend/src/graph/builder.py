@@ -21,6 +21,13 @@ class GraphBuilder:
     """
 
     @staticmethod
+    def clause_label(clause: Clause, doc_prefix: str) -> str:
+        """短標籤，例如「MAS Notice 626 6.3 (b)」：文件簡稱加上去掉章名後的段落路徑。"""
+        parts = [p.strip() for p in clause.section_ref.split(">")]
+        tail = " ".join(parts[1:]) if len(parts) > 1 else parts[0]
+        return f"{doc_prefix} {tail}"
+
+    @staticmethod
     def build_regulatory_graph(
         documents: List[SourceDocument],
         clauses: List[Clause],
@@ -60,11 +67,13 @@ class GraphBuilder:
             )
 
         # 2. 映射 Clause 節點與邊
+        clause_ids = {c.clause_id for c in clauses}
+        doc_prefix = {d.source_document_id: d.title.split(":")[0].strip() for d in documents}
         for cl in clauses:
             nodes[cl.clause_id] = GraphNode(
                 node_id=cl.clause_id,
                 node_type="Clause",
-                label=f"條款 {cl.clause_id}",
+                label=GraphBuilder.clause_label(cl, doc_prefix.get(cl.source_document_id, cl.source_document_id)),
                 properties=cl.model_dump()
             )
             # 建立連接至 SourceDocument 的邊
@@ -78,7 +87,7 @@ class GraphBuilder:
             ))
 
             # 如果有 parent_clause_id，建立連接至 parent Clause 的邊
-            if cl.parent_clause_id and cl.parent_clause_id in [c.clause_id for c in clauses]:
+            if cl.parent_clause_id and cl.parent_clause_id in clause_ids:
                 p_edge_id = f"{cl.clause_id}_derived_from_{cl.parent_clause_id}"
                 edges.append(GraphEdge(
                     edge_id=p_edge_id,
@@ -223,6 +232,16 @@ class GraphBuilder:
                             target_id=ob_id,
                             edge_type="applies_to",
                             label="適用義務"
+                        ))
+                # 連結 CDDChecklist ➔ 引用條文（citations 是條文 ID，圖譜上可一路追回原文）
+                for cl_id in chk.citations:
+                    if cl_id in nodes:
+                        edges.append(GraphEdge(
+                            edge_id=f"{chk.checklist_id}_references_clause_{cl_id}",
+                            source_id=chk.checklist_id,
+                            target_id=cl_id,
+                            edge_type="references_clause",
+                            label="引用條文"
                         ))
                 # 連結 CDDChecklist ➔ Conflict
                 for cf_id in chk.unresolved_conflicts:

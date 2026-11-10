@@ -1,32 +1,32 @@
+# Gold source documents: metadata of the three sources the parser reads.
+
 - source_document_id: fatf_rec10
-  title: "FATF Recommendation 10: Customer due diligence"
+  title: 'FATF Recommendation 10: Customer due diligence'
   issuer: FATF
   jurisdiction: Global
-  version: "2012 (updated 2023)"
-  effective_date: "2012-02-15"
-  retrieval_date: "2026-05-21"
-  source_url: "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/FATF-Recommendations.html"
-  local_path: "data/cached/fatf_rec10.pdf"
-  content_hash: "d3b07384d113edec49eaa6238ad5ff00"
-
+  version: The FATF Recommendations, updated June 2026 (Recommendation 10 and INR.10 paragraph 5(b))
+  effective_date: null
+  retrieval_date: '2026-11-09'
+  source_url: https://www.fatf-gafi.org/content/dam/fatf-gafi/recommendations/fatf-recommendations-2012.pdf
+  local_path: data/sources/fatf_rec10.md
+  content_hash: 89afe277cea803b17cb90e38cd5eb6f7
 - source_document_id: mas_notice_626
-  title: "MAS Notice 626: Prevention of Money Laundering and Countering the Financing of Terrorism"
+  title: 'MAS Notice 626: Prevention of Money Laundering and Countering the Financing of Terrorism – Banks'
   issuer: MAS
   jurisdiction: Singapore
-  version: "2015 (updated 2024)"
-  effective_date: "2015-05-24"
-  retrieval_date: "2026-05-21"
-  source_url: "https://www.mas.gov.sg/regulatory-sandboxes/mas-notice-626"
-  local_path: "data/cached/mas_notice_626.pdf"
-  content_hash: "8f31bc5f7d24a919cd1d73cd5d14e321"
-
+  version: 28 March 2024, last revised on 30 June 2025
+  effective_date: '2024-04-01'
+  retrieval_date: '2026-11-09'
+  source_url: https://www.mas.gov.sg/regulation/notices/notice-626
+  local_path: data/sources/mas_notice_626.md
+  content_hash: 556c9cb285b7f1549035600c49fb9854
 - source_document_id: mock_internal_policy
-  title: "Global Bank AML and KYC Compliance Policy"
-  issuer: "Global Bank Compliance Committee"
+  title: Global Bank AML and KYC Compliance Policy
+  issuer: Global Bank Compliance Committee
   jurisdiction: Internal
-  version: "4.2"
-  effective_date: "2025-01-01"
-  retrieval_date: "2026-05-21"
+  version: 4.2 (fictional policy written for this project)
+  effective_date: '2025-01-01'
+  retrieval_date: '2026-05-21'
   source_url: null
-  local_path: "data/cached/global_bank_policy.pdf"
-  content_hash: "c4ca4238a0b923820dcc509a6f75849b"
+  local_path: data/sources/mock_internal_policy.md
+  content_hash: 6e70c928a7fd828d59896c11bca1af85

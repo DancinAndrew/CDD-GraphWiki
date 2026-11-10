@@ -6,6 +6,37 @@ from pathlib import Path
 import argparse
 from src.contracts.models import SourceDocument, Clause
 
+SOURCE_METADATA: Dict[str, Dict[str, Any]] = {
+    "fatf_rec10": {
+        "title": "FATF Recommendation 10: Customer due diligence",
+        "issuer": "FATF",
+        "jurisdiction": "Global",
+        "version": "The FATF Recommendations, updated June 2026 (Recommendation 10 and INR.10 paragraph 5(b))",
+        "effective_date": None,
+        "retrieval_date": "2026-11-09",
+        "source_url": "https://www.fatf-gafi.org/content/dam/fatf-gafi/recommendations/fatf-recommendations-2012.pdf"
+    },
+    "mas_notice_626": {
+        "title": "MAS Notice 626: Prevention of Money Laundering and Countering the Financing of Terrorism – Banks",
+        "issuer": "MAS",
+        "jurisdiction": "Singapore",
+        "version": "28 March 2024, last revised on 30 June 2025",
+        "effective_date": "2024-04-01",
+        "retrieval_date": "2026-11-09",
+        "source_url": "https://www.mas.gov.sg/regulation/notices/notice-626"
+    },
+    "mock_internal_policy": {
+        "title": "Global Bank AML and KYC Compliance Policy",
+        "issuer": "Global Bank Compliance Committee",
+        "jurisdiction": "Internal",
+        "version": "4.2 (fictional policy written for this project)",
+        "effective_date": "2025-01-01",
+        "retrieval_date": "2026-05-21",
+        "source_url": None
+    }
+}
+
+
 class SemanticHierarchicalSegmenter:
     """
     基於 Markdown 標題層級與編號列表的語意段落切分器。
@@ -230,36 +261,9 @@ def run_pipeline(src_dir: str, out_dir: str):
     all_clauses: List[Dict[str, Any]] = []
     all_source_docs: List[Dict[str, Any]] = []
 
-    # 為了方便後續測試與合約驗證，我們為這三份源文件配備人工黃金數據庫定義的元數據
-    gold_metadata = {
-        "fatf_rec10": {
-            "title": "FATF Recommendation 10: Customer due diligence",
-            "issuer": "FATF",
-            "jurisdiction": "Global",
-            "version": "2012 (updated 2023)",
-            "effective_date": "2012-02-15",
-            "retrieval_date": "2026-05-21",
-            "source_url": "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/FATF-Recommendations.html"
-        },
-        "mas_notice_626": {
-            "title": "MAS Notice 626: Prevention of Money Laundering and Countering the Financing of Terrorism",
-            "issuer": "MAS",
-            "jurisdiction": "Singapore",
-            "version": "2015 (updated 2024)",
-            "effective_date": "2015-05-24",
-            "retrieval_date": "2026-05-21",
-            "source_url": "https://www.mas.gov.sg/regulatory-sandboxes/mas-notice-626"
-        },
-        "mock_internal_policy": {
-            "title": "Global Bank AML and KYC Compliance Policy",
-            "issuer": "Global Bank Compliance Committee",
-            "jurisdiction": "Internal",
-            "version": "4.2",
-            "effective_date": "2025-01-01",
-            "retrieval_date": "2026-05-21",
-            "source_url": None
-        }
-    }
+    # 三份來源文件的 metadata（版本、官方網址）。MAS 與 FATF 的 Markdown 是官方原文的逐字摘錄，
+    # 銀行內部政策則是為本專案虛構的文件。
+    gold_metadata = SOURCE_METADATA
 
     # 遞迴讀取 src_dir 底下的所有 *.md 文件
     for file_path in sorted(src_path.glob("*.md")):
