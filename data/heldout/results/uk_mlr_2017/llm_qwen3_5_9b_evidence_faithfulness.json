@@ -1,0 +1,1829 @@
+{
+  "set": "uk_mlr_2017",
+  "model": "qwen3.5:9b",
+  "prompt_version": "heldout-v2-evidence",
+  "evidence": {
+    "quotes_given": 176,
+    "quotes_located": 174,
+    "labels_by_category": {
+      "all_located": 173,
+      "some_located": 0,
+      "none_located": 2,
+      "no_evidence": 0
+    },
+    "labels_with_repeated_quotes": 0
+  },
+  "labels": 175,
+  "labels_tested": 173,
+  "deletion": {
+    "passed": 111,
+    "tested": 170,
+    "rate": 0.6529,
+    "failed_requests": 0,
+    "unparseable": 3,
+    "not_run": 0
+  },
+  "rationale_only": {
+    "passed": 88,
+    "tested": 164,
+    "rate": 0.5366,
+    "failed_requests": 0,
+    "unparseable": 9,
+    "not_run": 0
+  },
+  "both": {
+    "passed": 53,
+    "tested": 161,
+    "rate": 0.3292
+  },
+  "coverage": {
+    "mean": 0.7617,
+    "median": 0.9275
+  },
+  "generation": {
+    "records": 346,
+    "answers": 346,
+    "with_num_predict": 346,
+    "without_num_predict": 0,
+    "num_predict_values": [
+      2048
+    ],
+    "invalid_json": 3,
+    "with_done_reason": 0,
+    "hit_cap": 0
+  },
+  "by_type": {
+    "prohibit_anonymous": {
+      "labels": 5,
+      "labels_tested": 5,
+      "deletion": {
+        "passed": 3,
+        "tested": 5,
+        "rate": 0.6,
+        "failed_requests": 0,
+        "unparseable": 0,
+        "not_run": 0
+      },
+      "rationale_only": {
+        "passed": 1,
+        "tested": 4,
+        "rate": 0.25,
+        "failed_requests": 0,
+        "unparseable": 1,
+        "not_run": 0
+      },
+      "both": {
+        "passed": 0,
+        "tested": 4,
+        "rate": 0.0
+      }
+    },
+    "cdd_triggers": {
+      "labels": 32,
+      "labels_tested": 32,
+      "deletion": {
+        "passed": 20,
+        "tested": 29,
+        "rate": 0.6897,
+        "failed_requests": 0,
+        "unparseable": 3,
+        "not_run": 0
+      },
+      "rationale_only": {
+        "passed": 18,
+        "tested": 30,
+        "rate": 0.6,
+        "failed_requests": 0,
+        "unparseable": 2,
+        "not_run": 0
+      },
+      "both": {
+        "passed": 11,
+        "tested": 27,
+        "rate": 0.4074
+      }
+    },
+    "verify_customer": {
+      "labels": 34,
+      "labels_tested": 33,
+      "deletion": {
+        "passed": 24,
+        "tested": 33,
+        "rate": 0.7273,
+        "failed_requests": 0,
+        "unparseable": 0,
+        "not_run": 0
+      },
+      "rationale_only": {
+        "passed": 14,
+        "tested": 32,
+        "rate": 0.4375,
+        "failed_requests": 0,
+        "unparseable": 1,
+        "not_run": 0
+      },
+      "both": {
+        "passed": 12,
+        "tested": 32,
+        "rate": 0.375
+      }
+    },
+    "identify_ubo": {
+      "labels": 20,
+      "labels_tested": 20,
+      "deletion": {
+        "passed": 14,
+        "tested": 20,
+        "rate": 0.7,
+        "failed_requests": 0,
+        "unparseable": 0,
+        "not_run": 0
+      },
+      "rationale_only": {
+        "passed": 9,
+        "tested": 19,
+        "rate": 0.4737,
+        "failed_requests": 0,
+        "unparseable": 1,
+        "not_run": 0
+      },
+      "both": {
+        "passed": 6,
+        "tested": 19,
+        "rate": 0.3158
+      }
+    },
+    "pep_edd": {
+      "labels": 61,
+      "labels_tested": 60,
+      "deletion": {
+        "passed": 30,
+        "tested": 60,
+        "rate": 0.5,
+        "failed_requests": 0,
+        "unparseable": 0,
+        "not_run": 0
+      },
+      "rationale_only": {
+        "passed": 37,
+        "tested": 57,
+        "rate": 0.6491,
+        "failed_requests": 0,
+        "unparseable": 3,
+        "not_run": 0
+      },
+      "both": {
+        "passed": 18,
+        "tested": 57,
+        "rate": 0.3158
+      }
+    },
+    "pep_approval": {
+      "labels": 1,
+      "labels_tested": 1,
+      "deletion": {
+        "passed": 1,
+        "tested": 1,
+        "rate": 1.0,
+        "failed_requests": 0,
+        "unparseable": 0,
+        "not_run": 0
+      },
+      "rationale_only": {
+        "passed": 1,
+        "tested": 1,
+        "rate": 1.0,
+        "failed_requests": 0,
+        "unparseable": 0,
+        "not_run": 0
+      },
+      "both": {
+        "passed": 1,
+        "tested": 1,
+        "rate": 1.0
+      }
+    },
+    "cdd_incomplete": {
+      "labels": 22,
+      "labels_tested": 22,
+      "deletion": {
+        "passed": 19,
+        "tested": 22,
+        "rate": 0.8636,
+        "failed_requests": 0,
+        "unparseable": 0,
+        "not_run": 0
+      },
+      "rationale_only": {
+        "passed": 8,
+        "tested": 21,
+        "rate": 0.381,
+        "failed_requests": 0,
+        "unparseable": 1,
+        "not_run": 0
+      },
+      "both": {
+        "passed": 5,
+        "tested": 21,
+        "rate": 0.2381
+      }
+    }
+  },
+  "failures": [
+    {
+      "paragraph": "27(1)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_1",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "quotes": [
+        "A relevant person must apply customer due diligence measures if the person—"
+      ],
+      "answer_types": [
+        "cdd_triggers"
+      ]
+    },
+    {
+      "paragraph": "27(2)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_2",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "quotes": [
+        "must also apply customer due diligence measures if the person carries out an occasional transaction that amounts to £12,000 or more"
+      ],
+      "answer_types": [
+        "cdd_incomplete",
+        "cdd_triggers",
+        "identify_ubo",
+        "pep_edd",
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "27(5)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_5",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "quotes": [
+        "apply customer due diligence measures in relation to any transaction within paragraph (6) that amounts to £2,000 or more"
+      ],
+      "answer_types": [
+        "cdd_triggers"
+      ]
+    },
+    {
+      "paragraph": "27(7C)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_7c",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "quotes": [
+        "must also apply customer due diligence measures"
+      ],
+      "answer_types": [
+        "cdd_triggers"
+      ]
+    },
+    {
+      "paragraph": "27(7C)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_7c_a",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "quotes": [
+        "when the firm or sole practitioner carries out, or acts in respect of, any such occasional transaction"
+      ],
+      "answer_types": [
+        "cdd_triggers"
+      ]
+    },
+    {
+      "paragraph": "27(7C)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_7c_b",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "quotes": [
+        "when it is the operator of a freeport"
+      ],
+      "answer_types": [
+        "cdd_triggers"
+      ]
+    },
+    {
+      "paragraph": "27(7C)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_7c_b",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "when it is the operator of a freeport"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "27(7D)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_7d",
+      "type": "verify_customer",
+      "test": "deletion",
+      "quotes": [
+        "apply customer due diligence measures"
+      ],
+      "answer_types": [
+        "cdd_triggers",
+        "identify_ubo",
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "27(7D)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_7d",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "apply customer due diligence measures"
+      ],
+      "answer_types": [
+        "cdd_incomplete",
+        "cdd_triggers"
+      ]
+    },
+    {
+      "paragraph": "27(7D)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_7d",
+      "type": "identify_ubo",
+      "test": "deletion",
+      "quotes": [
+        "apply customer due diligence measures"
+      ],
+      "answer_types": [
+        "cdd_triggers",
+        "identify_ubo",
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "27(7D)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_7d",
+      "type": "identify_ubo",
+      "test": "rationale_only",
+      "quotes": [
+        "apply customer due diligence measures"
+      ],
+      "answer_types": [
+        "cdd_incomplete",
+        "cdd_triggers"
+      ]
+    },
+    {
+      "paragraph": "27(8)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_8_i",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "(i) is relevant to the relevant person's risk assessment for that customer, and"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "27(8)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_8_ii",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "quotes": [
+        "(ii) relates to the beneficial ownership of the customer, including information which enables the relevant person to understand the ownership or control structure of a legal person, trust, foundation or similar arrangement who is the beneficial owner of the customer;"
+      ],
+      "answer_types": [
+        "cdd_triggers"
+      ]
+    },
+    {
+      "paragraph": "27(8)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_8_ii",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "(ii) relates to the beneficial ownership of the customer, including information which enables the relevant person to understand the ownership or control structure of a legal person, trust, foundation or similar arrangement who is the beneficial owner of the customer;"
+      ],
+      "answer_types": [
+        "identify_ubo"
+      ]
+    },
+    {
+      "paragraph": "27(8)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_8_a",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "(a) at other appropriate times to existing customers on a risk based approach;"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "27(9)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_9",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "quotes": [
+        "in determining when it is appropriate to take customer due diligence measures in relation to existing customers"
+      ],
+      "answer_types": [
+        "cdd_triggers"
+      ]
+    },
+    {
+      "paragraph": "27(9)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_9",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "in determining when it is appropriate to take customer due diligence measures in relation to existing customers"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "27(9)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_9_b",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "any transactions which are not reasonably consistent with the relevant person's knowledge of the customer"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "27(9)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_9_c",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "any change in the purpose or intended nature of the relevant person's relationship with the customer"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "27(9)",
+      "clause_id": "uk_mlr_2017_27_cdd_27_9_d",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "any other matter which might affect the relevant person's assessment of the money laundering or terrorist financing risk in relation to the customer"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "28(1)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_1",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "applies when a relevant person is required by regulation 27 to apply customer due diligence measures"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "28(2)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_2",
+      "type": "verify_customer",
+      "test": "deletion",
+      "quotes": [
+        "The relevant person must—"
+      ],
+      "answer_types": [
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "28(2)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_2",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "The relevant person must—"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "28(2)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_2_c",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "assess, and where appropriate obtain information on, the purpose and intended nature of the business relationship or occasional transaction."
+      ],
+      "answer_types": [
+        "cdd_triggers"
+      ]
+    },
+    {
+      "paragraph": "28(3)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_3",
+      "type": "verify_customer",
+      "test": "deletion",
+      "quotes": [
+        "Where the customer is a body corporate"
+      ],
+      "answer_types": [
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "28(3)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_3",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "Where the customer is a body corporate"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "28(3)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_3_a",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "the relevant person must obtain and verify"
+      ],
+      "answer_types": [
+        "identify_ubo"
+      ]
+    },
+    {
+      "paragraph": "28(3)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_3_a_i",
+      "type": "verify_customer",
+      "test": "deletion",
+      "quotes": [
+        "the name of the body corporate"
+      ],
+      "answer_types": [
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "28(3)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_3_a_i",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "the name of the body corporate"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "28(3)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_3_a_ii",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "its company number or other registration number"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "28(3)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_3_a_iii",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "the address of its registered office, and if different, its principal place of business"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "28(3)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_3_b",
+      "type": "identify_ubo",
+      "test": "rationale_only",
+      "quotes": [
+        "subject to paragraph (5), the relevant person must take reasonable measures to determine and verify"
+      ],
+      "answer_types": [
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "28(3)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_3_b_i",
+      "type": "identify_ubo",
+      "test": "deletion",
+      "quotes": [
+        "the law to which the body corporate is subject, and its constitution (whether set out in its articles of association or other governing documents)"
+      ],
+      "answer_types": [
+        "identify_ubo"
+      ]
+    },
+    {
+      "paragraph": "28(3)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_3_b_ii",
+      "type": "identify_ubo",
+      "test": "deletion",
+      "quotes": [
+        "the full names of the board of directors (or if there is no board, the members of the equivalent management body) and the senior persons responsible for the operations of the body corporate"
+      ],
+      "answer_types": [
+        "identify_ubo"
+      ]
+    },
+    {
+      "paragraph": "28(4)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_4",
+      "type": "identify_ubo",
+      "test": "deletion",
+      "quotes": [
+        "where the customer is beneficially owned by another person",
+        "the relevant person must"
+      ],
+      "answer_types": [
+        "identify_ubo"
+      ]
+    },
+    {
+      "paragraph": "28(4)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_4_c",
+      "type": "identify_ubo",
+      "test": "rationale_only",
+      "quotes": [
+        "(c) if the beneficial owner is a legal person, trust, company, foundation or similar legal arrangement take reasonable measures to understand the ownership and control structure of that legal person, trust, company, foundation or similar legal arrangement."
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "28(8)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_8_b",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "take reasonable measures to verify the identity of the senior person in the body corporate responsible for managing it"
+      ],
+      "answer_types": [
+        "identify_ubo"
+      ]
+    },
+    {
+      "paragraph": "28(8)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_8_b_i",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "all the actions the relevant person has taken in doing so"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "28(9)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_9",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "do not satisfy their requirements under paragraph (4) by relying solely on information delivered to the registrar"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "28(10)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_10",
+      "type": "verify_customer",
+      "test": "deletion",
+      "quotes": [
+        "the relevant person must—"
+      ],
+      "answer_types": [
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "28(10)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_10",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "the relevant person must—"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "28(10)",
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_10_b",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "(b) identify A;"
+      ],
+      "answer_types": [
+        "identify_ubo"
+      ]
+    },
+    {
+      "paragraph": "29(3)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_3",
+      "type": "identify_ubo",
+      "test": "rationale_only",
+      "quotes": [
+        "As soon as the beneficiaries of the insurance policy are identified or designated, the relevant person must—"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "29(3)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_3_a",
+      "type": "identify_ubo",
+      "test": "rationale_only",
+      "quotes": [
+        "(a) if the beneficiary is a named person or legal arrangement, take the full name of the person or arrangement;"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "29(3)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_3_b",
+      "type": "identify_ubo",
+      "test": "deletion",
+      "quotes": [
+        "(b) if the beneficiaries are designated by specified characteristics, as a class or in any other way, obtain sufficient information about the beneficiaries to satisfy itself that it will be able to establish the identity of the beneficiary before any payment is made under the insurance policy."
+      ],
+      "answer_types": [
+        "identify_ubo"
+      ]
+    },
+    {
+      "paragraph": "29(3)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_3_b",
+      "type": "identify_ubo",
+      "test": "rationale_only",
+      "quotes": [
+        "(b) if the beneficiaries are designated by specified characteristics, as a class or in any other way, obtain sufficient information about the beneficiaries to satisfy itself that it will be able to establish the identity of the beneficiary before any payment is made under the insurance policy."
+      ],
+      "answer_types": [
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "29(4)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_4",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "The relevant person must verify the identity of the beneficiaries"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "29(4)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_4",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "before any payment is made under the insurance policy"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "29(5)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_5",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "before a payment is made under the policy"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "29(6)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_6",
+      "type": "prohibit_anonymous",
+      "test": "deletion",
+      "quotes": [
+        "must not set up an anonymous account"
+      ],
+      "answer_types": [
+        "prohibit_anonymous"
+      ]
+    },
+    {
+      "paragraph": "29(7A)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7a",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "quotes": [
+        "before such safe-deposit boxes are used in any way"
+      ],
+      "answer_types": [
+        "cdd_incomplete",
+        "cdd_triggers",
+        "prohibit_anonymous"
+      ]
+    },
+    {
+      "paragraph": "29(7A)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7a",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "before such safe-deposit boxes are used in any way"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "29(11)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_11",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "When providing a customer with a pooled account, the relevant person must—"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "29(11)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_11_c",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "quotes": [
+        "assess the level of risk of money laundering and terrorist financing associated with the customer using the pooled account"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "29(14)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_14",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "information on the identity of the persons on whose behalf monies are held in the pooled account"
+      ],
+      "answer_types": [
+        "identify_ubo"
+      ]
+    },
+    {
+      "paragraph": "29(14)",
+      "clause_id": "uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_14",
+      "type": "identify_ubo",
+      "test": "deletion",
+      "quotes": [
+        "information on the identity of any beneficial owners of those persons"
+      ],
+      "answer_types": [
+        "cdd_triggers",
+        "identify_ubo",
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "30(2)",
+      "clause_id": "uk_mlr_2017_30_timing_of_verification_30_2",
+      "type": "verify_customer",
+      "test": "deletion",
+      "quotes": [
+        "verify the identity of the customer"
+      ],
+      "answer_types": [
+        "cdd_incomplete",
+        "cdd_triggers",
+        "identify_ubo",
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "30(3)",
+      "clause_id": "uk_mlr_2017_30_timing_of_verification_30_3",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "the verification of the customer, any person purporting to act on behalf of the customer and the customer's beneficial owner"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "30(3)",
+      "clause_id": "uk_mlr_2017_30_timing_of_verification_30_3_a",
+      "type": "verify_customer",
+      "test": "deletion",
+      "quotes": [
+        "this is necessary not to interrupt the normal conduct of business"
+      ],
+      "answer_types": [
+        "identify_ubo",
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "30(3)",
+      "clause_id": "uk_mlr_2017_30_timing_of_verification_30_3_a",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "this is necessary not to interrupt the normal conduct of business"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "30(3)",
+      "clause_id": "uk_mlr_2017_30_timing_of_verification_30_3_b",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "there is little risk of money laundering and terrorist financing"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "30(4)",
+      "clause_id": "uk_mlr_2017_30_timing_of_verification_30_4",
+      "type": "identify_ubo",
+      "test": "rationale_only",
+      "quotes": [
+        "any beneficial owner of the customer"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "30(7)",
+      "clause_id": "uk_mlr_2017_30_timing_of_verification_30_7",
+      "type": "verify_customer",
+      "test": "deletion",
+      "quotes": [
+        "must establish and verify the identity of any beneficiary"
+      ],
+      "answer_types": [
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "30(7)",
+      "clause_id": "uk_mlr_2017_30_timing_of_verification_30_7_b",
+      "type": "verify_customer",
+      "test": "deletion",
+      "quotes": [
+        "the beneficiary exercises its vested rights in the trust, legal entity or legal arrangement"
+      ],
+      "answer_types": [
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "30(7)",
+      "clause_id": "uk_mlr_2017_30_timing_of_verification_30_7_b",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "quotes": [
+        "the beneficiary exercises its vested rights in the trust, legal entity or legal arrangement"
+      ],
+      "answer_types": [
+        "cdd_triggers"
+      ]
+    },
+    {
+      "paragraph": "30ZA(3)",
+      "clause_id": "uk_mlr_2017_30za_insolvent_bank_customers_30za_3",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "After permitting an insolvent bank customer to open an account and transact from it under paragraph (1), the credit institution must—"
+      ],
+      "answer_types": [
+        "prohibit_anonymous"
+      ]
+    },
+    {
+      "paragraph": "30ZA(3)",
+      "clause_id": "uk_mlr_2017_30za_insolvent_bank_customers_30za_3_b",
+      "type": "cdd_incomplete",
+      "test": "deletion",
+      "quotes": [
+        "if it becomes apparent that any of the situations or cases set out in regulation 33(1) apply, carry out no further transactions from the insolvent bank customer's account until it has completed the customer due diligence measures required by regulation 28, with the exception of regulation 28(11)."
+      ],
+      "answer_types": [
+        "cdd_incomplete"
+      ]
+    },
+    {
+      "paragraph": "30ZA(4)",
+      "clause_id": "uk_mlr_2017_30za_insolvent_bank_customers_30za_4",
+      "type": "identify_ubo",
+      "test": "rationale_only",
+      "quotes": [
+        "a credit institution is to be treated as identifying an insolvent bank customer"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "30ZA(4)",
+      "clause_id": "uk_mlr_2017_30za_insolvent_bank_customers_30za_4_a",
+      "type": "identify_ubo",
+      "test": "rationale_only",
+      "quotes": [
+        "obtains the information listed in regulation 28(3)(a)"
+      ],
+      "answer_types": [
+        "verify_customer"
+      ]
+    },
+    {
+      "paragraph": "30ZA(4)",
+      "clause_id": "uk_mlr_2017_30za_insolvent_bank_customers_30za_4_b_i",
+      "type": "identify_ubo",
+      "test": "rationale_only",
+      "quotes": [
+        "takes reasonable measures to determine the information listed in regulation 28(3)(b)"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "31(1)",
+      "clause_id": "uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1",
+      "type": "cdd_incomplete",
+      "test": "deletion",
+      "quotes": [
+        "unable to apply customer due diligence measures as required by regulation 28"
+      ],
+      "answer_types": [
+        "cdd_incomplete"
+      ]
+    },
+    {
+      "paragraph": "31(1)",
+      "clause_id": "uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1_d",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "must consider whether the relevant person is required to make a disclosure (or to make further disclosure) by—"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "31(1)",
+      "clause_id": "uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1_d_i",
+      "type": "cdd_incomplete",
+      "test": "deletion",
+      "quotes": [
+        "Part 3 of the Terrorism Act 2000 ; or"
+      ],
+      "answer_types": [
+        "cdd_incomplete"
+      ]
+    },
+    {
+      "paragraph": "33(1)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "A relevant person must apply enhanced customer due diligence measures"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(1)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_b",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "in any business relationship ... with a person established in a FATF call for action country"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(1)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_d",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "if a relevant person has determined that a customer or potential customer is a PEP, or a family member or known close associate of a PEP"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(1)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_e",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "in any case where the relevant person discovers that a customer has provided false or stolen identification documentation or information"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(1)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_f",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "in any case where—"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(3A)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_3a",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "The enhanced due diligence measures taken by a relevant person for the purpose of paragraph (1)(b) must include—"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(3A)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_3a_f",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "(f) conducting enhanced monitoring of the business relationship by increasing the number and timing of controls applied, and selecting patterns of transactions that need further examination."
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(4)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "The enhanced customer due diligence measures taken by a relevant person for the purpose of paragraph (1)(f) must include"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(4)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4_b",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "(b) increasing the degree and nature of monitoring of the business relationship in which the transaction is made to determine whether that transaction or that relationship appear to be suspicious."
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(4B)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4b",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "Where the beneficiary of a life insurance policy provided by a relevant person—"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(4B)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4b",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "Where the beneficiary of a life insurance policy provided by a relevant person—"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "33(4B)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4b_a",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "(a) is a legal person or a legal arrangement, and"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "33(4B)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4b_b",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "(b) presents a high risk of money laundering or terrorist financing, the relevant person must take reasonable measures to identify and verify the identity of the beneficial owner of that beneficiary before any payment is made under the policy."
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(4B)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4b_b",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "(b) presents a high risk of money laundering or terrorist financing, the relevant person must take reasonable measures to identify and verify the identity of the beneficial owner of that beneficiary before any payment is made under the policy."
+      ],
+      "answer_types": [
+        "identify_ubo"
+      ]
+    },
+    {
+      "paragraph": "33(5)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_5",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "enhanced customer due diligence measures required under paragraph (1)"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "33(5)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_5",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "enhanced customer due diligence measures required under paragraph (1)"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "33(5)",
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_5_b",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "taking additional measures to understand better the background, ownership and financial situation of the customer"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "34(1)",
+      "clause_id": "uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "in addition to the measures required by regulation 33"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "34(1)",
+      "clause_id": "uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "in addition to the measures required by regulation 33"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "34(1)",
+      "clause_id": "uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_b",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "determine from publicly-available information from credible sources the reputation of the respondent and the quality of the supervision to which the respondent is subject"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "34(1)",
+      "clause_id": "uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_c",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "assess the respondent's controls to counter money laundering and terrorist financing"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "34(1)",
+      "clause_id": "uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_d",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "obtain approval from senior management before establishing a new correspondent relationship"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "34(1)",
+      "clause_id": "uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_e",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "document the responsibilities of the respondent and correspondent in the correspondent relationship"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "34(1)",
+      "clause_id": "uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_f",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "be satisfied that, in respect of those of the respondent's customers who have direct access to accounts with the correspondent"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "34(1)",
+      "clause_id": "uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_f_i",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "has verified the identity of, and conducts ongoing customer due diligence measures in relation to, such customers"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(1)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "A relevant person must have in place appropriate risk-management systems and procedures to determine whether a customer or the beneficial owner of a customer is—"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(1)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1_a",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "(a) a politically exposed person (a \"PEP\"); or"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "35(1)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1_b",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "(b) a family member or a known close associate of a PEP, and to manage the enhanced risks arising from the relevant person's business relationship or transactions with such a customer."
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(3)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_3",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "If a relevant person has determined that a customer or a potential customer is a PEP, or a family member or known close associate of a PEP, the relevant person must assess"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(4)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "In assessing the extent of the enhanced customer due diligence measures to be taken in relation to any particular person"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "35(4)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4_a",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "must take account of any relevant information made available to the relevant person under regulations 17(9) and 47"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(4)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4_b",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "may take into account any guidance which has been—"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(4)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4_b",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "may take into account any guidance which has been—"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "35(4)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4_b_i",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "issued by the FCA"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(4)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4_b_i",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "issued by the FCA"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "35(4)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4_b_ii",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "issued by any other supervisory authority or appropriate body and approved by the Treasury"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(5)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "in addition to the measures required by regulation 33"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(5)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "in addition to the measures required by regulation 33"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "35(5)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5_c",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "conduct enhanced ongoing monitoring of the business relationship with that person"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(6)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_6",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "must take reasonable measures to determine whether one or more of the beneficiaries of the insurance policy or the beneficial owner of a beneficiary of such an insurance policy are"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(6)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_6_b",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "(b) family members or known close associates of PEPs."
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "35(7)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_7_a",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "(a) any payment is made under the insurance policy, or"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "35(7)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_7_b",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "(b) the benefit of the insurance policy is assigned in whole or in part to another person."
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "35(8)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_8",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "in addition to the measures required by regulation 33"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(8)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_8",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "in addition to the measures required by regulation 33"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "35(8)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_8_a",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "its senior management is informed before it pays out any sums under an insurance policy the beneficiary of which is a PEP"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(9)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_9",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "continue to apply the requirements in paragraphs (5) and (8)"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(9)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_9",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "quotes": [
+        "continue to apply the requirements in paragraphs (5) and (8)"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "35(9)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_9_a",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "for a period of at least 12 months after the date on which that person ceased to be entrusted with that public function"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "35(9)",
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_9_b",
+      "type": "pep_edd",
+      "test": "deletion",
+      "quotes": [
+        "for such longer period as the relevant person considers appropriate to address risks of money laundering or terrorist financing in relation to that person"
+      ],
+      "answer_types": [
+        "pep_edd"
+      ]
+    },
+    {
+      "paragraph": "37(2)",
+      "clause_id": "uk_mlr_2017_37_application_of_simplified_cdd_37_2",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "Where a relevant person applies simplified customer due diligence measures, it must—"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "37(2)",
+      "clause_id": "uk_mlr_2017_37_application_of_simplified_cdd_37_2_a",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "continue to comply with the requirements in regulations 28 , 29 and 30A"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "37(2)",
+      "clause_id": "uk_mlr_2017_37_application_of_simplified_cdd_37_2_b",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "carry out sufficient monitoring of any business relationships or transactions which are subject to those measures to enable it to detect any unusual or suspicious transactions."
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "37(8)",
+      "clause_id": "uk_mlr_2017_37_application_of_simplified_cdd_37_8",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "A relevant person must not continue to apply simplified customer due diligence measures under paragraph (1)"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "37(8)",
+      "clause_id": "uk_mlr_2017_37_application_of_simplified_cdd_37_8_a",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "if it doubts the veracity or accuracy of any documents or information previously obtained for the purposes of identification or verification"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "37(8)",
+      "clause_id": "uk_mlr_2017_37_application_of_simplified_cdd_37_8_b",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "if its risk assessment changes and it no longer considers that there is a low degree of risk of money laundering and terrorist financing"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "37(8)",
+      "clause_id": "uk_mlr_2017_37_application_of_simplified_cdd_37_8_c",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "if it suspects money laundering or terrorist financing"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "37(8)",
+      "clause_id": "uk_mlr_2017_37_application_of_simplified_cdd_37_8_d",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "quotes": [
+        "if any of the conditions set out in regulation 33(1) apply"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "38(4A)",
+      "clause_id": "uk_mlr_2017_38_electronic_money_38_4a",
+      "type": "prohibit_anonymous",
+      "test": "rationale_only",
+      "quotes": [
+        "shall only accept payment where"
+      ],
+      "answer_types": [
+        "cdd_incomplete"
+      ]
+    },
+    {
+      "paragraph": "38(4A)",
+      "clause_id": "uk_mlr_2017_38_electronic_money_38_4a_a",
+      "type": "prohibit_anonymous",
+      "test": "rationale_only",
+      "quotes": [
+        "the anonymous prepaid card is subject to requirements in national legislation having an equivalent effect to those laid down in this regulation"
+      ],
+      "answer_types": []
+    },
+    {
+      "paragraph": "38(4A)",
+      "clause_id": "uk_mlr_2017_38_electronic_money_38_4a_b",
+      "type": "prohibit_anonymous",
+      "test": "deletion",
+      "quotes": [
+        "the anonymous prepaid card satisfies those requirements"
+      ],
+      "answer_types": [
+        "prohibit_anonymous"
+      ]
+    },
+    {
+      "paragraph": "38(4A)",
+      "clause_id": "uk_mlr_2017_38_electronic_money_38_4a_b",
+      "type": "prohibit_anonymous",
+      "test": "rationale_only",
+      "quotes": [
+        "the anonymous prepaid card satisfies those requirements"
+      ],
+      "answer_types": []
+    }
+  ],
+  "request_failures": [
+    {
+      "clause_id": "uk_mlr_2017_27_cdd_27_1_b",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "error": "cites a clause ID that was not sent: uk_mlr_27_cdd_27_1_b"
+    },
+    {
+      "clause_id": "uk_mlr_2017_27_cdd_27_8",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "error": "cites a clause ID that was not sent: uk_mlr_2017_27_cdd_27_8_zb"
+    },
+    {
+      "clause_id": "uk_mlr_2017_27_cdd_27_8_i",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "error": "cites a clause ID that was not sent: uk_mlr_2017_27_cdd_27_8_zb"
+    },
+    {
+      "clause_id": "uk_mlr_2017_27_cdd_27_8_b",
+      "type": "cdd_triggers",
+      "test": "deletion",
+      "error": "cites a clause ID that was not sent: uk_mlr_2017_27_cdd_27_8_zb"
+    },
+    {
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_3_b_ii",
+      "type": "identify_ubo",
+      "test": "rationale_only",
+      "error": "cites a clause ID that was not sent: uk_mlr_28_cdd_measures_28_3_a_i"
+    },
+    {
+      "clause_id": "uk_mlr_2017_28_cdd_measures_28_8_b_ii",
+      "type": "verify_customer",
+      "test": "rationale_only",
+      "error": "cites a clause ID that was not sent: uk_mlr_28_cdd_measures_28_8_a"
+    },
+    {
+      "clause_id": "uk_mlr_2017_30za_insolvent_bank_customers_30za_2",
+      "type": "cdd_triggers",
+      "test": "rationale_only",
+      "error": "answer is not valid JSON"
+    },
+    {
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_c",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "error": "cites a clause ID that was not sent: uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_b_i"
+    },
+    {
+      "clause_id": "uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_f",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "error": "cites a clause ID that was not sent: uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_b_i"
+    },
+    {
+      "clause_id": "uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_2",
+      "type": "prohibit_anonymous",
+      "test": "rationale_only",
+      "error": "answer is not valid JSON"
+    },
+    {
+      "clause_id": "uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_2",
+      "type": "cdd_incomplete",
+      "test": "rationale_only",
+      "error": "answer is not valid JSON"
+    },
+    {
+      "clause_id": "uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1",
+      "type": "pep_edd",
+      "test": "rationale_only",
+      "error": "an entry has a missing or unknown type: {\"clause_id\": \"uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1_a\", "
+    }
+  ]
+}

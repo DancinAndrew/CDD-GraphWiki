@@ -12,6 +12,16 @@
     "invalid_type_names": [],
     "paragraphs_missing_from_run": []
   },
+  "generation": {
+    "records": 137,
+    "answers": 137,
+    "with_num_predict": 0,
+    "without_num_predict": 137,
+    "num_predict_values": [],
+    "invalid_json": 0,
+    "with_done_reason": 0,
+    "hit_cap": 0
+  },
   "scores": {
     "clause": {
       "overall": {
@@ -163,6 +173,36 @@
           "recall": 1.0,
           "f1": 0.8
         }
+      }
+    }
+  },
+  "agreement_with_rules_v2": {
+    "paragraph": {
+      "both": {
+        "items": 14,
+        "correct": 14
+      },
+      "rules_only": {
+        "items": 3,
+        "correct": 1
+      },
+      "llm_only": {
+        "items": 46,
+        "correct": 12
+      }
+    },
+    "clause": {
+      "both": {
+        "items": 23,
+        "correct": 23
+      },
+      "rules_only": {
+        "items": 7,
+        "correct": 4
+      },
+      "llm_only": {
+        "items": 128,
+        "correct": 31
       }
     }
   }

@@ -6,6 +6,7 @@ Held out: 137 paragraphs, 429 clauses; 75 clauses in 30 paragraphs carry one of 
 Held-out clauses containing 'shall' or 'must': 74.
 Model: qwen3.5:9b (temperature 0, seed 7, reasoning mode off, prompt heldout-v1), one request per held-out paragraph, given the task definition from ANNOTATION_GUIDELINE.md.
 Requests: 137 sent, 0 failed, 0 answers not valid JSON.
+Generation: 137 records, 0 with an output cap, 137 without; answers not valid JSON: 0; answers that hit the cap: 0 of the 0 that store the stop reason (stop reason not stored for 137).
 Citations: 173 clause IDs returned, 1 not among the clauses sent (0.6%).
 Invalid clause IDs: 27(8): uk_mlr_2017_27_cdd_27_8_zb
 
@@ -250,3 +251,7 @@ Disagreements with the gold labels (110 clauses):
     "(d) if any of the conditions set out in regulation 33(1) apply."
 - 38(4A)  uk_mlr_2017_38_electronic_money_38_4a: spurious prohibit_anonymous
     "Credit institutions and financial institutions, acting as acquirers for payment using an anonymous prepaid card issued in a third country, shall only accept payment where—"
+
+Agreement with rules v2 on the same held-out clauses (trust tiers; correct = also a gold label):
+  Paragraph level: both 14/14 correct; rules only 1/3 correct; llm only 12/46 correct
+  Clause    level: both 23/23 correct; rules only 4/7 correct; llm only 31/128 correct

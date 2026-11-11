@@ -10,6 +10,16 @@
     "invalid_type_names": [],
     "paragraphs_missing_from_run": []
   },
+  "generation": {
+    "records": 157,
+    "answers": 157,
+    "with_num_predict": 0,
+    "without_num_predict": 157,
+    "num_predict_values": [],
+    "invalid_json": 0,
+    "with_done_reason": 0,
+    "hit_cap": 0
+  },
   "scores": {
     "clause": {
       "overall": {
@@ -131,5 +141,36 @@
         }
       }
     }
+  },
+  "agreement_with_rules_v2": {
+    "paragraph": {
+      "both": {
+        "items": 17,
+        "correct": 16
+      },
+      "rules_only": {
+        "items": 2,
+        "correct": 2
+      },
+      "llm_only": {
+        "items": 23,
+        "correct": 0
+      }
+    },
+    "clause": {
+      "both": {
+        "items": 29,
+        "correct": 28
+      },
+      "rules_only": {
+        "items": 22,
+        "correct": 22
+      },
+      "llm_only": {
+        "items": 65,
+        "correct": 0
+      }
+    },
+    "note": "Rules v2 were designed after studying their errors on this set, so the rules' side of this comparison is not an unseen-data result."
   }
 }

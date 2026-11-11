@@ -28,6 +28,7 @@ jobs:
           PYTHONPATH=backend python -m src.heldout.convert_uk
           PYTHONPATH=backend python -m src.heldout.evaluate
           PYTHONPATH=backend python -m src.heldout.llm_compare score
+          PYTHONPATH=backend python -m src.heldout.llm_faithfulness score
           git diff --exit-code -- data/heldout
       - name: No untracked files were produced
         run: test -z "$(git status --porcelain)" || (git status --porcelain && exit 1)

@@ -215,3 +215,106 @@ def test_uk_llm_scores_can_be_recomputed_offline_from_cached_answers(tmp_path):
     assert summary["requests"]["paragraphs_sent"] == 137
     # the one clause ID the model made up, following the naming pattern for "(zb)" in regulation 27(8)
     assert summary["requests"]["invalid_clause_ids"] == ["27(8): uk_mlr_2017_27_cdd_27_8_zb"]
+
+
+def test_trust_tiers_add_up_to_each_extractor_s_own_scores(uk_corpus):
+    """both + llm only = the LLM's labels, both + rules only = the rules' labels; correct items = true positives."""
+    run = REPO_ROOT / "data" / "heldout" / "llm_runs" / "uk_mlr_2017" / f"{llm_compare.model_slug(llm_compare.DEFAULT_MODEL)}.jsonl"
+    llm = llm_compare.load_answers(str(run), uk_corpus)["predictions"]
+    rules = evaluate.rules_v2_predictions(uk_corpus, uk_corpus.spec.jurisdiction)
+    tiers = llm_compare.agreement_with_rules(uk_corpus, llm, rules)
+    for level in ("paragraph", "clause"):
+        t = tiers[level]
+        for predictions, own in ((llm, "llm_only"), (rules, "rules_only")):
+            o = evaluate.score(uk_corpus, predictions)[level]["overall"]
+            assert t["both"]["items"] + t[own]["items"] == o["tp"] + o["fp"]
+            assert t["both"]["correct"] + t[own]["correct"] == o["tp"]
+    assert "note" not in tiers  # the UK set is unseen by rules v2
+
+
+# --- llm_compare run bookkeeping (no model is called) ---------------------------------------------------------
+
+def _stub_model(monkeypatch, asked, answer=None):
+    answer = answer or {"response": '{"labels": []}', "done_reason": "stop", "eval_count": 5}
+    monkeypatch.setattr(llm_compare, "endpoint", lambda base_url, data_dir: {"local": True, "api_key": "ollama"})
+    monkeypatch.setattr(llm_compare, "chat",
+                        lambda client, model, base_url, conn, system, user: asked.append(user) or dict(answer))
+
+
+def test_resume_with_limit_keeps_every_cached_record_outside_the_selected_paragraphs(uk_corpus, tmp_path, monkeypatch):
+    units = llm_compare.paragraph_units(uk_corpus)
+    out = tmp_path / "run.jsonl"
+    cached = [{"paragraph": u["paragraph"], "model": "m", "response": '{"labels": []}', "prompt_sha256": "old"}
+              for u in units]
+    cached[5] = {"paragraph": units[5]["paragraph"], "model": "m", "error": "ReadTimeout"}  # kept too, as it was
+    out.write_text("".join(json.dumps(r) + "\n" for r in reversed(cached)), encoding="utf-8")
+    asked = []
+    _stub_model(monkeypatch, asked)
+    llm_compare.run_model(DATA_DIR, "uk_mlr_2017", "m", "http://localhost:11434/v1", str(out), limit=2, resume=True)
+    records = [json.loads(line) for line in out.read_text(encoding="utf-8").splitlines()]
+    assert len(asked) == 2                                                 # only the two selected (stale) ones
+    assert [r["paragraph"] for r in records] == [u["paragraph"] for u in units]   # all of them, in paragraph order
+    assert records[2:] == cached[2:]
+    assert records[0]["done_reason"] == "stop" and records[0]["eval_count"] == 5
+
+
+def test_an_answer_cut_by_the_output_cap_is_logged_as_truncated(uk_corpus, tmp_path, monkeypatch, capsys):
+    asked = []
+    _stub_model(monkeypatch, asked, {"response": '{"labels": [{"clause_id": "x", "ty', "done_reason": "length",
+                                     "eval_count": llm_compare.MAX_NEW_TOKENS})
+    out = tmp_path / "run.jsonl"
+    llm_compare.run_model(DATA_DIR, "uk_mlr_2017", "m", "http://localhost:11434/v1", str(out), limit=1)
+    assert ": truncated (" in capsys.readouterr().out
+    assert llm_compare.request_status({"error": "x"}) == "error"
+    assert llm_compare.request_status({"response": "{}"}) == "ok"  # records made before the stop reason was stored
+
+
+def test_chat_keeps_ollama_s_stop_reason_and_token_count():
+    class Reply:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"message": {"content": "{}"}, "done_reason": "length", "eval_count": 2048}
+
+    class Client:
+        def post(self, url, json):
+            assert json["options"]["num_predict"] == llm_compare.MAX_NEW_TOKENS
+            return Reply()
+
+    assert llm_compare.chat(Client(), "m", "http://localhost:11434/v1", {"local": True}, "s", "u") == \
+        {"response": "{}", "done_reason": "length", "eval_count": 2048}
+
+
+def test_the_scored_summary_shows_mixed_generation_settings_invalid_json_and_cap_hits(uk_corpus, tmp_path):
+    units = llm_compare.paragraph_units(uk_corpus)[:4]
+    records = [
+        {"paragraph": units[0]["paragraph"], "model": "m", "response": '{"labels": []}'},                 # no cap
+        {"paragraph": units[1]["paragraph"], "model": "m", "response": '{"labels": [', "num_predict": 2048},
+        {"paragraph": units[2]["paragraph"], "model": "m", "response": '{"labels": [', "num_predict": 2048,
+         "done_reason": "length"},
+        {"paragraph": units[3]["paragraph"], "model": "m", "error": "ReadTimeout", "num_predict": 2048},
+    ]
+    run = tmp_path / "m.jsonl"
+    run.write_text("".join(json.dumps(r) + "\n" for r in records))
+    summary = llm_compare.score_cached(DATA_DIR, "uk_mlr_2017", str(run), str(tmp_path))
+    assert summary["generation"] == {"records": 4, "answers": 3, "with_num_predict": 3, "without_num_predict": 1,
+                                     "num_predict_values": [2048], "invalid_json": 2, "with_done_reason": 1,
+                                     "hit_cap": 1}
+    report = (tmp_path / "llm_m_report.txt").read_text()
+    assert ("Generation: 4 records, 3 with an output cap (num_predict 2048), 1 without (mixed settings); answers "
+            "not valid JSON: 2; answers that hit the cap: 1 of the 1 that store the stop reason (stop reason not "
+            "stored for 2).") \
+        in report
+
+
+def test_an_empty_or_partly_written_run_file_is_skipped_not_a_crash(tmp_path, capsys):
+    empty = tmp_path / "empty.jsonl"
+    empty.write_text("\n")
+    assert llm_compare.score_cached(DATA_DIR, "uk_mlr_2017", str(empty), str(tmp_path / "out")) is None
+    partial = tmp_path / "partial.jsonl"
+    partial.write_text('{"paragraph": "27(1)", "model": "m", "response": "{}"}\n{"paragraph": "27(2)", "mod')
+    assert llm_compare.score_cached(DATA_DIR, "uk_mlr_2017", str(partial), str(tmp_path / "out")) is None
+    err = capsys.readouterr().err
+    assert "skipping" in err and "no records" in err and "line 2 is not valid JSON" in err
+    assert not (tmp_path / "out").exists()

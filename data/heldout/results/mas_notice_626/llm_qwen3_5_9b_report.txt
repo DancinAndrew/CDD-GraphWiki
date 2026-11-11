@@ -6,6 +6,7 @@ Held out: 157 paragraphs, 360 clauses; 42 clauses in 16 paragraphs carry one of 
 Held-out clauses containing 'shall' or 'must': 147.
 Model: qwen3.5:9b (temperature 0, seed 7, reasoning mode off, prompt heldout-v1), one request per held-out paragraph, given the task definition from ANNOTATION_GUIDELINE.md.
 Requests: 157 sent, 0 failed, 0 answers not valid JSON.
+Generation: 157 records, 0 with an output cap, 157 without; answers not valid JSON: 0; answers that hit the cap: 0 of the 0 that store the stop reason (stop reason not stored for 157).
 Citations: 108 clause IDs returned, 0 not among the clauses sent (0.0%).
 
 Paragraph level (unit, type) pairs: precision 0.40, recall 0.89, F1 0.55  (TP 16, FP 24, FN 2)
@@ -161,3 +162,8 @@ Disagreements with the gold labels (68 clauses):
     "Before effecting a value transfer, every bank that is an ordering institution shall –"
 - 11A.19  mas_notice_626_11a_value_transfers_11a_19: spurious verify_customer
     "An intermediary institution shall take reasonable measures, which are consistent with straight-through processing, to identify value transfers that lack the required value transfer originator or value transfer beneficiar"
+
+Agreement with rules v2 on the same held-out clauses (trust tiers; correct = also a gold label):
+  Paragraph level: both 16/17 correct; rules only 2/2 correct; llm only 0/23 correct
+  Clause    level: both 28/29 correct; rules only 22/22 correct; llm only 0/65 correct
+  Rules v2 were designed after studying their errors on this set, so the rules' side of this comparison is not an unseen-data result.
