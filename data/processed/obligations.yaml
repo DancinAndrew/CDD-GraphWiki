@@ -13,8 +13,8 @@
   - anonymous_account_creation_attempt
   confidence: 1.0
   confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
-    2017, labelled after the rules were frozen): 1 of 1 paragraphs flagged with this
-    type were correct.'
+    2017, labelled after the rules were frozen, then independently reviewed): 1 of
+    1 paragraphs flagged with this type were correct.'
   confidence_kind: measured_on_heldout
   review_status: approved
   explanations:
@@ -63,8 +63,8 @@
   review_flags: []
   confidence: 0.89
   confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
-    2017, labelled after the rules were frozen): 8 of 9 paragraphs flagged with this
-    type were correct.'
+    2017, labelled after the rules were frozen, then independently reviewed): 8 of
+    9 paragraphs flagged with this type were correct.'
   confidence_kind: measured_on_heldout
   review_status: approved
   explanations:
@@ -164,8 +164,8 @@
   - unverifiable_identity_documents
   confidence: 1.0
   confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
-    2017, labelled after the rules were frozen): 3 of 3 paragraphs flagged with this
-    type were correct.'
+    2017, labelled after the rules were frozen, then independently reviewed): 3 of
+    3 paragraphs flagged with this type were correct.'
   confidence_kind: measured_on_heldout
   review_status: approved
   explanations:
@@ -206,8 +206,8 @@
   - complex_multi_layer_ownership
   confidence: 0.75
   confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
-    2017, labelled after the rules were frozen): 3 of 4 paragraphs flagged with this
-    type were correct.'
+    2017, labelled after the rules were frozen, then independently reviewed): 3 of
+    4 paragraphs flagged with this type were correct.'
   confidence_kind: measured_on_heldout
   review_status: approved
   explanations:
@@ -311,8 +311,8 @@
   review_flags: []
   confidence: 0.89
   confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
-    2017, labelled after the rules were frozen): 8 of 9 paragraphs flagged with this
-    type were correct.'
+    2017, labelled after the rules were frozen, then independently reviewed): 8 of
+    9 paragraphs flagged with this type were correct.'
   confidence_kind: measured_on_heldout
   review_status: approved
   explanations:
@@ -417,8 +417,8 @@
   - missing_mandatory_identification_fields
   confidence: 1.0
   confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
-    2017, labelled after the rules were frozen): 3 of 3 paragraphs flagged with this
-    type were correct.'
+    2017, labelled after the rules were frozen, then independently reviewed): 3 of
+    3 paragraphs flagged with this type were correct.'
   confidence_kind: measured_on_heldout
   review_status: approved
   explanations:
@@ -579,8 +579,8 @@
   - multi_jurisdictional_layers
   confidence: 0.75
   confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
-    2017, labelled after the rules were frozen): 3 of 4 paragraphs flagged with this
-    type were correct.'
+    2017, labelled after the rules were frozen, then independently reviewed): 3 of
+    4 paragraphs flagged with this type were correct.'
   confidence_kind: measured_on_heldout
   review_status: approved
   explanations:
@@ -697,7 +697,7 @@
   confidence: null
   confidence_basis: 'Not measured: rules v2 flagged no paragraph with this type in
     unseen text (Part 3 of the UK Money Laundering Regulations 2017), although the
-    gold labels give it to 2 paragraphs there; the rules found none of them.'
+    reviewed gold labels give it to 2 paragraphs there; the rules found none of them.'
   confidence_kind: null
   review_status: approved
   explanations:
@@ -740,7 +740,7 @@
   confidence: null
   confidence_basis: 'Not measured: rules v2 flagged no paragraph with this type in
     unseen text (Part 3 of the UK Money Laundering Regulations 2017), although the
-    gold labels give it to 4 paragraphs there; the rules found none of them.'
+    reviewed gold labels give it to 4 paragraphs there; the rules found none of them.'
   confidence_kind: null
   review_status: approved
   explanations:
@@ -823,8 +823,8 @@
   - customer_not_verified_before_onboarding
   confidence: 1.0
   confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
-    2017, labelled after the rules were frozen): 3 of 3 paragraphs flagged with this
-    type were correct.'
+    2017, labelled after the rules were frozen, then independently reviewed): 3 of
+    3 paragraphs flagged with this type were correct.'
   confidence_kind: measured_on_heldout
   review_status: approved
   explanations:
@@ -878,8 +878,8 @@
   - ownership_between_10_and_25_percent
   confidence: 0.75
   confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
-    2017, labelled after the rules were frozen): 3 of 4 paragraphs flagged with this
-    type were correct.'
+    2017, labelled after the rules were frozen, then independently reviewed): 3 of
+    4 paragraphs flagged with this type were correct.'
   confidence_kind: measured_on_heldout
   review_status: approved
   explanations:
@@ -978,8 +978,8 @@
   - pep_from_high_risk_country
   confidence: null
   confidence_basis: 'Not measured: rules v2 flagged no paragraph with this type in
-    unseen text (Part 3 of the UK Money Laundering Regulations 2017), and the gold
-    labels give it to no paragraph there either.'
+    unseen text (Part 3 of the UK Money Laundering Regulations 2017), and the reviewed
+    gold labels give it to no paragraph there either.'
   confidence_kind: null
   review_status: approved
   explanations:
@@ -1031,8 +1031,8 @@
   - pep_without_head_compliance_signoff
   confidence: null
   confidence_basis: 'Not measured: rules v2 flagged no paragraph with this type in
-    unseen text (Part 3 of the UK Money Laundering Regulations 2017), and the gold
-    labels give it to no paragraph there either.'
+    unseen text (Part 3 of the UK Money Laundering Regulations 2017), and the reviewed
+    gold labels give it to no paragraph there either.'
   confidence_kind: null
   review_status: approved
   explanations:

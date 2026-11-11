@@ -21,7 +21,7 @@ import re
 import json
 import argparse
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, Iterable, List, Set, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Tuple
 
 import yaml
 
@@ -42,6 +42,7 @@ class HeldOutSpec:
     jurisdiction: str
     title: str           # how prompts and reports name the document
     description: str     # one line for the LLM prompt
+    revised_gold: Optional[str] = None  # labels after an independent review (src/heldout/label_review.py), if any
 
 
 HELDOUT_SETS: Dict[str, HeldOutSpec] = {
@@ -50,8 +51,12 @@ HELDOUT_SETS: Dict[str, HeldOutSpec] = {
         "Singapore AML/CFT rules for banks"),
     "uk_mlr_2017": HeldOutSpec(
         "uk_mlr_2017", "gold_labels_uk_mlr_2017.yaml", "uk_mlr_2017", "United Kingdom",
-        "Part 3 of the UK Money Laundering Regulations 2017", "UK AML/CTF rules on customer due diligence"),
+        "Part 3 of the UK Money Laundering Regulations 2017", "UK AML/CTF rules on customer due diligence",
+        revised_gold="gold_labels_uk_mlr_2017_revised.yaml"),
 }
+# "pre_registered": the labels committed before the rules were run on the text (the scores in results/ use these);
+# "revised": the same labels with the changes an independent review accepted (data/heldout/reviews/<set>/)
+LABEL_SETS = ("pre_registered", "revised")
 DEFAULT_SET = "mas_notice_626"
 
 
@@ -71,9 +76,18 @@ def paragraph_number(clause: Clause) -> str:
     return parts[1] if len(parts) > 1 else ""
 
 
-def load_corpus(data_dir: str, set_name: str = DEFAULT_SET) -> HeldOutCorpus:
+def label_file(spec: HeldOutSpec, labels: str = "pre_registered") -> str:
+    """The gold label file of a set, relative to data/heldout."""
+    if labels == "pre_registered":
+        return spec.gold
+    if labels == "revised" and spec.revised_gold:
+        return spec.revised_gold
+    raise ValueError(f"{spec.name} has no {labels!r} labels")
+
+
+def load_corpus(data_dir: str, set_name: str = DEFAULT_SET, labels: str = "pre_registered") -> HeldOutCorpus:
     spec = HELDOUT_SETS[set_name]
-    with open(os.path.join(data_dir, "heldout", spec.gold), encoding="utf-8") as f:
+    with open(os.path.join(data_dir, "heldout", label_file(spec, labels)), encoding="utf-8") as f:
         gold_doc = yaml.safe_load(f)
     repo_root = os.path.dirname(os.path.abspath(data_dir))  # corpus paths in the gold file are repo-relative
     with open(os.path.join(repo_root, gold_doc["corpus"]), encoding="utf-8") as f:

@@ -22,13 +22,14 @@ jobs:
         run: |
           PYTHONPATH=backend python -m src.pipeline
           git diff --exit-code -- data/processed
-      - name: Rebuild the held-out corpus and scores and check they match the commit
+      - name: Rebuild the held-out corpus, scores and label review and check they match the commit
         run: |
           PYTHONPATH=backend python -m src.heldout.convert
           PYTHONPATH=backend python -m src.heldout.convert_uk
           PYTHONPATH=backend python -m src.heldout.evaluate
           PYTHONPATH=backend python -m src.heldout.llm_compare score
           PYTHONPATH=backend python -m src.heldout.llm_faithfulness score
+          PYTHONPATH=backend python -m src.heldout.label_review
           git diff --exit-code -- data/heldout
       - name: No untracked files were produced
         run: test -z "$(git status --porcelain)" || (git status --porcelain && exit 1)

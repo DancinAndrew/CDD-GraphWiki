@@ -37,6 +37,7 @@
   },
   "rule_reliability": {
     "set": "uk_mlr_2017",
+    "labels": "revised",
     "level": "paragraph",
     "by_type": {
       "prohibit_anonymous": {

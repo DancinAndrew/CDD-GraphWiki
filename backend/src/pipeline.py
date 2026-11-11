@@ -85,7 +85,8 @@ def explanation_faithfulness(clauses: List[Clause], extractor, report_path: str)
 def rule_reliability(data_dir: str) -> Dict[str, Any]:
     """規則 v2 各類型在未見過的保留文本上量到的精確率（段落層級），作為規則義務的信心值。"""
     by_type = reliability.measured_precision(data_dir)
-    return {"set": reliability.RELIABILITY_SET, "level": reliability.RELIABILITY_LEVEL, "by_type": by_type}
+    return {"set": reliability.RELIABILITY_SET, "labels": reliability.RELIABILITY_LABELS,
+            "level": reliability.RELIABILITY_LEVEL, "by_type": by_type}
 
 
 def run(sources_dir: str, gold_dir: str, out_dir: str, adjudications_path: str,

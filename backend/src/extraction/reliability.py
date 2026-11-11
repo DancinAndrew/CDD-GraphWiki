@@ -2,9 +2,11 @@
 Measured reliability of each rule type, used as the confidence of rule-extracted obligations.
 
 The confidence of a rule obligation is not set by hand: it is the precision of rules v2 for that obligation type
-on unseen text, i.e. the share of held-out paragraphs flagged with the type that the pre-registered gold labels
-also give that type. The unseen text is Part 3 of the UK Money Laundering Regulations 2017, labelled after the
-rules were frozen (data/heldout/gold_labels_uk_mlr_2017.yaml), scored at paragraph level by src.heldout.evaluate.
+on unseen text, i.e. the share of held-out paragraphs flagged with the type that the gold labels also give that
+type. The unseen text is Part 3 of the UK Money Laundering Regulations 2017, labelled after the rules were frozen
+(data/heldout/gold_labels_uk_mlr_2017.yaml) and then checked by an independent review that fixed its decision rule
+before running; the revised labels (gold_labels_uk_mlr_2017_revised.yaml, data/heldout/reviews/uk_mlr_2017/) are
+used, as that protocol stated in advance. Scored at paragraph level by src.heldout.evaluate.
 Types the rules never flagged there have no measured precision (None). Two such cases are kept apart: the gold
 labels give the type to some paragraphs and the rules found none of them (a measured miss, recall 0), or neither
 the gold labels nor the rules give the type to any paragraph (no evidence either way).
@@ -14,17 +16,19 @@ from typing import Any, Dict, Optional
 from src.extraction import frames
 
 RELIABILITY_SET = "uk_mlr_2017"
+RELIABILITY_LABELS = "revised"  # see data/heldout/reviews/uk_mlr_2017/PROTOCOL.md, rule 6
 RELIABILITY_LEVEL = "paragraph"
 NO_RELIABILITY_BASIS = "Not measured: no reliability data was given to the extractor."
 
 
-def measured_precision(data_dir: str, set_name: str = RELIABILITY_SET) -> Dict[str, Dict[str, Any]]:
+def measured_precision(data_dir: str, set_name: str = RELIABILITY_SET,
+                       labels: str = RELIABILITY_LABELS) -> Dict[str, Dict[str, Any]]:
     """Every rule type -> {"correct": tp, "flagged": tp + fp, "precision": tp / flagged or None,
     "gold": tp + fn (paragraphs the gold labels give the type), "missed": fn, "basis": sentence}."""
     # imported here: src.heldout.evaluate imports the extractor, which must not import evaluate at module load
     from src.heldout import evaluate
 
-    corpus = evaluate.load_corpus(data_dir, set_name)
+    corpus = evaluate.load_corpus(data_dir, set_name, labels)
     predictions = evaluate.rules_v2_predictions(corpus, corpus.spec.jurisdiction)
     by_type = evaluate.score(corpus, predictions)[RELIABILITY_LEVEL]["by_type"]
     result: Dict[str, Dict[str, Any]] = {}
@@ -34,21 +38,24 @@ def measured_precision(data_dir: str, set_name: str = RELIABILITY_SET) -> Dict[s
         entry: Dict[str, Any] = {"correct": correct, "flagged": flagged,
                                  "precision": round(correct / flagged, 4) if flagged else None,
                                  "gold": scores["tp"] + scores["fn"], "missed": scores["fn"]}
-        entry["basis"] = basis_sentence(entry, corpus.spec.title)
+        entry["basis"] = basis_sentence(entry, corpus.spec.title, labels)
         result[rule_type] = entry
     return result
 
 
-def basis_sentence(entry: Dict[str, Any], set_title: str) -> str:
+def basis_sentence(entry: Dict[str, Any], set_title: str, labels: str = "pre_registered") -> str:
     """One sentence naming the sample behind a type's precision, or saying why it was not measured."""
+    gold = "the gold labels" if labels == "pre_registered" else "the reviewed gold labels"
+    when = ("labelled after the rules were frozen" if labels == "pre_registered"
+            else "labelled after the rules were frozen, then independently reviewed")
     if not entry["flagged"] and entry["gold"]:
         paragraphs = "1 paragraph" if entry["gold"] == 1 else f"{entry['gold']} paragraphs"
         return (f"Not measured: rules v2 flagged no paragraph with this type in unseen text ({set_title}), "
-                f"although the gold labels give it to {paragraphs} there; the rules found none of them.")
+                f"although {gold} give it to {paragraphs} there; the rules found none of them.")
     if not entry["flagged"]:
         return (f"Not measured: rules v2 flagged no paragraph with this type in unseen text ({set_title}), "
-                f"and the gold labels give it to no paragraph there either.")
-    return (f"Rules v2 on unseen text ({set_title}, labelled after the rules were frozen): "
+                f"and {gold} give it to no paragraph there either.")
+    return (f"Rules v2 on unseen text ({set_title}, {when}): "
             f"{entry['correct']} of {entry['flagged']} paragraphs flagged with this type were correct.")
 
 

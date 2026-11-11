@@ -35,9 +35,11 @@ def measured():
 
 
 def test_numbers_equal_committed_held_out_scores(measured):
-    """與 src.heldout.evaluate 寫出的 rules_summary.json（rules v2、段落層級）一致。"""
-    with open(os.path.join(DATA_DIR, "heldout", "results", "uk_mlr_2017", "rules_summary.json"), encoding="utf-8") as f:
-        by_type = json.load(f)["rules_v2"]["paragraph"]["by_type"]
+    """與 src.heldout.label_review 寫出的 scores_before_after.json（rules v2、審核後金標、段落層級）一致。"""
+    assert reliability.RELIABILITY_LABELS == "revised"  # PROTOCOL.md 第 6 條事先定好：有修訂就用審核後的金標
+    path = os.path.join(DATA_DIR, "heldout", "reviews", "uk_mlr_2017", "scores_before_after.json")
+    with open(path, encoding="utf-8") as f:
+        by_type = json.load(f)["systems"]["rules_v2"]["revised"]["paragraph"]["by_type"]
     assert set(measured) == set(frames.TYPES)
     for rule_type, entry in measured.items():
         scores = by_type.get(rule_type, {"tp": 0, "fp": 0, "fn": 0})
@@ -53,16 +55,17 @@ def test_basis_sentences(measured):
     for entry in measured.values():
         if entry["flagged"]:
             assert entry["basis"] == (
-                f"Rules v2 on unseen text ({UK_TITLE}, labelled after the rules were frozen): "
+                f"Rules v2 on unseen text ({UK_TITLE}, labelled after the rules were frozen, then independently "
+                f"reviewed): "
                 f"{entry['correct']} of {entry['flagged']} paragraphs flagged with this type were correct.")
         elif entry["gold"]:
             assert entry["basis"] == (
                 f"Not measured: rules v2 flagged no paragraph with this type in unseen text ({UK_TITLE}), although "
-                f"the gold labels give it to {entry['gold']} paragraphs there; the rules found none of them.")
+                f"the reviewed gold labels give it to {entry['gold']} paragraphs there; the rules found none of them.")
         else:
             assert entry["basis"] == (
                 f"Not measured: rules v2 flagged no paragraph with this type in unseen text ({UK_TITLE}), "
-                f"and the gold labels give it to no paragraph there either.")
+                f"and the reviewed gold labels give it to no paragraph there either.")
 
 
 def test_types_never_flagged_have_no_precision(measured):
@@ -77,7 +80,7 @@ def test_types_never_flagged_have_no_precision(measured):
 
 def test_a_type_the_rules_missed_everywhere_is_not_reported_as_unlabelled(measured):
     """沒被標過的類型分兩種：金標有、規則全漏（召回率量到 0），和金標與規則都沒有（沒有證據）。"""
-    # 預先登錄的英國金標：PEP 加強審查 4 段、無法完成 CDD 2 段，規則 v2 一段都沒找到
+    # 審核後的英國金標（段落層級與預先登錄的相同）：PEP 加強審查 4 段、無法完成 CDD 2 段，規則 v2 一段都沒找到
     assert {t: (e["gold"], e["missed"]) for t, e in measured.items() if not e["flagged"] and e["gold"]} == {
         "pep_edd": (4, 4), "cdd_incomplete": (2, 2)}
     # 英國保留文本的金標沒有 PEP 禁令與 PEP 核准這兩類，規則也就不可能在那裡被量測
@@ -109,7 +112,7 @@ def test_pipeline_writes_measured_confidence():
     """管線輸出的每個規則義務，信心值與出處說明都等於其類型的量測結果；summary.json 記錄量測本身。"""
     with open(os.path.join(PROCESSED, "summary.json"), encoding="utf-8") as f:
         summary = json.load(f)["rule_reliability"]
-    assert summary["set"] == "uk_mlr_2017" and summary["level"] == "paragraph"
+    assert summary["set"] == "uk_mlr_2017" and summary["level"] == "paragraph" and summary["labels"] == "revised"
     measured = reliability.measured_precision(DATA_DIR)
     assert summary["by_type"] == {t: {k: v for k, v in e.items() if k != "basis"} for t, e in measured.items()}
 
