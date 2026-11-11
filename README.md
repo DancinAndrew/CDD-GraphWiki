@@ -4,7 +4,7 @@
 
 **What it is:** a proof-of-concept anti-money laundering (AML) customer due diligence (CDD) workflow. It parses verbatim excerpts of FATF Recommendation 10 and MAS Notice 626, plus a fictional bank policy, into 54 schema-validated clauses and links them in a knowledge graph with obligations, conflicts and customer contexts. A rule-based extractor finds all 13 obligations in my hand-labelled gold set, with the right source clauses. The system flags 3 conflicts between sources, such as 25% versus 10% beneficial ownership thresholds. It generates CDD/EDD checklists that cite their source clauses for 5 synthetic customer profiles, and routes high-risk cases to human review with a SHA-256 hash chain audit log.
 
-**Held-out tests:** the first rules (v1) matched every development obligation but found only 1 of 18 obligations in the 157 other paragraphs of the official MAS Notice 626, labelled and committed before the rules were run. The rules were rebuilt (v2) around how a requirement is phrased: which verb a modal governs, permissions and exemptions, who must be identified, and how list items relate to their lead-in. v2 was frozen before a second regulation was fetched and labelled: Part 3 of the UK Money Laundering Regulations 2017, which neither version had seen. There v2 found 15 of 32 labelled obligations at precision 0.88; v1 found none, and at most 3 when told to treat the text as FATF or MAS. A local open-weight LLM (qwen3.5:9b) given the same written guideline found 26 of 32, but at precision 0.43. The rules miss half and the LLM over-labels, so neither replaces the human review step.
+**Held-out tests:** the first rules (v1) matched every development obligation but found only 1 of 18 obligations in the 157 other paragraphs of the official MAS Notice 626, labelled and committed before the rules were run. The rules were rebuilt (v2) around how a requirement is phrased: which verb a modal governs, permissions and exemptions, who must be identified, and how list items relate to their lead-in. v2 was frozen before a second regulation was fetched and labelled: Part 3 of the UK Money Laundering Regulations 2017, which neither version had seen. There v2 found 15 of 32 labelled obligations at precision 0.88; v1 found none, and at most 3 when told to treat the text as FATF or MAS. A local open-weight LLM (qwen3.5:9b) given the same written guideline found 26 of 32, but at precision 0.43. The rules miss half and the LLM over-labels, so neither replaces the human review step. An independent review of the UK labels by Claude sub-agents, under a decision rule fixed before it ran, changed 1 of the 75 labelled clauses and left the paragraph-level scores unchanged; it also found 29 cases the annotation guideline does not decide.
 
 **Explanations:** every rule decision records the words that triggered it (character offsets into the clause) and the rule that fired, and the dashboard highlights them. Deletion tests in the style of ERASER check that these reasons are what the decision used: deleting the cited words removes the label, and keeping only them keeps it, for all 81 held-out labels (51 MAS, 30 UK) and for 42 of 46 development labels (the 4 exceptions come back through a second route in the list structure). The same tests on the LLM's own quoted evidence (a second prompt asks it to quote the words behind each label): deleting its quotes removed the label in 111 of 170 cases, keeping only its quotes kept the label in 88 of 164, and both held for 53 of 161, although its quotes cover about three quarters of the clause text. Confidence scores are no longer hand-set: each rule type carries its measured precision on the unseen UK text (for example 8 of 9, 3 of 4) or says it was not measured. Checklists are explained by the decision tree's actual path and by single-attribute counterfactuals; this exposed two listed risk triggers that the decision never checks.
 
@@ -21,6 +21,7 @@
 | All numbers in one file | [`data/processed/summary.json`](data/processed/summary.json) |
 | Held-out MAS Notice 626 (157 paragraphs, labels committed before v1 ran): v1 1/18 (precision 0.14); v2 18/18 (0.95, but v2 was designed after studying these errors); LLM 16/18 (0.40) | [`data/heldout/results/mas_notice_626/`](data/heldout/results/mas_notice_626/) |
 | Held-out UK MLR 2017 Part 3 (137 paragraphs, labels committed after v2 was frozen): v1 0/32; v2 15/32 (0.88); LLM 26/32 (0.43), 1 of 173 returned clause IDs invented | [`data/heldout/results/uk_mlr_2017/`](data/heldout/results/uk_mlr_2017/) |
+| UK labels reviewed independently (2 blind re-annotations, 1 critic, 3 adjudicators on different models; decision rule fixed in advance): 1 of 42 disputed clauses changed, paragraph scores unchanged, 29 cases the guideline does not decide | [`data/heldout/reviews/uk_mlr_2017/`](data/heldout/reviews/uk_mlr_2017/REPORT.md) |
 | Rule explanations pass both deletion tests: 81/81 held-out labels, 42/46 development labels; cited words cover about 20% of the clause text they touch | [`rules_v2_faithfulness.txt`](data/heldout/results/uk_mlr_2017/rules_v2_faithfulness.txt), [`explanation_faithfulness.txt`](data/processed/explanation_faithfulness.txt) |
 | The LLM's quoted evidence on the UK text: deletion test 111/170, quotes-only test 88/164, both 53/161; its quotes cover 76% of the clause text (median 93%) | [`llm_qwen3_5_9b_evidence_faithfulness.txt`](data/heldout/results/uk_mlr_2017/llm_qwen3_5_9b_evidence_faithfulness.txt) |
 | Confidence = measured precision of the rule type on the unseen UK text (cdd_triggers 8/9, verify_customer 3/3, identify_ubo 3/4, prohibit_anonymous 1/1; PEP EDD and CDD-incomplete found 0 of 4 and 0 of 2, so no precision) | `rule_reliability` in [`summary.json`](data/processed/summary.json) |
@@ -289,6 +290,7 @@ GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評�
 **第二輪：英國《Money Laundering Regulations 2017》第 3 部（兩版規則都沒看過）**
 1. 第 2 版規則先 commit 凍結（`98332e9`），之後才從 legislation.gov.uk 下載官方 XML（2026-06-30 起生效的修訂版），用 [`convert_uk.py`](backend/src/heldout/convert_uk.py) 轉成 137 款、443 筆條文；測試逐行比對 XML 原文。
 2. 標註（[`gold_labels_uk_mlr_2017.yaml`](data/heldout/gold_labels_uk_mlr_2017.yaml)）先 commit（`5a89252`），共 30 款、32 項義務，才第一次讓規則和 LLM 作答。
+3. 之後用 Claude sub-agent 獨立審核這份標註，改不改的規則在審核前就寫定。結果只改了一處，段落層級的分數不變（見下方「標註審核」）。
 
 | 段落層級：找到幾項（精確率） | MAS 157 段 | 英國第 3 部（未看過） |
 | --- | --- | --- |
@@ -308,7 +310,14 @@ GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評�
 
 **結論**：改寫後的規則在沒看過的法規上，精確率維持在 0.88，找到的義務從最多 3／32 提高到 15／32，而且每一個判斷都能指出是哪條句型規則。規則精確但漏掉一半，LLM 找得多但一半以上是錯的，兩者錯在不同地方；所以系統保留人工審查。把兩者串起來（例如規則先判、LLM 補漏、再交人工）是可以研究的下一步，目前沒有做。
 
-**這個測試的限制**：兩份標註都只有一位標註者，沒有測量標註者間的一致性；項目數不多（18 項、32 項），數字的波動會很大；英國第 3 部有幾項標註需要判斷（例如 30A 的公司登記資料、30(7) 的信託受益人），換一位標註者可能不同；LLM 只測了一個 9B 的本機模型；LLM 回傳的條文 ID 只能從送給它的那一段裡選，所以無效 ID 很少不代表它在開放情境下不會捏造引用。
+**這個測試的限制**：兩份標註都只有一位人類標註者；英國那份另外由模型重標與審核（見下），但沒有具法律背景的人複核，MAS 那份沒有審核；項目數不多（18 項、32 項），數字的波動會很大；英國第 3 部有幾項標註需要判斷（例如 30A 的公司登記資料、30(7) 的信託受益人），換一位標註者可能不同；LLM 只測了一個 9B 的本機模型；LLM 回傳的條文 ID 只能從送給它的那一段裡選，所以無效 ID 很少不代表它在開放情境下不會捏造引用。
+
+**標註審核**（[`REPORT.md`](data/heldout/reviews/uk_mlr_2017/REPORT.md)）：英國標註只有作者一人標，作者也讀不太懂法條，所以另外請 Claude sub-agent 審核。改標註的規則在任何審核者開跑前就寫進 [`PROTOCOL.md`](data/heldout/reviews/uk_mlr_2017/PROTOCOL.md)：三位裁決者中至少兩位選出同一組類型，而且都指出原標註違反準則的哪一句，才改。審核者看不到規則和 LLM 的答案；修訂版標註由 [`label_review.py`](backend/src/heldout/label_review.py) 從投票結果產生，CI 每次重建比對。
+- 兩位盲標者（不看原標註，從頭標）與原標註的一致度：段落層級 F1 0.89、條文層級 0.88。兩位盲標者的答案完全相同，因為用的是同一個模型，只能算一種讀法。
+- 42 處不一致交給三位分別使用不同模型的裁決者：改 1 處、維持 12 處，另外 29 處裁決者認為準則的文字不足以判斷，依規則維持原標註。
+- 唯一的修改：28(3)(b)(ii) 法人客戶的董事與高階人員姓名屬於「關聯方」，準則明寫不算客戶身分驗證。28(3) 這一款仍因其他項目屬於客戶身分驗證，所以段落層級的分數完全不變；條文層級各系統的召回率約高 0.01。
+- 如果連多數裁決者偏好、但不認為原標註有錯的 7 處也一起改，規則 v2 的段落 F1 會從 0.61 降到 0.57（多出來的都是規則漏掉的），LLM 從 0.57 到 0.56。審核沒有把標註推向對規則有利的方向。
+- 限制：審核者全是 Claude 模型，不是法律專家，同一家族的模型可能有相同的誤讀，也沒有具法律背景的人複核。所以結論是「審核找到 1 個問題」，不是「標註已驗證正確」。準則沒講清楚的 7 類情況列在報告裡，現在改準則等於看過分數再重標，所以沒有改。
 
 ## 可解釋性：每個判斷都說得出依據，而且依據是真的
 
@@ -363,7 +372,7 @@ LLM 另外跑了一版提示詞（`heldout-v2-evidence`）：任務定義完全�
 | 無法完成 CDD 須停止 | 0（標註有 2 段，全漏） | – | 無 |
 | PEP 禁止、PEP 核准 | 0（英國法規沒有這類條文） | – | 無 |
 
-樣本很小（1 到 9 段），所以這些數字只能當「量過一次」的紀錄，不是可靠的機率。PDF 匯入時 LLM 自己報的分數另外標成「模型自評、未校準」（`confidence_kind`）。
+樣本很小（1 到 9 段），所以這些數字只能當「量過一次」的紀錄，不是可靠的機率。英國標註經獨立審核後，信心值改用審核後的標註計算（審核前就決定）；唯一的修改不影響段落層級的計數，所以數值沒變。PDF 匯入時 LLM 自己報的分數另外標成「模型自評、未校準」（`confidence_kind`）。
 
 同一段文字上規則和 LLM 都有答案時，報告也依「誰提出」分三級（英國法規，段落層級，標準提示詞那一輪）：兩者都提出 14 項，14 項正確；只有規則 3 項，1 項正確；只有 LLM 46 項，12 項正確。MAS 上對應的是 16／17、2／2、0／23，但 MAS 是改規則時看過的。
 
@@ -394,7 +403,7 @@ LLM 另外跑了一版提示詞（`heldout-v2-evidence`）：任務定義完全�
 - [`data/sources/`](data/sources/) - 管線讀取的三份來源：FATF R.10 與 MAS Notice 626 的官方原文逐字摘錄，以及虛構的銀行內部政策；[`official/`](data/sources/official/) 放 MAS Notice 626 官方 PDF
 - [`data/gold/`](data/gold/) - 人工標註的黃金資料集：條文（parser 輸出經人工檢查後凍結）、義務、衝突、客戶情境與預期檢查清單
 - [`data/reviews/`](data/reviews/) - 衝突的人工裁決紀錄
-- [`data/heldout/`](data/heldout/) - 未用於開發的測試：MAS Notice 626 全文（由官方 PDF 轉出）與英國《Money Laundering Regulations 2017》第 3 部（由 legislation.gov.uk 的 XML 轉出）、標註準則、先於規則執行 commit 的兩份金標、新舊規則與 LLM 的評估結果，以及 LLM 的原始回答
+- [`data/heldout/`](data/heldout/) - 未用於開發的測試：MAS Notice 626 全文（由官方 PDF 轉出）與英國《Money Laundering Regulations 2017》第 3 部（由 legislation.gov.uk 的 XML 轉出）、標註準則、先於規則執行 commit 的兩份金標、新舊規則與 LLM 的評估結果、LLM 的原始回答，以及英國標註的獨立審核（`reviews/`）
 - [`data/processed/`](data/processed/) - `python -m src.pipeline` 產生的結果與 `summary.json`，以及只能追加的稽核日誌 `audit_log.json`
 - [`schemas/`](schemas/) - JSON Schema 契約與範例
 - [`docs/`](docs/) - 產品規格、路線圖、ADR、論文筆記、簡報支援素材和視覺素材
@@ -441,6 +450,7 @@ LLM 另外跑了一版提示詞（`heldout-v2-evidence`）：任務定義完全�
 - **2026-11（規則第 2 版與第二份 held-out 測試）：** 依第一輪的錯誤類型重寫規則（句子結構、放寬句、主詞、條列關係、多重類型），舊版凍結在 [`extractor_v1.py`](backend/src/extraction/extractor_v1.py) 供對照；新規則先 commit 凍結，之後才下載英國《Money Laundering Regulations 2017》第 3 部、先標註再測試。新規則在開發資料上找到一條原本漏標的義務（銀行政策 1.1 客戶身分驗證），金標因此從 12 條變成 13 條。
 - **2026-11（可解釋性）：** 規則判斷記錄觸發字詞與規則，並用刪字測試檢查；LLM 另跑一輪要求逐字引用依據，對它的依據做同樣測試；拿掉寫死的信心分數，改成在沒看過的英國法規上實測的精確率；檢查清單引擎改寫成明確的決策樹（輸出與舊版相同），附上決策路徑、每份文件的依據條文與「如果…會怎樣」，取代原本的固定說明文字與關鍵字對應；儀表板顯示這些解釋。
 - **2026-11（決策引擎修正）：** 修正決策樹浮現的四個問題：風險標記只在條件成立時列出；多層持股門檻改成銀行政策的 3 層，受益人已識別的多層持股企業改走高風險分支並要求簽核持股架構圖；資金與財富來源只在政要分支檢查；註冊在開曼群島不再等於 CDD 無法完成。金標隨之更新一筆風險標記。
+- **2026-11（英國標註獨立審核）：** 用 Claude sub-agent 審核英國第 3 部的預先登錄標註：兩位盲標者從頭標註、一位批評者找錯，42 處不一致交給三位使用不同模型的裁決者投票，改不改的規則在審核前寫定、由程式套用。結果改了一處（28(3)(b)(ii) 董事姓名屬於關聯方，不算客戶身分驗證），另有 29 處標註準則沒有明確答案。預先登錄的標註檔不變，修訂版另存，兩版分數都列出；規則可靠度改用修訂版，數值不變。
 
 ## 免責聲明
 
