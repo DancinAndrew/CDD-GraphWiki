@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List
 from src.contracts.models import (
     CustomerContext,
     Obligation,
@@ -8,11 +8,52 @@ from src.contracts.models import (
     ProvenanceNode,
     ExplanationPath
 )
+from src.decision.engine import PathStep, read_attribute, route
+from src.decision.explain import obligation_for_item
+
+
+def _format_value(value: Any) -> str:
+    return "未提供" if value is None else str(value)
+
+
+def _fact_nodes(steps: List[PathStep], customer: CustomerContext) -> List[ProvenanceNode]:
+    """決策路徑上讀到的每個屬性一個節點（同一屬性被多個測試讀取時合併），附讀到的值與測試結果。"""
+    facts: Dict[str, Dict[str, Any]] = {}
+    for step in steps:
+        for attribute in step.test.attributes:
+            fact = facts.setdefault(attribute, {"value": read_attribute(customer, attribute), "tests": []})
+            fact["tests"].append({
+                "test_id": step.test.test_id,
+                "question": step.test.question,
+                "outcome": step.outcome,
+            })
+    nodes = []
+    for attribute, fact in facts.items():
+        name = attribute.split(".", 1)[-1]
+        answers = "；".join(f"{t['question']}{'是' if t['outcome'] else '否'}" for t in fact["tests"])
+        nodes.append(ProvenanceNode(
+            node_id=f"fact_{name}",
+            node_type="customer_fact",
+            label=f"客戶特徵：{attribute} = {_format_value(fact['value'])}（{answers}）",
+            properties={name: fact["value"], "attribute": attribute, "tests": fact["tests"]},
+        ))
+    return nodes
+
+
+def _path_sentence(steps: List[PathStep], customer: CustomerContext) -> str:
+    parts = []
+    for step in steps:
+        observed = "、".join(f"{a} = {_format_value(read_attribute(customer, a))}" for a in step.test.attributes)
+        parts.append(f"{step.test.question}{'是' if step.outcome else '否'}（{observed}）")
+    return " → ".join(parts)
+
 
 class ProvenanceEngine:
     """
     可解釋合規推理與條款級雙向溯源引擎。
     提供為檢核表項目回溯推理合規鏈與生成人類可讀 Markdown 審計軌跡報告之功能。
+    解釋完全取自引擎的決策樹：事實節點是路徑上讀到的屬性，義務來自葉節點宣告的 (文件, 義務)，
+    不再以關鍵字猜測。
     """
 
     def explain_item(
@@ -25,145 +66,36 @@ class ProvenanceEngine:
         documents: List[SourceDocument]
     ) -> ExplanationPath:
         """
-        為檢核清單中的特定要求項目或風險標記進行雙向回溯推理，產出結構化的 ExplanationPath。
+        為檢核清單中的特定要求文件或風險標記回溯推理，產出結構化的 ExplanationPath：
+        路徑上讀到的客戶特徵 ➔ 葉節點宣告的義務 ➔ 條文 ➔ 來源文件。
+        文件引用義務的錨點條文；風險標記引用 TriggerSpec 宣告、寫出這個條件的那一條出處條文。
+        項目不在清單中、與客戶的決策路徑對不上、或風險標記沒有宣告義務（沒有法源）時拋出 ValueError。
         """
-        # 將輸入資料轉成 dictionary 以加快查詢
-        ob_dict = {ob.obligation_id: ob for ob in obligations}
-        clause_dict = {cl.clause_id: cl for cl in clauses}
-        doc_dict = {doc.source_document_id: doc for doc in documents}
+        is_document = target_item in checklist.required_documents
+        is_trigger = target_item in checklist.risk_triggers
+        if not (is_document or is_trigger):
+            raise ValueError(f"{target_item!r} is not a required document or risk trigger of {checklist.checklist_id}")
 
-        # 1. Obligation Resolution (識別適用義務)
-        target_lower = target_item.lower()
-        matched_ob_id = None
-
-        # 根據 target_item 來決定對應的 Obligation ID
-        if "head of compliance" in target_lower or "head_of_compliance" in target_lower:
-            matched_ob_id = "ob_pep_approval_gb"
-        elif "senior management" in target_lower or "senior_management" in target_lower:
-            matched_ob_id = "ob_pep_edd_mas"
-        elif "source of funds" in target_lower or "source_of_funds" in target_lower:
-            matched_ob_id = "ob_pep_edd_mas"
-        elif "source of wealth" in target_lower or "source_of_wealth" in target_lower:
-            matched_ob_id = "ob_pep_edd_mas"
-        elif "pep_exposure" in target_lower:
-            matched_ob_id = "ob_pep_edd_mas"
-        elif "nric" in target_lower or "residential address" in target_lower or "proof of address" in target_lower or "nric/passport" in target_lower or "unique_id" in target_lower:
-            # 優先匹配 ob_identify_ubo_10_gb，如果 target 含有 ubo 或是持股比例
-            if "ubo" in target_lower or "15%" in target_lower or "shareholder" in target_lower:
-                matched_ob_id = "ob_identify_ubo_10_gb"
-            else:
-                matched_ob_id = "ob_verify_customer_mas"
-        elif "rejected onboarding" in target_lower or "pep_from_high_risk" in target_lower or "prohibited_by_policy" in target_lower or "suspicious transaction report" in target_lower:
-            matched_ob_id = "ob_pep_prohibitions_gb"
-        elif "incorporation" in target_lower or "acra company profile" in target_lower:
-            # 對於 corporate，可能是 ob_verify_customer_mas
-            matched_ob_id = "ob_verify_customer_mas"
-        elif "shareholder registry" in target_lower or "internal_ubo_threshold" in target_lower:
-            matched_ob_id = "ob_identify_ubo_10_gb"
-        elif "account opening rejection" in target_lower or "str evaluation file" in target_lower or "missing_source" in target_lower:
-            # 無法完成 CDD：MAS 6.35 不得建立業務關係並考慮申報 STR
-            matched_ob_id = "ob_cdd_incomplete_mas"
-        elif "excessive_layering" in target_lower:
-            matched_ob_id = "ob_identify_ubo_10_gb"
-        elif "unclear_ubo" in target_lower:
-            matched_ob_id = "ob_identify_ubo_mas"
+        leaf, steps = route(customer)
+        ob_id = obligation_for_item(leaf, target_item)
+        ob = next((o for o in obligations if o.obligation_id == ob_id), None)
+        if ob is None:
+            raise ValueError(f"Obligation {ob_id} for {target_item!r} is not in the knowledge base")
+        spec = None if is_document else next(t for t in leaf.triggers if t.trigger == target_item)
+        if spec is not None and spec.clause_id is not None:
+            # 風險標記：用寫出這個條件的那一條，而不是義務的錨點條文
+            clause_id, clause_role = spec.clause_id, "寫出這個條件的條文"
+            if clause_id not in ob.source_clause_ids:
+                raise ValueError(f"Clause {clause_id} declared by {target_item!r} is not a source clause of {ob_id}")
         else:
-            # Fallback：檢查 checklist.applicable_obligations 中是否有包含在 obligations 裡的
-            for ob_id in checklist.applicable_obligations:
-                if ob_id in ob_dict:
-                    # 嘗試與義務的 required_evidence 或 review_flags 匹配
-                    ob = ob_dict[ob_id]
-                    if any(ev.lower() in target_lower for ev in ob.required_evidence) or any(fl.lower() in target_lower for fl in ob.review_flags):
-                        matched_ob_id = ob_id
-                        break
-            if not matched_ob_id and checklist.applicable_obligations:
-                matched_ob_id = checklist.applicable_obligations[0]
+            clause_id, clause_role = ob.source_clause_ids[0], "錨點條文"
+        clause = next((c for c in clauses if c.clause_id == clause_id), None)
+        if clause is None:
+            raise ValueError(f"Clause {clause_id} of {ob_id} is not in the knowledge base")
+        doc = next((d for d in documents if d.source_document_id == clause.source_document_id), None)
+        if doc is None:
+            raise ValueError(f"Source document {clause.source_document_id} of {clause_id} is not in the knowledge base")
 
-        # 提取匹配的義務
-        if not matched_ob_id or matched_ob_id not in ob_dict:
-            # 防禦性 fallback
-            if obligations:
-                ob = obligations[0]
-            else:
-                raise ValueError("Obligations list cannot be empty for provenance lookup.")
-        else:
-            ob = ob_dict[matched_ob_id]
-
-        # 2. Factual Lineage Trace (追溯觸發事實)
-        fact_nodes = []
-        if ob.obligation_id == "ob_pep_edd_mas":
-            fact_nodes.append(ProvenanceNode(
-                node_id="fact_pep_exposure",
-                node_type="customer_fact",
-                label="客戶特徵：政要曝險 (pep_exposure = True)",
-                properties={"pep_exposure": customer.pep_exposure}
-            ))
-        elif ob.obligation_id == "ob_pep_prohibitions_gb":
-            fact_nodes.append(ProvenanceNode(
-                node_id="fact_pep_exposure",
-                node_type="customer_fact",
-                label="客戶特徵：政要曝險 (pep_exposure = True)",
-                properties={"pep_exposure": customer.pep_exposure}
-            ))
-            if customer.ubo_country_risk == "high":
-                fact_nodes.append(ProvenanceNode(
-                    node_id="fact_ubo_country_risk",
-                    node_type="customer_fact",
-                    label="客戶特徵：受益人國家風險為高風險 (ubo_country_risk = high)",
-                    properties={"ubo_country_risk": customer.ubo_country_risk}
-                ))
-            if customer.registration_jurisdiction.lower() == "myanmar":
-                fact_nodes.append(ProvenanceNode(
-                    node_id="fact_registration_jurisdiction",
-                    node_type="customer_fact",
-                    label="客戶特徵：註冊管轄區為緬甸 (Myanmar)",
-                    properties={"registration_jurisdiction": customer.registration_jurisdiction}
-                ))
-        elif ob.obligation_id == "ob_identify_ubo_10_gb":
-            fact_nodes.append(ProvenanceNode(
-                node_id="fact_customer_type",
-                node_type="customer_fact",
-                label="客戶特徵：客戶類型為企業 (corporate)",
-                properties={"customer_type": customer.customer_type}
-            ))
-            share_pct = customer.custom_attributes.get("major_shareholder_pct", 0)
-            fact_nodes.append(ProvenanceNode(
-                node_id="fact_major_shareholder_pct",
-                node_type="customer_fact",
-                label=f"客戶特徵：內部持股比例門檻觸發 (major_shareholder_pct = {share_pct}%)",
-                properties={"major_shareholder_pct": share_pct}
-            ))
-        elif ob.obligation_id in ["ob_identify_ubo_mas", "ob_identify_ubo_25", "ob_cdd_incomplete_mas"]:
-            fact_nodes.append(ProvenanceNode(
-                node_id="fact_customer_type",
-                node_type="customer_fact",
-                label="客戶特徵：客戶類型為企業 (corporate)",
-                properties={"customer_type": customer.customer_type}
-            ))
-            if customer.ubo_status == "unclear":
-                fact_nodes.append(ProvenanceNode(
-                    node_id="fact_ubo_status",
-                    node_type="customer_fact",
-                    label="客戶特徵：實質受益人 (UBO) 狀態不明確 (ubo_status = unclear)",
-                    properties={"ubo_status": customer.ubo_status}
-                ))
-            if customer.registration_jurisdiction.lower() == "cayman islands":
-                fact_nodes.append(ProvenanceNode(
-                    node_id="fact_registration_jurisdiction",
-                    node_type="customer_fact",
-                    label="客戶特徵：註冊管轄區為開曼群島 (Cayman Islands)",
-                    properties={"registration_jurisdiction": customer.registration_jurisdiction}
-                ))
-        else:
-            # Fallback 通用
-            fact_nodes.append(ProvenanceNode(
-                node_id="fact_customer_type",
-                node_type="customer_fact",
-                label=f"客戶特徵：客戶類型為 {customer.customer_type}",
-                properties={"customer_type": customer.customer_type, "registration_jurisdiction": customer.registration_jurisdiction}
-            ))
-
-        # 3. Obligation Node 建立
         ob_node = ProvenanceNode(
             node_id=ob.obligation_id,
             node_type="obligation",
@@ -175,25 +107,6 @@ class ProvenanceEngine:
                 "required_evidence": ob.required_evidence
             }
         )
-
-        # 4. Legal Snippet Extraction (法源條文提取)
-        clause = None
-        if ob.source_clause_ids:
-            cl_id = ob.source_clause_ids[0]
-            if cl_id in clause_dict:
-                clause = clause_dict[cl_id]
-
-        if not clause:
-            # 防禦性 fallback
-            clause = Clause(
-                clause_id="fallback_clause",
-                source_document_id="fallback_doc",
-                section_ref="Unknown Section",
-                raw_text="No original legal snippet found for this obligation.",
-                normalized_text="No original legal snippet found.",
-                citations=[]
-            )
-
         clause_node = ProvenanceNode(
             node_id=clause.clause_id,
             node_type="clause",
@@ -205,23 +118,6 @@ class ProvenanceEngine:
                 "citations": clause.citations
             }
         )
-
-        # 尋找對應的 SourceDocument
-        doc = None
-        if clause.source_document_id in doc_dict:
-            doc = doc_dict[clause.source_document_id]
-
-        if not doc:
-            doc = SourceDocument(
-                source_document_id="fallback_doc",
-                title="Unknown Regulatory Source",
-                issuer="Regulatory Authority",
-                jurisdiction="Global",
-                version="1.0",
-                retrieval_date="2026-05-21",
-                local_path="data/cached/unknown.pdf"
-            )
-
         doc_node = ProvenanceNode(
             node_id=doc.source_document_id,
             node_type="document",
@@ -235,34 +131,31 @@ class ProvenanceEngine:
             }
         )
 
-        # 5. 組裝有向路徑
-        path_nodes = []
-        path_nodes.extend(fact_nodes)
-        path_nodes.append(ob_node)
-        path_nodes.append(clause_node)
-        path_nodes.append(doc_node)
-
-        # 6. 生成繁體中文合規論述摘要
-        if ob.obligation_id == "ob_pep_edd_mas":
-            desc = f"由於客戶具有反洗錢政要曝險特徵 (pep_exposure = True)，依據新加坡金融管理局 {doc.title} 第 {clause.section_ref} 條款之規定，銀行在與政治敏感人物建立業務關係時必須實施加強盡職調查 (EDD)。因此，系統推理判定必須徵集『{target_item}』以落實合規准入審查。"
-        elif ob.obligation_id == "ob_pep_prohibitions_gb":
-            desc = f"依據內部政策 {doc.title} 第 {clause.section_ref} 條款之規定，銀行嚴禁為來自高風險管轄區或實質受益人國家風險等級為高的政治敏感人物 (PEP) 辦理開戶。本案客戶符合該禁止項特徵，故系統推理判定必須輸出『{target_item}』並拒絕准入。"
-        elif ob.obligation_id == "ob_identify_ubo_10_gb":
-            desc = f"本案為企業客戶。依據內部政策 {doc.title} 第 {clause.section_ref} 條款之持股比例閥值限制，持股 10% 以上的自然人即須識別為實質受益人（比 FATF 註腳 40 舉例的 25% 更嚴格）。故系統推理判定必須獲取大股東身份證明文件與『{target_item}』。"
-        elif ob.obligation_id in ["ob_identify_ubo_mas", "ob_identify_ubo_25"]:
-            desc = f"本案為企業客戶，依據 {doc.title} 第 {clause.section_ref} 條款之規定，必須詢問並識別最終擁有或控制該法人的自然人（實質受益人），並驗證其身分。故系統推理判定必須徵集『{target_item}』。"
-        elif ob.obligation_id == "ob_cdd_incomplete_mas":
-            desc = f"本案企業客戶的實質受益人 (UBO) 無法釐清，CDD 措施無法完成。依據新加坡金融管理局 {doc.title} 第 {clause.section_ref} 條款，銀行不得建立或延續業務關係，並須考慮是否申報可疑交易報告 (STR)。故系統推理判定必須輸出『{target_item}』。"
-        elif ob.obligation_id == "ob_pep_approval_gb":
-            desc = f"本案為非高風險地區的政治敏感人物 (PEP)。依據內部政策 {doc.title} 第 {clause.section_ref} 條款，業務關係須經 Head of Compliance 核准並由至少兩層獨立高級管理層簽核，故系統推理判定必須徵集『{target_item}』。"
-        elif ob.obligation_id == "ob_verify_customer_mas":
-            desc = f"依據新加坡金融管理局 {doc.title} 第 {clause.section_ref} 條款之 CDD 客戶識別與核實基本義務，銀行必須獲取並核實客戶的基本身份資訊（如姓名、地址與身份證件）。故系統推理判定必須徵集『{target_item}』以完成基礎 CDD 檢核。"
+        # 繁體中文論述：全部由路徑、葉節點、義務、條文與規則理由組成
+        if is_document:
+            item_sentence = f"此分支要求文件『{target_item}』，葉節點宣告它依據義務 {ob.obligation_id}"
         else:
-            desc = f"由於客戶特徵觸發了合規義務 {ob.obligation_id}，依據法規文件 {doc.title} 之規定，判定需要徵集『{target_item}』以滿足合規檢核表之要求。"
+            if spec.attributes:
+                read_on_path = {a for step in steps for a in step.test.attributes}
+                tested = "已在決策路徑上檢驗" if all(a in read_on_path for a in spec.attributes) else "未在決策路徑上檢驗"
+                holds = "成立" if spec.holds(customer) else "不成立"
+                assertion = f"斷言的客戶屬性 {'、'.join(spec.attributes)} {tested}，對本客戶{holds}"
+            else:
+                assertion = "它不對客戶屬性下斷言，只陳述分支的結果"
+            item_sentence = (f"此分支標記風險『{target_item}』（{assertion}），"
+                             f"葉節點宣告它依據義務 {ob.obligation_id}")
+        reasons = getattr(ob, "explanations", {}).get(clause_id, [])
+        messages = [r.message if hasattr(r, "message") else r.get("message", "") for r in reasons]
+        reason_sentence = ("規則理由：" + " ".join(messages)) if messages else f"此義務在{clause_role}上沒有記錄規則理由。"
+        desc = (
+            f"決策路徑：{_path_sentence(steps, customer)} → 分支「{leaf.label}」（{leaf.leaf_id}）。"
+            f"{item_sentence}（{ob.action} {ob.object}），{clause_role}為 {doc.title} 第 {clause.section_ref} 條。"
+            f"{reason_sentence}"
+        )
 
         return ExplanationPath(
             target_item=target_item,
-            path_nodes=path_nodes,
+            path_nodes=[*_fact_nodes(steps, customer), ob_node, clause_node, doc_node],
             description=desc
         )
 

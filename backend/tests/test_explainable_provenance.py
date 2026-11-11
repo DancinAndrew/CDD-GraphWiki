@@ -99,10 +99,14 @@ def test_explain_pep_senior_management_approval():
     assert isinstance(path, ExplanationPath)
     assert path.target_item == "Senior Management Approval Form"
     
-    # 驗證首個事實節點
-    fact_node = path.path_nodes[0]
-    assert fact_node.node_type == "customer_fact"
-    assert fact_node.properties["pep_exposure"] is True
+    # 事實節點就是決策路徑讀到的屬性（每個屬性一個），附讀到的值
+    fact_nodes = {n.node_id: n for n in path.path_nodes if n.node_type == "customer_fact"}
+    assert list(fact_nodes) == [
+        "fact_customer_type", "fact_pep_exposure", "fact_ubo_country_risk", "fact_registration_jurisdiction"
+    ]
+    assert path.path_nodes[0].node_type == "customer_fact"
+    assert fact_nodes["fact_pep_exposure"].properties["pep_exposure"] is True
+    assert fact_nodes["fact_ubo_country_risk"].properties["ubo_country_risk"] == "low"
     
     # 驗證包含義務 ob_pep_edd_mas 節點
     ob_node = next(n for n in path.path_nodes if n.node_type == "obligation")
@@ -120,9 +124,13 @@ def test_explain_pep_senior_management_approval():
     assert doc_node.node_id == "mas_notice_626"
     assert doc_node.properties["issuer"] == "MAS"
     
-    # 驗證 description 繁體中文論述
-    assert "反洗錢政要曝險特徵" in path.description
-    assert "新加坡金融管理局" in path.description
+    # description 由路徑、葉節點、義務與條文產生：必須含有這些事實
+    assert "pep_exposure = True" in path.description
+    assert "ubo_country_risk = low" in path.description
+    assert "individual_pep" in path.description
+    assert "ob_pep_edd_mas" in path.description
+    assert "8.3" in path.description
+    assert doc_node.properties["title"] in path.description
 
 
 def test_explain_high_risk_pep_rejection():
@@ -171,8 +179,16 @@ def test_explain_high_risk_pep_rejection():
     assert clause_node.node_id == "mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons"
     assert "strictly prohibits" in clause_node.properties["raw_text"]
     
-    # 驗證 description 繁體中文內部政策論述
-    assert "嚴禁為來自高風險管轄區" in path.description
+    fact_nodes = {n.node_id: n for n in path.path_nodes if n.node_type == "customer_fact"}
+    assert fact_nodes["fact_registration_jurisdiction"].properties["registration_jurisdiction"] == "Myanmar"
+    assert fact_nodes["fact_ubo_country_risk"].properties["ubo_country_risk"] == "high"
+
+    # description 含有路徑上的事實、分支、義務與條文
+    assert "ubo_country_risk = high" in path.description
+    assert "registration_jurisdiction = Myanmar" in path.description
+    assert "individual_pep_high_risk" in path.description
+    assert "ob_pep_prohibitions_gb" in path.description
+    assert "1.4 Politically Exposed Persons" in path.description
 
 
 def test_generate_audit_report():
@@ -238,5 +254,99 @@ def test_explain_unclear_ubo_rejection_uses_mas_6_35():
     assert ob_node.node_id == "ob_cdd_incomplete_mas"
     assert clause_node.node_id == "mas_notice_626_6_cdd_6_35"
     assert "shall not commence or continue business relations" in clause_node.properties["raw_text"]
-    assert "STR" in path.description
+    assert "ubo_status = unclear" in path.description
+    assert "registration_jurisdiction = Cayman Islands" in path.description
+    assert "corporate_cdd_incomplete" in path.description
+    assert "6.35" in path.description
     assert path.path_nodes[-1].node_id == "mas_notice_626"
+
+
+def _gold_inputs(customer_id: str):
+    customers = [CustomerContext(**item) for item in load_yaml("customer_contexts.yaml")]
+    checklists = [CDDChecklist(**item) for item in load_yaml("checklists.yaml")]
+    return (
+        next(c for c in customers if c.customer_id == customer_id),
+        next(k for k in checklists if k.customer_id == customer_id),
+        [Obligation(**item) for item in load_yaml("obligations.yaml")],
+        [Clause(**item) for item in load_yaml("clauses.yaml")],
+        [SourceDocument(**item) for item in load_yaml("source_documents.yaml")],
+    )
+
+
+def test_every_item_maps_to_the_obligation_its_branch_declares():
+    """每個文件都對應葉節點宣告的義務；同一義務的不同文件指向同一錨點條文。"""
+    from src.decision.engine import route
+    for customer_id in ["cust_individual_low_risk", "cust_corp_standard", "cust_individual_pep",
+                        "cust_individual_high_risk_pep", "cust_corp_unclear_ubo"]:
+        cust, chk, obligations, clauses, documents = _gold_inputs(customer_id)
+        leaf, _ = route(cust)
+        ob_dict = {ob.obligation_id: ob for ob in obligations}
+        for document, ob_id in leaf.items:
+            path = ProvenanceEngine().explain_item(chk, document, cust, obligations, clauses, documents)
+            ob_node = next(n for n in path.path_nodes if n.node_type == "obligation")
+            clause_node = next(n for n in path.path_nodes if n.node_type == "clause")
+            assert ob_node.node_id == ob_id
+            assert clause_node.node_id == ob_dict[ob_id].source_clause_ids[0]
+
+
+def _with_pct(cust, chk, obligations, clauses, documents, target_item):
+    """企業標準客戶加上 15% 主要股東：落在內部 10% 門檻分支。"""
+    from src.decision.engine import CDDChecklistEngine
+    corp = cust.model_copy(update={"ubo_status": "identified", "registration_jurisdiction": "Singapore",
+                                   "custom_attributes": {"major_shareholder_pct": 15}})
+    checklist = CDDChecklistEngine().generate_checklist(corp, obligations, [])
+    assert target_item in checklist.risk_triggers
+    return checklist, target_item, corp, obligations, clauses, documents
+
+
+def test_risk_trigger_reports_whether_the_path_tested_it():
+    """excessive_layering_5 斷言的是 ownership_layers，決策路徑沒有讀它，description 要說出來。"""
+    cust, chk, obligations, clauses, documents = _gold_inputs("cust_corp_unclear_ubo")
+    path = ProvenanceEngine().explain_item(chk, "excessive_layering_5", cust, obligations, clauses, documents)
+    assert "ownership_layers" in path.description
+    assert "未在決策路徑上檢驗" in path.description
+    assert "fact_ownership_layers" not in [n.node_id for n in path.path_nodes]
+    # 標記宣告的義務：銀行政策 1.2(b) 的多層持股條件；條文節點是寫出條件的 1.2(b)，不是義務的錨點 1.2
+    assert next(n for n in path.path_nodes if n.node_type == "obligation").node_id == "ob_identify_ubo_10_gb"
+    clause_node = next(n for n in path.path_nodes if n.node_type == "clause")
+    assert clause_node.node_id.endswith("_1_2_beneficial_ownership_verification_b")
+    assert "three or more layers of intermediary holding companies" in clause_node.properties["raw_text"]
+    assert "寫出這個條件的條文為" in path.description and "1.2 Beneficial Ownership Verification > (b)" in path.description
+
+    path = ProvenanceEngine().explain_item(
+        *_with_pct(cust, chk, obligations, clauses, documents, "internal_ubo_threshold_triggered_10_percent"))
+    clause_node = next(n for n in path.path_nodes if n.node_type == "clause")
+    assert clause_node.node_id.endswith("_1_2_beneficial_ownership_verification_a")
+    assert "ownership threshold of 10% or more" in clause_node.properties["raw_text"]
+
+
+def test_risk_trigger_uses_the_obligation_it_declares():
+    """風險標記追溯到 TriggerSpec 宣告的義務，而不是分支裡第一份非基本文件的義務。"""
+    cust, chk, obligations, clauses, documents = _gold_inputs("cust_corp_unclear_ubo")
+    path = ProvenanceEngine().explain_item(chk, "unclear_ubo_status", cust, obligations, clauses, documents)
+    ob_node = next(n for n in path.path_nodes if n.node_type == "obligation")
+    clause_node = next(n for n in path.path_nodes if n.node_type == "clause")
+    assert ob_node.node_id == "ob_cdd_incomplete_mas"
+    assert clause_node.node_id == "mas_notice_626_6_cdd_6_35"
+    assert "葉節點宣告它依據義務 ob_cdd_incomplete_mas" in path.description
+    assert "已在決策路徑上檢驗" in path.description
+
+    cust, chk, obligations, clauses, documents = _gold_inputs("cust_individual_pep")
+    path = ProvenanceEngine().explain_item(chk, "pep_exposure_detected", cust, obligations, clauses, documents)
+    assert next(n for n in path.path_nodes if n.node_type == "obligation").node_id == "ob_pep_edd_mas"
+
+
+def test_risk_trigger_without_obligation_is_rejected():
+    """missing_source_of_funds_evidence 沒有法源：不猜一個義務，直接拋出 ValueError。"""
+    import pytest
+    cust, chk, obligations, clauses, documents = _gold_inputs("cust_corp_unclear_ubo")
+    assert "missing_source_of_funds_evidence" in chk.risk_triggers
+    with pytest.raises(ValueError, match="no obligation in the knowledge base requires this condition"):
+        ProvenanceEngine().explain_item(chk, "missing_source_of_funds_evidence", cust, obligations, clauses, documents)
+
+
+def test_item_not_in_checklist_is_rejected():
+    import pytest
+    cust, chk, obligations, clauses, documents = _gold_inputs("cust_individual_low_risk")
+    with pytest.raises(ValueError):
+        ProvenanceEngine().explain_item(chk, "Senior Management Approval Form", cust, obligations, clauses, documents)

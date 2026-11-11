@@ -31,6 +31,7 @@ from src.api.dependencies import (
     check_referential_integrity
 )
 from src.association.conflict_detector import ConflictDetector
+from src.decision.explain import ChecklistExplanation, explain
 from src.graph.builder import GraphBuilder
 
 app = FastAPI(
@@ -219,6 +220,23 @@ def get_customer_checklist(customer_id: str):
         **checklist.model_dump(),
         citation_details=build_citation_details(checklist, load_knowledge_base())
     )
+
+
+@app.get("/api/v1/customers/{customer_id}/explanation", response_model=ChecklistExplanation)
+def get_customer_explanation(customer_id: str):
+    """
+    解釋引擎對指定客戶的決策：決策路徑、每份文件依據的義務與條文、風險標記是否被路徑檢驗、
+    會改變輸出的單一屬性反事實，以及引擎從不讀取的客戶屬性。內容取自目前載入的知識庫重新推理，
+    不含人工審查後的覆寫。
+    """
+    kb = load_knowledge_base()
+    customer = next((c for c in kb["customers"] if c.customer_id == customer_id), None)
+    if customer is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Customer not found: {customer_id}"
+        )
+    return explain(customer, kb["obligations"], kb["conflicts"], kb["clauses"], kb["documents"])
 
 
 # ==========================================
