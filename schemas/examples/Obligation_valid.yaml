@@ -4,7 +4,11 @@ applies_to:
   customer_type: corporate
 conditions:
 - ownership_layers > 2
-confidence: 0.95
+confidence: 0.75
+confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
+  2017, labelled after the rules were frozen): 3 of 4 paragraphs flagged with this
+  type were correct.'
+confidence_kind: measured_on_heldout
 exceptions: []
 jurisdiction: Singapore
 object: beneficial_owner

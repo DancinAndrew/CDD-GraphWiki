@@ -102,6 +102,8 @@ class GraphSyncEngine:
                         o.object = $object,
                         o.jurisdiction = $jurisdiction,
                         o.confidence = $confidence,
+                        o.confidence_basis = $confidence_basis,
+                        o.confidence_kind = $confidence_kind,
                         o.review_status = $review_status
                     """,
                     id=ob.obligation_id,
@@ -109,7 +111,9 @@ class GraphSyncEngine:
                     action=ob.action,
                     object=ob.object,
                     jurisdiction=ob.jurisdiction,
-                    confidence=ob.confidence,
+                    confidence=ob.confidence,  # 可能為 None：規則類型在保留文本上沒有量測
+                    confidence_basis=ob.confidence_basis,
+                    confidence_kind=ob.confidence_kind,  # measured_on_heldout / self_reported / None
                     review_status=ob.review_status
                 )
                 # 建立 Obligation ➔ Clause 關係 (確保 clause-level provenance)

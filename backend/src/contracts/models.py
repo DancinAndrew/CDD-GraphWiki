@@ -32,6 +32,28 @@ class Clause(BaseModel):
     citations: List[str] = Field(..., description="List of stable provenance citations")
 
 
+class EvidenceSpan(BaseModel):
+    """
+    規則判斷所依據的一段條文原文：位置是該條文 raw_text 的字元索引，text 恰為 raw_text[start:end]。
+    """
+    clause_id: str = Field(..., description="Clause whose raw_text holds the span")
+    start: int = Field(..., description="Character offset into that clause's raw_text")
+    end: int = Field(..., description="End offset (exclusive)")
+    text: str = Field(..., description="Exactly raw_text[start:end]")
+
+
+class RuleReason(BaseModel):
+    """
+    規則式抽取器為某條文標上某義務類型的一個理由：哪條規則、一句說明，以及讓規則成立的所有原文證據。
+    """
+    rule: str = Field(..., description="Stable rule id, e.g. 'identify.subject'")
+    obligation_type: str = Field(..., description="One of the rule types in src/extraction/frames.py")
+    message: str = Field(..., description="One plain English sentence saying why")
+    spans: List[EvidenceSpan] = Field(default_factory=list, description="All text that made the rule fire")
+    depends_on: List[str] = Field(
+        default_factory=list, description="Other labels this reason relies on, as '<clause_id>#<type>'")
+
+
 class Obligation(BaseModel):
     """
     從條款中抽取的機器可讀合規義務規則。
@@ -47,10 +69,26 @@ class Obligation(BaseModel):
     exceptions: List[str] = Field(default_factory=list, description="Exemptions")
     required_evidence: List[str] = Field(default_factory=list, description="Required evidence")
     review_flags: List[str] = Field(default_factory=list, description="Triggers for human review")
-    confidence: float = Field(..., description="Extraction confidence score")
+    confidence: Optional[float] = Field(
+        None,
+        description=("Rule-extracted: measured precision of this rule type on unseen held-out text "
+                     "(None when not measured). LLM-imported: the model's self-reported, uncalibrated score.")
+    )
+    confidence_basis: Optional[str] = Field(
+        None, description="One sentence saying where the confidence comes from, including the sample it was measured on"
+    )
+    confidence_kind: Optional[Literal["measured_on_heldout", "self_reported"]] = Field(
+        None,
+        description=("What the confidence is: 'measured_on_heldout' = precision measured on unseen held-out text; "
+                     "'self_reported' = the LLM's own uncalibrated score; None = no confidence")
+    )
     review_status: Literal["pending_human_review", "approved"] = Field(
-        default="pending_human_review", 
+        default="pending_human_review",
         description="Verification state"
+    )
+    explanations: Dict[str, List[RuleReason]] = Field(
+        default_factory=dict,
+        description="Rule reasons per source clause ID (rule-extracted obligations only)"
     )
 
 

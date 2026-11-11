@@ -15,7 +15,6 @@
   required_evidence: []
   review_flags:
     - anonymous_account_creation_attempt
-  confidence: 0.95
   review_status: approved
 
 - obligation_id: ob_cdd_on_relationship
@@ -39,7 +38,6 @@
   required_evidence:
     - cdd_checklist_completed
   review_flags: []
-  confidence: 0.92
   review_status: approved
 
 - obligation_id: ob_verify_customer_identity
@@ -57,7 +55,6 @@
     - reliable_independent_source_documents
   review_flags:
     - unverifiable_identity_documents
-  confidence: 0.94
   review_status: approved
 
 - obligation_id: ob_identify_ubo_25
@@ -82,7 +79,6 @@
   review_flags:
     - unclear_ownership_structure
     - complex_multi_layer_ownership
-  confidence: 0.93
   review_status: approved
 
 - obligation_id: ob_cdd_on_relationship_mas
@@ -106,7 +102,6 @@
   required_evidence:
     - cdd_completed_signoff
   review_flags: []
-  confidence: 0.96
   review_status: approved
 
 - obligation_id: ob_verify_customer_mas
@@ -137,7 +132,6 @@
     - reliable_independent_source_documents
   review_flags:
     - missing_mandatory_identification_fields
-  confidence: 0.95
   review_status: approved
 
 - obligation_id: ob_identify_ubo_mas
@@ -164,7 +158,6 @@
   review_flags:
     - ubo_not_identified
     - multi_jurisdictional_layers
-  confidence: 0.94
   review_status: approved
 
 - obligation_id: ob_pep_edd_mas
@@ -189,7 +182,6 @@
   review_flags:
     - pep_without_senior_mgmt_signoff
     - insufficient_source_of_wealth_evidence
-  confidence: 0.97
   review_status: approved
 
 # Added in 2026-11: policy 1.1 ("Every customer must be identified and verified before onboarding") is a
@@ -212,7 +204,6 @@
     - official_registry_extract
   review_flags:
     - customer_not_verified_before_onboarding
-  confidence: 0.97
   review_status: approved
 
 - obligation_id: ob_identify_ubo_10_gb
@@ -236,7 +227,6 @@
     - shareholder_registry
   review_flags:
     - ownership_between_10_and_25_percent
-  confidence: 0.98
   review_status: approved
 
 - obligation_id: ob_pep_prohibitions_gb
@@ -255,7 +245,6 @@
     - rejected_onboarding_record
   review_flags:
     - pep_from_high_risk_country
-  confidence: 0.99
   review_status: approved
 
 - obligation_id: ob_pep_approval_gb
@@ -277,7 +266,6 @@
     - source_of_wealth_verification
   review_flags:
     - pep_without_head_compliance_signoff
-  confidence: 0.97
   review_status: approved
 
 - obligation_id: ob_cdd_incomplete_mas
@@ -296,5 +284,4 @@
     - str_consideration_record
   review_flags:
     - cdd_incomplete
-  confidence: 0.95
   review_status: approved

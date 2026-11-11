@@ -34,7 +34,8 @@ TBD - created by archiving change inflow-ingestion-pipeline. Update Purpose afte
   2. `source_clause_ids` **MUST** 包含當前來源 Clause 的 ID，以確保 clause-level 溯源可追溯性。
   3. `actor` (如 `bank`, `financial_institution`)、`action` (如 `identify_and_verify`, `perform_edd`)、`object` (如 `beneficial_owner`, `pep`) **MUST** 從法規原文語意中精準抽取。
   4. `required_evidence` **SHALL** 條列出符合法規要求所需的審計憑證與表單清單。
-  5. `confidence` **MUST** 記錄大模型自身輸出的置信分數。
+  5. `confidence` **SHALL** 記錄大模型自身輸出的置信分數（選填），且 `confidence_basis` **MUST** 註明此分數是模型自評、未經校準（"Self-reported by the LLM during PDF import; not calibrated."），`confidence_kind` **MUST** 為 `self_reported`；模型沒給分數時三者皆為空。
+  6. `explanations`（規則理由）**MUST** 清空：回應 schema 雖然含這個欄位，規則理由只屬於規則式抽取器。
 
 ---
 
