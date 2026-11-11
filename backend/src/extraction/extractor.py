@@ -5,8 +5,8 @@ import argparse
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Dict, Any, Tuple, Optional, Iterable, Set
-from src.contracts.models import Clause, Obligation, SourceDocument
-from src.extraction import frames
+from src.contracts.models import Clause, Obligation, RuleReason, SourceDocument
+from src.extraction import frames, reliability as reliability_data
 
 
 # ---------------------------------------------------------------------------
@@ -73,7 +73,6 @@ class ObligationProfile:
     actor: str
     action: str
     object: str
-    confidence: float
     applies_to: Dict[str, Any] = field(default_factory=dict)
     base_conditions: Tuple[str, ...] = ()
     required_evidence: Tuple[str, ...] = ()
@@ -82,68 +81,68 @@ class ObligationProfile:
 
 PROFILES: Dict[Tuple[str, str], ObligationProfile] = {
     ("prohibit_anonymous", "Global"): ObligationProfile(
-        "ob_prohibit_anonymous", "financial_institution", "prohibit", "anonymous_accounts", 0.95,
+        "ob_prohibit_anonymous", "financial_institution", "prohibit", "anonymous_accounts",
         review_flags=("anonymous_account_creation_attempt",)),
     ("cdd_triggers", "Global"): ObligationProfile(
-        "ob_cdd_on_relationship", "financial_institution", "perform_cdd", "customer", 0.92,
+        "ob_cdd_on_relationship", "financial_institution", "perform_cdd", "customer",
         required_evidence=("cdd_checklist_completed",)),
     ("cdd_triggers", "Singapore"): ObligationProfile(
-        "ob_cdd_on_relationship_mas", "bank", "perform_cdd", "customer", 0.96,
+        "ob_cdd_on_relationship_mas", "bank", "perform_cdd", "customer",
         required_evidence=("cdd_completed_signoff",)),
     ("verify_customer", "Global"): ObligationProfile(
-        "ob_verify_customer_identity", "financial_institution", "identify_and_verify", "customer_identity", 0.94,
+        "ob_verify_customer_identity", "financial_institution", "identify_and_verify", "customer_identity",
         base_conditions=("cdd_triggered",),
         required_evidence=("reliable_independent_source_documents",),
         review_flags=("unverifiable_identity_documents",)),
     ("verify_customer", "Singapore"): ObligationProfile(
-        "ob_verify_customer_mas", "bank", "identify_and_verify", "customer_identity", 0.95,
+        "ob_verify_customer_mas", "bank", "identify_and_verify", "customer_identity",
         base_conditions=("cdd_triggered",),
         required_evidence=("full_name", "unique_id_number", "residential_address", "date_of_birth",
                            "nationality", "reliable_independent_source_documents"),
         review_flags=("missing_mandatory_identification_fields",)),
     # identify_ubo 的 ID 依解析到的持股門檻決定：{pct} 會變成 "_25"、"_10" 或空字串
     ("verify_customer", "Internal"): ObligationProfile(
-        "ob_verify_customer_gb", "bank", "identify_and_verify", "customer_identity", 0.97,
+        "ob_verify_customer_gb", "bank", "identify_and_verify", "customer_identity",
         base_conditions=("cdd_triggered",),
         required_evidence=("independent_passport_or_identity_card", "official_registry_extract"),
         review_flags=("customer_not_verified_before_onboarding",)),
     ("identify_ubo", "Global"): ObligationProfile(
-        "ob_identify_ubo{pct}", "financial_institution", "identify_and_verify", "beneficial_owner", 0.93,
+        "ob_identify_ubo{pct}", "financial_institution", "identify_and_verify", "beneficial_owner",
         applies_to={"customer_type": "legal_person"},
         required_evidence=("ownership_chart", "identity_documents_of_ubo"),
         review_flags=("unclear_ownership_structure", "complex_multi_layer_ownership")),
     ("identify_ubo", "Singapore"): ObligationProfile(
-        "ob_identify_ubo{pct}_mas", "bank", "identify_and_verify", "beneficial_owner", 0.94,
+        "ob_identify_ubo{pct}_mas", "bank", "identify_and_verify", "beneficial_owner",
         applies_to={"customer_type": "legal_person"},
         required_evidence=("ubo_declaration", "corporate_profile"),
         review_flags=("ubo_not_identified", "multi_jurisdictional_layers")),
     ("identify_ubo", "Internal"): ObligationProfile(
-        "ob_identify_ubo{pct}_gb", "bank", "identify_and_verify", "beneficial_owner", 0.98,
+        "ob_identify_ubo{pct}_gb", "bank", "identify_and_verify", "beneficial_owner",
         applies_to={"customer_type": "legal_person"},
         required_evidence=("ubo_proof_of_identity", "shareholder_registry"),
         review_flags=("ownership_between_10_and_25_percent",)),
     ("pep_edd", "Singapore"): ObligationProfile(
-        "ob_pep_edd_mas", "bank", "perform_edd", "pep", 0.97,
+        "ob_pep_edd_mas", "bank", "perform_edd", "pep",
         applies_to={"pep_exposure": True},
         base_conditions=("pep_detected",),
         required_evidence=("senior_management_approval", "source_of_wealth_verification",
                            "source_of_funds_verification"),
         review_flags=("pep_without_senior_mgmt_signoff", "insufficient_source_of_wealth_evidence")),
     ("pep_prohibition", "Internal"): ObligationProfile(
-        "ob_pep_prohibitions_gb", "bank", "restrict_relationship", "pep", 0.99,
+        "ob_pep_prohibitions_gb", "bank", "restrict_relationship", "pep",
         applies_to={"pep_exposure": True},
         base_conditions=("pep_from_high_risk_jurisdiction",),
         required_evidence=("rejected_onboarding_record",),
         review_flags=("pep_from_high_risk_country",)),
     ("pep_approval", "Internal"): ObligationProfile(
-        "ob_pep_approval_gb", "bank", "obtain_approval", "pep", 0.97,
+        "ob_pep_approval_gb", "bank", "obtain_approval", "pep",
         applies_to={"pep_exposure": True},
         base_conditions=("pep_not_from_high_risk_jurisdiction",),
         required_evidence=("head_of_compliance_approval", "two_levels_senior_mgmt_approval",
                            "source_of_funds_verification", "source_of_wealth_verification"),
         review_flags=("pep_without_head_compliance_signoff",)),
     ("cdd_incomplete", "Singapore"): ObligationProfile(
-        "ob_cdd_incomplete_mas", "bank", "refuse_relationship", "customer", 0.95,
+        "ob_cdd_incomplete_mas", "bank", "refuse_relationship", "customer",
         base_conditions=("cdd_measures_not_completed",),
         required_evidence=("account_opening_rejection_record", "str_consideration_record"),
         review_flags=("cdd_incomplete",)),
@@ -170,7 +169,7 @@ def profile_for(rule: str, jurisdiction: str) -> ObligationProfile:
     suffix = JURISDICTION_SUFFIX.get(jurisdiction, re.sub(r"[^a-z0-9]+", "_", jurisdiction.lower()).strip("_"))
     action, obj, applies_to = RULE_DEFAULTS[rule]
     pct = "{pct}" if rule == "identify_ubo" else ""
-    return ObligationProfile(f"ob_{rule}{pct}{'_' + suffix if suffix else ''}", "regulated_entity", action, obj, 0.8,
+    return ObligationProfile(f"ob_{rule}{pct}{'_' + suffix if suffix else ''}", "regulated_entity", action, obj,
                              applies_to=dict(applies_to))
 
 
@@ -181,6 +180,7 @@ class ClauseMatch:
     jurisdiction: str
     clause_id: str
     conditions: List[str]
+    reasons: List[RuleReason] = field(default_factory=list)  # 這條條文得到這個類型的規則理由（frames.classify_traced）
 
 
 def _paragraph_of(clause: Clause) -> str:
@@ -197,11 +197,14 @@ class RuleBasedObligationExtractor:
     - 一條條文可以同時屬於多種義務類型。
     - 管轄區只決定義務 ID 與樣板，不決定規則能不能命中；沒有專屬樣板的管轄區用通用樣板。
     - 持股與金額門檻從條文文字解析，不寫死。
+    - 信心值不是手寫常數：`reliability` 是各類型在未見過的保留文本上量到的精確率
+      （src/extraction/reliability.py）；沒有給就不填信心值，出處說明寫明沒有量測資料。
     """
 
-    def __init__(self, confidence_threshold: float = 0.75, jurisdictions: Optional[Dict[str, str]] = None):
-        self.confidence_threshold = confidence_threshold
+    def __init__(self, jurisdictions: Optional[Dict[str, str]] = None,
+                 reliability: Optional[Dict[str, Dict[str, Any]]] = None):
         self.jurisdictions = jurisdictions or {}
+        self.reliability = reliability
 
     def jurisdiction_for(self, source_document_id: str) -> str:
         return self.jurisdictions.get(source_document_id) or infer_jurisdiction(source_document_id)
@@ -216,6 +219,16 @@ class RuleBasedObligationExtractor:
             types.update(frames.classify(document_clauses, _paragraph_of))
         return types
 
+    def classify_traced(self, clauses: List[Clause]) -> Dict[str, Dict[str, List[RuleReason]]]:
+        """同 classify，但每個類型附上規則理由與原文證據位置：clause_id -> 類型 -> 理由。"""
+        by_document: Dict[str, List[Clause]] = {}
+        for clause in clauses:
+            by_document.setdefault(clause.source_document_id, []).append(clause)
+        traced: Dict[str, Dict[str, List[RuleReason]]] = {}
+        for document_clauses in by_document.values():
+            traced.update(frames.classify_traced(document_clauses, _paragraph_of))
+        return traced
+
     def _rule_conditions(self, rule: str, own: str) -> List[str]:
         if rule == "cdd_triggers":
             return trigger_conditions(own)
@@ -224,8 +237,9 @@ class RuleBasedObligationExtractor:
             return [f"controlling_ownership_interest_above_{pct}_percent"] if pct else []
         return []
 
-    def matches_for(self, clause: Clause, rules: Iterable[str]) -> Tuple[List[ClauseMatch], Optional[str]]:
-        """把一條條文的義務類型轉成 ClauseMatch；沒有類型時回傳未命中的原因。"""
+    def matches_for(self, clause: Clause, rules: Iterable[str],
+                    reasons: Optional[Dict[str, List[RuleReason]]] = None) -> Tuple[List[ClauseMatch], Optional[str]]:
+        """把一條條文的義務類型轉成 ClauseMatch；沒有類型時回傳未命中的原因。`reasons` 是這條條文各類型的規則理由。"""
         jurisdiction = self.jurisdiction_for(clause.source_document_id)
         own = clause.normalized_text.lower()
         rules = [r for r in frames.TYPES if r in set(rules)]
@@ -233,10 +247,9 @@ class RuleBasedObligationExtractor:
             if any(indicator in own for indicator in OBLIGATION_INDICATORS):
                 return [], "MISSING_CORE_ELEMENTS"
             return [], "NON_OBLIGATION_TEXT"
-        confident = [r for r in rules if profile_for(r, jurisdiction).confidence >= self.confidence_threshold]
-        if not confident:
-            return [], "LOW_CONFIDENCE"
-        return [ClauseMatch(r, jurisdiction, clause.clause_id, self._rule_conditions(r, own)) for r in confident], None
+        reasons = reasons or {}
+        return [ClauseMatch(r, jurisdiction, clause.clause_id, self._rule_conditions(r, own), list(reasons.get(r, [])))
+                for r in rules], None
 
     def match_clause(self, clause: Clause, context: str = "") -> Tuple[Optional[ClauseMatch], Optional[str]]:
         """
@@ -255,8 +268,10 @@ class RuleBasedObligationExtractor:
             document.append(parent)
             clause = clause.model_copy(update={"parent_clause_id": "__context__"})
         document.append(clause)
-        types = frames.classify(document, _paragraph_of)
-        return self.matches_for(clause, types.get(clause.clause_id, set()))
+        # 理由的證據若落在 `context`，會引用虛擬條文 "__context__"
+        traced = frames.classify_traced(document, _paragraph_of)
+        reasons = traced.get(clause.clause_id, {})
+        return self.matches_for(clause, set(reasons), reasons)
 
     def build_obligation(self, matches: List[ClauseMatch]) -> Obligation:
         """把同一規則、同一管轄區的命中合併成一個強型別 Obligation。"""
@@ -265,9 +280,11 @@ class RuleBasedObligationExtractor:
 
         source_clause_ids: List[str] = []
         conditions: List[str] = list(profile.base_conditions)
+        explanations: Dict[str, List[RuleReason]] = {}
         for m in matches:
             if m.clause_id not in source_clause_ids:
                 source_clause_ids.append(m.clause_id)
+            explanations.setdefault(m.clause_id, []).extend(m.reasons)
             for cond in m.conditions:
                 if cond not in conditions:
                     conditions.append(cond)
@@ -289,8 +306,9 @@ class RuleBasedObligationExtractor:
             exceptions=[],
             required_evidence=list(profile.required_evidence),
             review_flags=list(profile.review_flags),
-            confidence=profile.confidence,
+            **reliability_data.confidence_for(self.reliability, first.rule),
             review_status="approved",
+            explanations=explanations,
         )
 
     def extract_obligation(self, clause: Clause, context: str = "") -> Tuple[Optional[Obligation], Optional[str]]:
@@ -329,12 +347,13 @@ def extract_obligations(
     回傳 (義務列表, 未命中而送入低信心審查佇列的條文)。
     """
     extractor = extractor or RuleBasedObligationExtractor()
-    types = extractor.classify(clauses)
+    traced = extractor.classify_traced(clauses)
 
     grouped: Dict[Tuple[str, str], List[ClauseMatch]] = {}
     review_queue: List[Dict[str, Any]] = []
     for clause in clauses:
-        matches, reason = extractor.matches_for(clause, types.get(clause.clause_id, set()))
+        reasons = traced.get(clause.clause_id, {})
+        matches, reason = extractor.matches_for(clause, set(reasons), reasons)
         for match in matches:
             grouped.setdefault((match.rule, match.jurisdiction), []).append(match)
         if not matches:
@@ -361,8 +380,9 @@ class ObligationExtractionPipeline:
     """
     合規義務抽取與黃金數據集比對管線。
     """
-    def __init__(self, confidence_threshold: float = 0.75, jurisdictions: Optional[Dict[str, str]] = None):
-        self.extractor = RuleBasedObligationExtractor(confidence_threshold, jurisdictions)
+    def __init__(self, jurisdictions: Optional[Dict[str, str]] = None,
+                 reliability: Optional[Dict[str, Dict[str, Any]]] = None):
+        self.extractor = RuleBasedObligationExtractor(jurisdictions, reliability)
 
     def run(self, clauses_path: str, gold_path: str, out_dir: str) -> List[Obligation]:
         """
@@ -492,7 +512,15 @@ if __name__ == "__main__":
     parser.add_argument("--gold", type=str, default="data/gold/obligations.yaml", help="Path to gold obligations yaml")
     parser.add_argument("--sources", type=str, default="data/processed/source_documents.yaml", help="Path to source documents yaml")
     parser.add_argument("--out", type=str, default="data/processed", help="Output directory")
+    parser.add_argument("--data", type=str, default=None,
+                        help="Data directory holding heldout/, used to measure rule reliability "
+                             "(default: the parent of the gold file's directory)")
     args = parser.parse_args()
 
-    pipeline = ObligationExtractionPipeline(jurisdictions=load_jurisdictions(args.sources))
+    # 信心值和 src.pipeline 一樣取自保留文本上量到的精確率；少了它，寫進 data/processed 的信心值會全部變成未量測
+    data_dir = args.data or os.path.dirname(os.path.dirname(os.path.abspath(args.gold)))
+    measured = reliability_data.measured_precision(data_dir)
+    print(f"[Extraction] Rule reliability measured on {reliability_data.RELIABILITY_SET} "
+          f"({reliability_data.RELIABILITY_LEVEL} level) from {data_dir}.")
+    pipeline = ObligationExtractionPipeline(jurisdictions=load_jurisdictions(args.sources), reliability=measured)
     pipeline.run(args.clauses, args.gold, args.out)

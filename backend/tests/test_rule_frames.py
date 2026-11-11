@@ -107,3 +107,24 @@ def test_a_jurisdiction_without_its_own_profile_still_gets_obligations():
     obligations, _ = extract_obligations(clauses, RuleBasedObligationExtractor(jurisdictions={DOC: "Testland"}))
     assert [(o.obligation_id, o.jurisdiction, o.source_clause_ids) for o in obligations] == [
         ("ob_prohibit_anonymous_testland", "Testland", [f"{DOC}_9_1"])]
+
+
+def test_every_type_comes_with_the_rule_that_gave_it():
+    clauses = _clauses(
+        ("3.1", None, "### 3.1 A bank that undertakes any transaction of a value exceeding S$20,000 for a walk-in customer shall –"),
+        ("3.1/a", f"{DOC}_3_1", "(a) perform CDD measures as if the customer had applied to establish business relations; and"),
+        ("3.2", None, "### 3.2 A bank shall perform CDD measures when -"),
+        ("3.2/a", f"{DOC}_3_2", "(a) it establishes business relations with a customer;"),
+    )
+    traced = RuleBasedObligationExtractor(jurisdictions={DOC: "Testland"}).classify_traced(clauses)
+    rules = {cid: {t: [r.rule for r in reasons] for t, reasons in types.items()} for cid, types in traced.items()}
+    assert rules == {
+        f"{DOC}_3_1": {"cdd_triggers": ["list.propagate"]},
+        f"{DOC}_3_1_a": {"cdd_triggers": ["trigger.cdd_on_condition"]},
+        f"{DOC}_3_2": {"cdd_triggers": ["trigger.cdd_on_condition"]},
+        f"{DOC}_3_2_a": {"cdd_triggers": ["list.inherit"]},
+    }
+    # the item's condition sits in its lead-in, so the item's reason cites both clauses
+    cited = {(s.clause_id, s.text) for s in traced[f"{DOC}_3_1_a"]["cdd_triggers"][0].spans}
+    assert {(f"{DOC}_3_1", "that undertakes"), (f"{DOC}_3_1_a", "perform"), (f"{DOC}_3_1_a", "CDD measures")} <= cited
+    assert traced[f"{DOC}_3_1"]["cdd_triggers"][0].depends_on == [f"{DOC}_3_1_a#cdd_triggers"]

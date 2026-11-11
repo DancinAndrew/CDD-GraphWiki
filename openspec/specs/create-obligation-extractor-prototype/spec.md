@@ -16,7 +16,16 @@ TBD - created by archiving change create-obligation-extractor-prototype. Update 
 
 ### Requirement: Compliance Extraction Failure Classification
 
-當條款不包含明確的義務特徵、缺少核心要素（例如 Actor 或 Action 缺失），或是匹配信心度低於指定閾值時，系統 **SHALL** 拒絕隨意合成不實數據，而是將其進行精準的失敗原因分類（包含 `NON_OBLIGATION_TEXT`、`MISSING_CORE_ELEMENTS` 或 `LOW_CONFIDENCE`），並將其導出至人工審查報告隊列中。
+當條款沒有被任何規則判定為義務類型時，系統 **SHALL** 拒絕隨意合成不實數據，而是將其進行精準的失敗原因分類，並將其導出至人工審查報告隊列（`low_confidence_review_queue.yaml`，檔名沿用舊版）中。失敗原因只有兩種：
+- `MISSING_CORE_ELEMENTS`：條文含有義務用語（例如 `shall`、`must`），但規則判斷不出完整的義務（例如沒有可辨識的動作或對象）。
+- `NON_OBLIGATION_TEXT`：條文不含義務用語，例如標題或背景敘述。
+
+信心值**不得 (MUST NOT)** 決定條文能不能被抽取，也沒有信心門檻：規則義務的 `confidence` 是該規則類型在未見過的保留文本上實測的精確率，附 `confidence_basis` 說明樣本與計數、`confidence_kind` 為 `measured_on_heldout`；保留文本上沒有量測到的類型 `confidence` 為空、`confidence_kind` 為空（見 compliance-data-contracts「信心值必須有可重算的依據」）。
+
+#### Scenario: Confidence does not gate extraction
+* **GIVEN**: 一條被規則判定為某義務類型、但該類型在保留文本上沒有量測（`confidence` 為空）的條款。
+* **WHEN**: 執行抽取引擎進行義務提取時。
+* **THEN**: 系統 **SHALL** 照常產出義務，`confidence` 為空，`confidence_basis` 說明沒有量測，且不會因此被送進人工審查隊列。
 
 #### Scenario: Classifying Non-Obligation Background Text
 * **GIVEN**: 一個純文件標題或純背景敘述條款（例如 `fatf_rec10_introduction`）。

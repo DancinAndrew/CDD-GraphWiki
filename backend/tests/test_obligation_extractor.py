@@ -24,7 +24,7 @@ class TestObligationExtractor:
     
     @pytest.fixture
     def extractor(self):
-        return RuleBasedObligationExtractor(confidence_threshold=0.75)
+        return RuleBasedObligationExtractor()
 
     def test_extractor_success_and_json_schema(self, extractor):
         # MAS Notice 626 第 6.3(a) 段（逐字原文），上層段落是 CDD 觸發句
@@ -88,10 +88,8 @@ class TestObligationExtractor:
         assert ob is None
         assert reason == "MISSING_CORE_ELEMENTS"
 
-    def test_extractor_failure_low_confidence(self):
-        # 使用極高的 confidence_threshold 來迫使低置信度分類生效
-        strict_extractor = RuleBasedObligationExtractor(confidence_threshold=0.99)
-        
+    def test_extractor_without_reliability_leaves_confidence_empty(self, extractor):
+        # 沒有給量測資料時不填信心值，出處說明寫明沒有量測；不再有 LOW_CONFIDENCE 這種未命中原因
         clause = Clause(
             clause_id="mas_notice_626_6_cdd_6_3_a",
             source_document_id="mas_notice_626",
@@ -102,10 +100,30 @@ class TestObligationExtractor:
         )
         context = "### 6.3 a bank shall perform the measures as required by paragraphs 6, 7 and 8 when -"
 
-        ob, reason = strict_extractor.extract_obligation(clause, context)
-        # MAS CDD 觸發規則的信心值是 0.96，低於 0.99 應被拒絕
-        assert ob is None
-        assert reason == "LOW_CONFIDENCE"
+        ob, reason = extractor.extract_obligation(clause, context)
+        assert reason is None
+        assert ob.confidence is None
+        assert ob.confidence_basis == "Not measured: no reliability data was given to the extractor."
+        assert ob.confidence_kind is None
+        assert not hasattr(extractor, "confidence_threshold")
+
+    def test_extractor_uses_given_reliability(self):
+        # 信心值 = 給定的量測精確率四捨五入到小數兩位，出處說明照抄
+        reliability = {"cdd_triggers": {"correct": 8, "flagged": 9, "precision": 0.8889, "basis": "measured on X"}}
+        extractor = RuleBasedObligationExtractor(reliability=reliability)
+        clause = Clause(
+            clause_id="mas_notice_626_6_cdd_6_3_a",
+            source_document_id="mas_notice_626",
+            section_ref="6 Customer Due Diligence > 6.3 > (a)",
+            raw_text="(a) the bank establishes business relations with any customer;",
+            normalized_text="(a) the bank establishes business relations with any customer;",
+            citations=["mas_notice_626_6_cdd_6_3_a"]
+        )
+        ob, _ = extractor.extract_obligation(
+            clause, "### 6.3 a bank shall perform the measures as required by paragraphs 6, 7 and 8 when -")
+        assert ob.confidence == 0.89
+        assert ob.confidence_basis == "measured on X"
+        assert ob.confidence_kind == "measured_on_heldout"
 
     def test_evaluation_metrics_calculation(self, tmp_path):
         # 手動測試 evaluate_against_gold 計算精度、召回率與 F1-score 的正確性

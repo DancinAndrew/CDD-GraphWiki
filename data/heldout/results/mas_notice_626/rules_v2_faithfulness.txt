@@ -1,0 +1,35 @@
+Rule-based extractor v2 explanations on held-out MAS Notice 626 paragraphs: deletion tests
+==========================================================================================
+
+Labels are the (clause, type) pairs rules v2 gives the held-out clauses, right or wrong; the perturbed text is classified as a whole document.
+
+Labels (clause, type) checked: 51
+Comprehensiveness (deleting the rationale removes the type): 51/51
+Sufficiency (the rationale alone keeps the type): 51/51
+Both: 51/51
+Labels whose rationale cites text in their own clause: 25/51
+Rationale coverage of the touched clauses' text (the clauses it cites plus the label's own clause): mean 0.20, median 0.17
+
+By evidence (list-structure labels take their type from another label, so their tests largely repeat that label's):
+  own evidence                                   labels  19  comprehensive  19  sufficient  19  both  19  own clause cited  19  coverage mean 0.22
+  list structure (list.inherit, list.propagate)  labels  32  comprehensive  32  sufficient  32  both  32  own clause cited   6  coverage mean 0.19
+
+By first rule:
+  anonymous.prohibition              labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.52
+  identify.complete_such             labels   2  comprehensive   2  sufficient   2  both   2  own clause cited   2  coverage mean 0.13
+  identify.information_for_purposes  labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.38
+  identify.subject                   labels   7  comprehensive   7  sufficient   7  both   7  own clause cited   7  coverage mean 0.16
+  incomplete.unable_and_stop         labels   2  comprehensive   2  sufficient   2  both   2  own clause cited   2  coverage mean 0.23
+  list.inherit                       labels  26  comprehensive  26  sufficient  26  both  26  own clause cited   0  coverage mean 0.20
+  list.propagate                     labels   6  comprehensive   6  sufficient   6  both   6  own clause cited   6  coverage mean 0.13
+  trigger.cdd_on_condition           labels   5  comprehensive   5  sufficient   5  both   5  own clause cited   5  coverage mean 0.15
+  ubo.ownership_structure            labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.63
+
+By type:
+  prohibit_anonymous  labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.52
+  cdd_triggers        labels   7  comprehensive   7  sufficient   7  both   7  own clause cited   7  coverage mean 0.14
+  verify_customer     labels  15  comprehensive  15  sufficient  15  both  15  own clause cited  10  coverage mean 0.13
+  identify_ubo        labels  26  comprehensive  26  sufficient  26  both  26  own clause cited   5  coverage mean 0.24
+  cdd_incomplete      labels   2  comprehensive   2  sufficient   2  both   2  own clause cited   2  coverage mean 0.23
+
+Failed tests (0):

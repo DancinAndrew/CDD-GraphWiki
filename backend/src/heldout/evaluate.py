@@ -12,7 +12,9 @@ scored side by side:
 - rules_v2: the current extractor (src/extraction/extractor.py), redesigned after the v1 errors on the MAS
   Notice 626 held-out set. That set is therefore no longer unseen for v2; sets added after v2 was frozen are.
 
-Results go to data/heldout/results/<set>/rules_<version>_{predictions.yaml,report.txt,summary.json}.
+Results go to data/heldout/results/<set>/rules_<version>_{predictions.yaml,report.txt} and rules_summary.json.
+The reasons rules v2 gives for its held-out labels are checked with deletion tests (src/extraction/faithfulness.py)
+and written to rules_v2_faithfulness.{json,txt}.
 """
 import os
 import re
@@ -25,8 +27,8 @@ import yaml
 
 from src.contracts.models import Clause
 from src.ingestion.parser import SemanticHierarchicalSegmenter
-from src.extraction import extractor_v1
-from src.extraction.extractor import RuleBasedObligationExtractor
+from src.extraction import extractor_v1, faithfulness
+from src.extraction.extractor import RuleBasedObligationExtractor, _paragraph_of
 from src.paths import find_data_dir
 
 OBLIGATION_WORDS = re.compile(r"\b(shall|must)\b")
@@ -241,6 +243,24 @@ def v1_best_case_notes(corpus: HeldOutCorpus) -> List[str]:
     return notes
 
 
+def rules_v2_faithfulness(corpus: HeldOutCorpus, out_dir: str) -> Dict[str, Any]:
+    """Deletion tests for the reasons rules v2 gives for its held-out labels; classification runs on the whole document."""
+    extractor = RuleBasedObligationExtractor(jurisdictions={corpus.spec.document_id: corpus.spec.jurisdiction})
+    trace = extractor.classify_traced(corpus.clauses)
+    results = faithfulness.evaluate_document(corpus.clauses, _paragraph_of, trace,
+                                             clause_ids={c.clause_id for c in corpus.held_out})
+    summary = faithfulness.summarize(results)
+    with open(os.path.join(out_dir, "rules_v2_faithfulness.json"), "w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+    with open(os.path.join(out_dir, "rules_v2_faithfulness.txt"), "w", encoding="utf-8") as f:
+        f.write(faithfulness.format_report(
+            f"Rule-based extractor v2 explanations on held-out {corpus.spec.title} paragraphs: deletion tests", summary,
+            ["Labels are the (clause, type) pairs rules v2 gives the held-out clauses, right or wrong; "
+             "the perturbed text is classified as a whole document.", ""]))
+    return summary
+
+
 def run_set(data_dir: str, set_name: str, out_dir: str) -> Dict[str, Any]:
     corpus = load_corpus(data_dir, set_name)
     stats = corpus_stats(corpus)
@@ -262,6 +282,7 @@ def run_set(data_dir: str, set_name: str, out_dir: str) -> Dict[str, Any]:
     with open(os.path.join(out_dir, "rules_summary.json"), "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
         f.write("\n")
+    rules_v2_faithfulness(corpus, out_dir)
     return summary
 
 

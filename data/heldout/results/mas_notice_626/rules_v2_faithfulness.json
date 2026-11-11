@@ -1,0 +1,160 @@
+{
+  "labels": 51,
+  "comprehensive": 51,
+  "sufficient": 51,
+  "both": 51,
+  "cites_own_clause": 25,
+  "coverage_mean": 0.1975,
+  "coverage_median": 0.1667,
+  "by_type": {
+    "prohibit_anonymous": {
+      "labels": 1,
+      "comprehensive": 1,
+      "sufficient": 1,
+      "both": 1,
+      "cites_own_clause": 1,
+      "coverage_mean": 0.5172,
+      "coverage_median": 0.5172
+    },
+    "cdd_triggers": {
+      "labels": 7,
+      "comprehensive": 7,
+      "sufficient": 7,
+      "both": 7,
+      "cites_own_clause": 7,
+      "coverage_mean": 0.145,
+      "coverage_median": 0.14
+    },
+    "verify_customer": {
+      "labels": 15,
+      "comprehensive": 15,
+      "sufficient": 15,
+      "both": 15,
+      "cites_own_clause": 10,
+      "coverage_mean": 0.1297,
+      "coverage_median": 0.1234
+    },
+    "identify_ubo": {
+      "labels": 26,
+      "comprehensive": 26,
+      "sufficient": 26,
+      "both": 26,
+      "cites_own_clause": 5,
+      "coverage_mean": 0.2357,
+      "coverage_median": 0.2439
+    },
+    "cdd_incomplete": {
+      "labels": 2,
+      "comprehensive": 2,
+      "sufficient": 2,
+      "both": 2,
+      "cites_own_clause": 2,
+      "coverage_mean": 0.2324,
+      "coverage_median": 0.2324
+    }
+  },
+  "by_evidence": {
+    "own_evidence": {
+      "labels": 19,
+      "comprehensive": 19,
+      "sufficient": 19,
+      "both": 19,
+      "cites_own_clause": 19,
+      "coverage_mean": 0.2177,
+      "coverage_median": 0.1667
+    },
+    "list_structure": {
+      "labels": 32,
+      "comprehensive": 32,
+      "sufficient": 32,
+      "both": 32,
+      "cites_own_clause": 6,
+      "coverage_mean": 0.1855,
+      "coverage_median": 0.1861
+    }
+  },
+  "by_rule": {
+    "anonymous.prohibition": {
+      "labels": 1,
+      "comprehensive": 1,
+      "sufficient": 1,
+      "both": 1,
+      "cites_own_clause": 1,
+      "coverage_mean": 0.5172,
+      "coverage_median": 0.5172
+    },
+    "identify.complete_such": {
+      "labels": 2,
+      "comprehensive": 2,
+      "sufficient": 2,
+      "both": 2,
+      "cites_own_clause": 2,
+      "coverage_mean": 0.126,
+      "coverage_median": 0.126
+    },
+    "identify.information_for_purposes": {
+      "labels": 1,
+      "comprehensive": 1,
+      "sufficient": 1,
+      "both": 1,
+      "cites_own_clause": 1,
+      "coverage_mean": 0.3816,
+      "coverage_median": 0.3816
+    },
+    "identify.subject": {
+      "labels": 7,
+      "comprehensive": 7,
+      "sufficient": 7,
+      "both": 7,
+      "cites_own_clause": 7,
+      "coverage_mean": 0.1623,
+      "coverage_median": 0.1531
+    },
+    "incomplete.unable_and_stop": {
+      "labels": 2,
+      "comprehensive": 2,
+      "sufficient": 2,
+      "both": 2,
+      "cites_own_clause": 2,
+      "coverage_mean": 0.2324,
+      "coverage_median": 0.2324
+    },
+    "list.inherit": {
+      "labels": 26,
+      "comprehensive": 26,
+      "sufficient": 26,
+      "both": 26,
+      "cites_own_clause": 0,
+      "coverage_mean": 0.1979,
+      "coverage_median": 0.2342
+    },
+    "list.propagate": {
+      "labels": 6,
+      "comprehensive": 6,
+      "sufficient": 6,
+      "both": 6,
+      "cites_own_clause": 6,
+      "coverage_mean": 0.1316,
+      "coverage_median": 0.1322
+    },
+    "trigger.cdd_on_condition": {
+      "labels": 5,
+      "comprehensive": 5,
+      "sufficient": 5,
+      "both": 5,
+      "cites_own_clause": 5,
+      "coverage_mean": 0.1511,
+      "coverage_median": 0.14
+    },
+    "ubo.ownership_structure": {
+      "labels": 1,
+      "comprehensive": 1,
+      "sufficient": 1,
+      "both": 1,
+      "cites_own_clause": 1,
+      "coverage_mean": 0.6284,
+      "coverage_median": 0.6284
+    }
+  },
+  "failures": []
+}

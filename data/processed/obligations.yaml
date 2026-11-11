@@ -11,8 +11,35 @@
   required_evidence: []
   review_flags:
   - anonymous_account_creation_attempt
-  confidence: 0.95
+  confidence: 1.0
+  confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
+    2017, labelled after the rules were frozen): 1 of 1 paragraphs flagged with this
+    type were correct.'
+  confidence_kind: measured_on_heldout
   review_status: approved
+  explanations:
+    fatf_rec10_rec_10_anonymous_accounts:
+    - rule: anonymous.prohibition
+      obligation_type: prohibit_anonymous
+      message: '"anonymous account" and the prohibition "prohibit" occur in one sentence.'
+      spans:
+      - clause_id: fatf_rec10_rec_10_anonymous_accounts
+        start: 4
+        end: 21
+        text: Anonymous account
+      - clause_id: fatf_rec10_rec_10_anonymous_accounts
+        start: 56
+        end: 64
+        text: prohibit
+      - clause_id: fatf_rec10_rec_10_anonymous_accounts
+        start: 80
+        end: 97
+        text: anonymous account
+      - clause_id: fatf_rec10_rec_10_anonymous_accounts
+        start: 124
+        end: 139
+        text: fictitious name
+      depends_on: []
 - obligation_id: ob_cdd_on_relationship
   source_clause_ids:
   - fatf_rec10_rec_10_when_cdd_is_required
@@ -34,8 +61,92 @@
   required_evidence:
   - cdd_checklist_completed
   review_flags: []
-  confidence: 0.92
+  confidence: 0.89
+  confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
+    2017, labelled after the rules were frozen): 8 of 9 paragraphs flagged with this
+    type were correct.'
+  confidence_kind: measured_on_heldout
   review_status: approved
+  explanations:
+    fatf_rec10_rec_10_when_cdd_is_required:
+    - rule: trigger.cdd_on_condition
+      obligation_type: cdd_triggers
+      message: '"should" governs "undertake" with the object "customer due diligence
+        (cdd) measures", and the condition "when" occurs in the same sentence.'
+      spans:
+      - clause_id: fatf_rec10_rec_10_when_cdd_is_required
+        start: 4
+        end: 8
+        text: When
+      - clause_id: fatf_rec10_rec_10_when_cdd_is_required
+        start: 48
+        end: 54
+        text: should
+      - clause_id: fatf_rec10_rec_10_when_cdd_is_required
+        start: 55
+        end: 69
+        text: be required to
+      - clause_id: fatf_rec10_rec_10_when_cdd_is_required
+        start: 70
+        end: 79
+        text: undertake
+      - clause_id: fatf_rec10_rec_10_when_cdd_is_required
+        start: 80
+        end: 117
+        text: customer due diligence (CDD) measures
+      - clause_id: fatf_rec10_rec_10_when_cdd_is_required
+        start: 118
+        end: 122
+        text: when
+      depends_on: []
+    fatf_rec10_rec_10_when_cdd_is_required_i:
+    - rule: list.inherit
+      obligation_type: cdd_triggers
+      message: The item continues a lead-in that introduces the conditions of a duty
+        ("when:"), so it takes the lead-in's type cdd_triggers.
+      spans:
+      - clause_id: fatf_rec10_rec_10_when_cdd_is_required
+        start: 118
+        end: 123
+        text: 'when:'
+      depends_on:
+      - fatf_rec10_rec_10_when_cdd_is_required#cdd_triggers
+    fatf_rec10_rec_10_when_cdd_is_required_ii:
+    - rule: list.inherit
+      obligation_type: cdd_triggers
+      message: The item continues a lead-in that introduces the conditions of a duty
+        ("when:"), so it takes the lead-in's type cdd_triggers.
+      spans:
+      - clause_id: fatf_rec10_rec_10_when_cdd_is_required
+        start: 118
+        end: 123
+        text: 'when:'
+      depends_on:
+      - fatf_rec10_rec_10_when_cdd_is_required#cdd_triggers
+    fatf_rec10_rec_10_when_cdd_is_required_iii:
+    - rule: list.inherit
+      obligation_type: cdd_triggers
+      message: The item continues a lead-in that introduces the conditions of a duty
+        ("when:"), so it takes the lead-in's type cdd_triggers.
+      spans:
+      - clause_id: fatf_rec10_rec_10_when_cdd_is_required
+        start: 118
+        end: 123
+        text: 'when:'
+      depends_on:
+      - fatf_rec10_rec_10_when_cdd_is_required#cdd_triggers
+    fatf_rec10_rec_10_when_cdd_is_required_iv:
+    - rule: list.inherit
+      obligation_type: cdd_triggers
+      message: The item continues a lead-in that introduces the conditions of a duty
+        ("when:"), so it takes the lead-in's type cdd_triggers.
+      spans:
+      - clause_id: fatf_rec10_rec_10_when_cdd_is_required
+        start: 118
+        end: 123
+        text: 'when:'
+      depends_on:
+      - fatf_rec10_rec_10_when_cdd_is_required#cdd_triggers
 - obligation_id: ob_verify_customer_identity
   source_clause_ids:
   - fatf_rec10_rec_10_cdd_measures_a
@@ -51,8 +162,27 @@
   - reliable_independent_source_documents
   review_flags:
   - unverifiable_identity_documents
-  confidence: 0.94
+  confidence: 1.0
+  confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
+    2017, labelled after the rules were frozen): 3 of 3 paragraphs flagged with this
+    type were correct.'
+  confidence_kind: measured_on_heldout
   review_status: approved
+  explanations:
+    fatf_rec10_rec_10_cdd_measures_a:
+    - rule: identify.subject
+      obligation_type: verify_customer
+      message: The item starts with "identifying", whose object is the customer.
+      spans:
+      - clause_id: fatf_rec10_rec_10_cdd_measures_a
+        start: 4
+        end: 15
+        text: Identifying
+      - clause_id: fatf_rec10_rec_10_cdd_measures_a
+        start: 16
+        end: 28
+        text: the customer
+      depends_on: []
 - obligation_id: ob_identify_ubo_25
   source_clause_ids:
   - fatf_rec10_rec_10_cdd_measures_b
@@ -74,8 +204,90 @@
   review_flags:
   - unclear_ownership_structure
   - complex_multi_layer_ownership
-  confidence: 0.93
+  confidence: 0.75
+  confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
+    2017, labelled after the rules were frozen): 3 of 4 paragraphs flagged with this
+    type were correct.'
+  confidence_kind: measured_on_heldout
   review_status: approved
+  explanations:
+    fatf_rec10_rec_10_cdd_measures_b:
+    - rule: identify.subject
+      obligation_type: identify_ubo
+      message: The item starts with "identifying", whose object is a beneficial owner.
+      spans:
+      - clause_id: fatf_rec10_rec_10_cdd_measures_b
+        start: 4
+        end: 15
+        text: Identifying
+      - clause_id: fatf_rec10_rec_10_cdd_measures_b
+        start: 20
+        end: 36
+        text: beneficial owner
+      - clause_id: fatf_rec10_rec_10_cdd_measures_b
+        start: 99
+        end: 115
+        text: beneficial owner
+      - clause_id: fatf_rec10_rec_10_cdd_measures_b
+        start: 188
+        end: 204
+        text: beneficial owner
+      depends_on: []
+    - rule: ubo.ownership_structure
+      obligation_type: identify_ubo
+      message: '"should" governs "understanding the ownership and control structure",
+        a duty to understand an ownership and control structure.'
+      spans:
+      - clause_id: fatf_rec10_rec_10_cdd_measures_b
+        start: 249
+        end: 255
+        text: should
+      - clause_id: fatf_rec10_rec_10_cdd_measures_b
+        start: 287
+        end: 336
+        text: understanding the ownership and control structure
+      depends_on: []
+    fatf_rec10_interpretive_note_to_rec_10_p_5_b_b:
+    - rule: identify.subject
+      obligation_type: identify_ubo
+      message: The item starts with "identify", whose object is a beneficial owner.
+      spans:
+      - clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b_b
+        start: 4
+        end: 12
+        text: Identify
+      - clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b_b
+        start: 17
+        end: 33
+        text: beneficial owner
+      depends_on: []
+    fatf_rec10_interpretive_note_to_rec_10_p_5_b_b_i:
+    - rule: list.inherit
+      obligation_type: identify_ubo
+      message: The item continues a lead-in that introduces the information to obtain
+        ("following information"), so it takes the lead-in's type identify_ubo.
+      spans:
+      - clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b_b
+        start: 132
+        end: 153
+        text: following information
+      depends_on:
+      - fatf_rec10_interpretive_note_to_rec_10_p_5_b_b#identify_ubo
+    fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40:
+    - rule: ubo.ownership_threshold
+      obligation_type: identify_ubo
+      message: '"controlling ownership interest" and the percentage "25%" occur in
+        one clause, read as an ownership threshold for beneficial owners.'
+      spans:
+      - clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40
+        start: 19
+        end: 49
+        text: controlling ownership interest
+      - clause_id: fatf_rec10_interpretive_note_to_rec_10_p_5_b_footnote_40
+        start: 208
+        end: 211
+        text: 25%
+      depends_on: []
 - obligation_id: ob_cdd_on_relationship_mas
   source_clause_ids:
   - mas_notice_626_6_cdd_6_3
@@ -97,8 +309,84 @@
   required_evidence:
   - cdd_completed_signoff
   review_flags: []
-  confidence: 0.96
+  confidence: 0.89
+  confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
+    2017, labelled after the rules were frozen): 8 of 9 paragraphs flagged with this
+    type were correct.'
+  confidence_kind: measured_on_heldout
   review_status: approved
+  explanations:
+    mas_notice_626_6_cdd_6_3:
+    - rule: trigger.cdd_on_condition
+      obligation_type: cdd_triggers
+      message: '"shall" governs "perform" with the object "the measures as required
+        by paragraphs", and the condition "when" occurs in the same sentence.'
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_3
+        start: 15
+        end: 20
+        text: shall
+      - clause_id: mas_notice_626_6_cdd_6_3
+        start: 21
+        end: 28
+        text: perform
+      - clause_id: mas_notice_626_6_cdd_6_3
+        start: 29
+        end: 67
+        text: the measures as required by paragraphs
+      - clause_id: mas_notice_626_6_cdd_6_3
+        start: 79
+        end: 83
+        text: when
+      depends_on: []
+    mas_notice_626_6_cdd_6_3_a:
+    - rule: list.inherit
+      obligation_type: cdd_triggers
+      message: The item continues a lead-in that introduces the conditions of a duty
+        ("when -"), so it takes the lead-in's type cdd_triggers.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_3
+        start: 79
+        end: 85
+        text: when -
+      depends_on:
+      - mas_notice_626_6_cdd_6_3#cdd_triggers
+    mas_notice_626_6_cdd_6_3_b:
+    - rule: list.inherit
+      obligation_type: cdd_triggers
+      message: The item continues a lead-in that introduces the conditions of a duty
+        ("when -"), so it takes the lead-in's type cdd_triggers.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_3
+        start: 79
+        end: 85
+        text: when -
+      depends_on:
+      - mas_notice_626_6_cdd_6_3#cdd_triggers
+    mas_notice_626_6_cdd_6_3_f:
+    - rule: list.inherit
+      obligation_type: cdd_triggers
+      message: The item continues a lead-in that introduces the conditions of a duty
+        ("when -"), so it takes the lead-in's type cdd_triggers.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_3
+        start: 79
+        end: 85
+        text: when -
+      depends_on:
+      - mas_notice_626_6_cdd_6_3#cdd_triggers
+    mas_notice_626_6_cdd_6_3_g:
+    - rule: list.inherit
+      obligation_type: cdd_triggers
+      message: The item continues a lead-in that introduces the conditions of a duty
+        ("when -"), so it takes the lead-in's type cdd_triggers.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_3
+        start: 79
+        end: 85
+        text: when -
+      depends_on:
+      - mas_notice_626_6_cdd_6_3#cdd_triggers
 - obligation_id: ob_verify_customer_mas
   source_clause_ids:
   - mas_notice_626_6_cdd_6_5
@@ -127,8 +415,146 @@
   - reliable_independent_source_documents
   review_flags:
   - missing_mandatory_identification_fields
-  confidence: 0.95
+  confidence: 1.0
+  confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
+    2017, labelled after the rules were frozen): 3 of 3 paragraphs flagged with this
+    type were correct.'
+  confidence_kind: measured_on_heldout
   review_status: approved
+  explanations:
+    mas_notice_626_6_cdd_6_5:
+    - rule: identify.subject
+      obligation_type: verify_customer
+      message: '"shall" governs "identify", whose object is the customer.'
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_5
+        start: 15
+        end: 20
+        text: shall
+      - clause_id: mas_notice_626_6_cdd_6_5
+        start: 21
+        end: 29
+        text: identify
+      - clause_id: mas_notice_626_6_cdd_6_5
+        start: 30
+        end: 43
+        text: each customer
+      depends_on: []
+    mas_notice_626_6_cdd_6_6:
+    - rule: identify.information_for_purposes
+      obligation_type: verify_customer
+      message: '"shall" governs "obtain" with the object "at least the following information",
+        the clause says "for the purposes of paragraph 6.5", and paragraph 6.5 carries
+        verify_customer.'
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_6
+        start: 8
+        end: 41
+        text: For the purposes of paragraph 6.5
+      - clause_id: mas_notice_626_6_cdd_6_6
+        start: 50
+        end: 55
+        text: shall
+      - clause_id: mas_notice_626_6_cdd_6_6
+        start: 56
+        end: 62
+        text: obtain
+      - clause_id: mas_notice_626_6_cdd_6_6
+        start: 63
+        end: 97
+        text: at least the following information
+      depends_on:
+      - mas_notice_626_6_cdd_6_5#verify_customer
+    mas_notice_626_6_cdd_6_6_a:
+    - rule: list.inherit
+      obligation_type: verify_customer
+      message: The item continues a lead-in that introduces the information to obtain
+        ("following information"), so it takes the lead-in's type verify_customer.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_6
+        start: 76
+        end: 97
+        text: following information
+      depends_on:
+      - mas_notice_626_6_cdd_6_6#verify_customer
+    mas_notice_626_6_cdd_6_6_a_i:
+    - rule: list.inherit
+      obligation_type: verify_customer
+      message: The item continues a lead-in that introduces a list of duties ("–"),
+        so it takes the lead-in's type verify_customer.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_6_a
+        start: 55
+        end: 56
+        text: –
+      depends_on:
+      - mas_notice_626_6_cdd_6_6_a#verify_customer
+    mas_notice_626_6_cdd_6_6_a_ii:
+    - rule: list.inherit
+      obligation_type: verify_customer
+      message: The item continues a lead-in that introduces a list of duties ("–"),
+        so it takes the lead-in's type verify_customer.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_6_a
+        start: 55
+        end: 56
+        text: –
+      depends_on:
+      - mas_notice_626_6_cdd_6_6_a#verify_customer
+    mas_notice_626_6_cdd_6_6_a_iii:
+    - rule: list.inherit
+      obligation_type: verify_customer
+      message: The item continues a lead-in that introduces a list of duties ("–"),
+        so it takes the lead-in's type verify_customer.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_6_a
+        start: 55
+        end: 56
+        text: –
+      depends_on:
+      - mas_notice_626_6_cdd_6_6_a#verify_customer
+    mas_notice_626_6_cdd_6_6_a_iv:
+    - rule: list.inherit
+      obligation_type: verify_customer
+      message: The item continues a lead-in that introduces a list of duties ("–"),
+        so it takes the lead-in's type verify_customer.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_6_a
+        start: 55
+        end: 56
+        text: –
+      depends_on:
+      - mas_notice_626_6_cdd_6_6_a#verify_customer
+    mas_notice_626_6_cdd_6_6_a_v:
+    - rule: list.inherit
+      obligation_type: verify_customer
+      message: The item continues a lead-in that introduces a list of duties ("–"),
+        so it takes the lead-in's type verify_customer.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_6_a
+        start: 55
+        end: 56
+        text: –
+      depends_on:
+      - mas_notice_626_6_cdd_6_6_a#verify_customer
+    mas_notice_626_6_cdd_6_9:
+    - rule: identify.subject
+      obligation_type: verify_customer
+      message: '"shall" governs "verify", whose object is the customer.'
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_9
+        start: 15
+        end: 20
+        text: shall
+      - clause_id: mas_notice_626_6_cdd_6_9
+        start: 21
+        end: 27
+        text: verify
+      - clause_id: mas_notice_626_6_cdd_6_9
+        start: 44
+        end: 56
+        text: the customer
+      depends_on: []
 - obligation_id: ob_identify_ubo_mas
   source_clause_ids:
   - mas_notice_626_6_cdd_6_13
@@ -151,8 +577,107 @@
   review_flags:
   - ubo_not_identified
   - multi_jurisdictional_layers
-  confidence: 0.94
+  confidence: 0.75
+  confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
+    2017, labelled after the rules were frozen): 3 of 4 paragraphs flagged with this
+    type were correct.'
+  confidence_kind: measured_on_heldout
   review_status: approved
+  explanations:
+    mas_notice_626_6_cdd_6_13:
+    - rule: identify.subject
+      obligation_type: identify_ubo
+      message: '"shall" governs "inquire if", whose object is a beneficial owner.'
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_13
+        start: 43
+        end: 48
+        text: shall
+      - clause_id: mas_notice_626_6_cdd_6_13
+        start: 49
+        end: 59
+        text: inquire if
+      - clause_id: mas_notice_626_6_cdd_6_13
+        start: 77
+        end: 93
+        text: beneficial owner
+      depends_on: []
+    mas_notice_626_6_cdd_6_14:
+    - rule: identify.subject
+      obligation_type: identify_ubo
+      message: '"shall" governs "identify", whose object is a beneficial owner.'
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_14
+        start: 90
+        end: 95
+        text: shall
+      - clause_id: mas_notice_626_6_cdd_6_14
+        start: 96
+        end: 104
+        text: identify
+      - clause_id: mas_notice_626_6_cdd_6_14
+        start: 109
+        end: 125
+        text: beneficial owner
+      depends_on: []
+    mas_notice_626_6_cdd_6_14_a:
+    - rule: list.inherit
+      obligation_type: identify_ubo
+      message: The item continues a lead-in that introduces a list of duties ("–"),
+        so it takes the lead-in's type identify_ubo.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_14
+        start: 198
+        end: 199
+        text: –
+      depends_on:
+      - mas_notice_626_6_cdd_6_14#identify_ubo
+    mas_notice_626_6_cdd_6_14_a_i:
+    - rule: identify.subject
+      obligation_type: identify_ubo
+      message: The item starts with "identify", whose object is a beneficial owner.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_14_a_i
+        start: 4
+        end: 12
+        text: identify
+      - clause_id: mas_notice_626_6_cdd_6_14_a_i
+        start: 72
+        end: 86
+        text: ultimately own
+      depends_on: []
+    mas_notice_626_6_cdd_6_14_a_ii:
+    - rule: list.inherit
+      obligation_type: identify_ubo
+      message: The item continues a lead-in that introduces a list of duties ("-"),
+        so it takes the lead-in's type identify_ubo.
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_14_a
+        start: 41
+        end: 42
+        text: '-'
+      depends_on:
+      - mas_notice_626_6_cdd_6_14_a#identify_ubo
+    mas_notice_626_6_cdd_6_14b:
+    - rule: identify.cross_reference
+      obligation_type: identify_ubo
+      message: '"shall" governs "verify", whose object is the person identified under
+        paragraph 6.14, which carries identify_ubo.'
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_14b
+        start: 17
+        end: 22
+        text: shall
+      - clause_id: mas_notice_626_6_cdd_6_14b
+        start: 48
+        end: 54
+        text: verify
+      - clause_id: mas_notice_626_6_cdd_6_14b
+        start: 76
+        end: 114
+        text: person identified under paragraph 6.14
+      depends_on:
+      - mas_notice_626_6_cdd_6_14#identify_ubo
 - obligation_id: ob_cdd_incomplete_mas
   source_clause_ids:
   - mas_notice_626_6_cdd_6_35
@@ -169,8 +694,27 @@
   - str_consideration_record
   review_flags:
   - cdd_incomplete
-  confidence: 0.95
+  confidence: null
+  confidence_basis: 'Not measured: rules v2 flagged no paragraph with this type in
+    unseen text (Part 3 of the UK Money Laundering Regulations 2017), although the
+    gold labels give it to 2 paragraphs there; the rules found none of them.'
+  confidence_kind: null
   review_status: approved
+  explanations:
+    mas_notice_626_6_cdd_6_35:
+    - rule: incomplete.unable_and_stop
+      obligation_type: cdd_incomplete
+      message: '"unable to complete" and "shall not commence" occur in one sentence.'
+      spans:
+      - clause_id: mas_notice_626_6_cdd_6_35
+        start: 27
+        end: 45
+        text: unable to complete
+      - clause_id: mas_notice_626_6_cdd_6_35
+        start: 100
+        end: 118
+        text: shall not commence
+      depends_on: []
 - obligation_id: ob_pep_edd_mas
   source_clause_ids:
   - mas_notice_626_8_enhanced_cdd_8_3
@@ -193,8 +737,72 @@
   review_flags:
   - pep_without_senior_mgmt_signoff
   - insufficient_source_of_wealth_evidence
-  confidence: 0.97
+  confidence: null
+  confidence_basis: 'Not measured: rules v2 flagged no paragraph with this type in
+    unseen text (Part 3 of the UK Money Laundering Regulations 2017), although the
+    gold labels give it to 4 paragraphs there; the rules found none of them.'
+  confidence_kind: null
   review_status: approved
+  explanations:
+    mas_notice_626_8_enhanced_cdd_8_3:
+    - rule: pep.enhanced
+      obligation_type: pep_edd
+      message: '"shall" and "enhanced cdd" occur in a sentence that mentions a politically
+        exposed person ("politically exposed").'
+      spans:
+      - clause_id: mas_notice_626_8_enhanced_cdd_8_3
+        start: 15
+        end: 20
+        text: shall
+      - clause_id: mas_notice_626_8_enhanced_cdd_8_3
+        start: 120
+        end: 132
+        text: enhanced CDD
+      - clause_id: mas_notice_626_8_enhanced_cdd_8_3
+        start: 233
+        end: 252
+        text: politically exposed
+      - clause_id: mas_notice_626_8_enhanced_cdd_8_3
+        start: 304
+        end: 323
+        text: politically exposed
+      depends_on: []
+    mas_notice_626_8_enhanced_cdd_8_3_a:
+    - rule: list.inherit
+      obligation_type: pep_edd
+      message: The item continues a lead-in that introduces a list of measures ("following
+        enhanced cdd measures"), so it takes the lead-in's type pep_edd.
+      spans:
+      - clause_id: mas_notice_626_8_enhanced_cdd_8_3
+        start: 110
+        end: 141
+        text: following enhanced CDD measures
+      depends_on:
+      - mas_notice_626_8_enhanced_cdd_8_3#pep_edd
+    mas_notice_626_8_enhanced_cdd_8_3_b:
+    - rule: list.inherit
+      obligation_type: pep_edd
+      message: The item continues a lead-in that introduces a list of measures ("following
+        enhanced cdd measures"), so it takes the lead-in's type pep_edd.
+      spans:
+      - clause_id: mas_notice_626_8_enhanced_cdd_8_3
+        start: 110
+        end: 141
+        text: following enhanced CDD measures
+      depends_on:
+      - mas_notice_626_8_enhanced_cdd_8_3#pep_edd
+    mas_notice_626_8_enhanced_cdd_8_3_c:
+    - rule: list.inherit
+      obligation_type: pep_edd
+      message: The item continues a lead-in that introduces a list of measures ("following
+        enhanced cdd measures"), so it takes the lead-in's type pep_edd.
+      spans:
+      - clause_id: mas_notice_626_8_enhanced_cdd_8_3
+        start: 110
+        end: 141
+        text: following enhanced CDD measures
+      depends_on:
+      - mas_notice_626_8_enhanced_cdd_8_3#pep_edd
 - obligation_id: ob_verify_customer_gb
   source_clause_ids:
   - mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification
@@ -213,8 +821,40 @@
   - official_registry_extract
   review_flags:
   - customer_not_verified_before_onboarding
-  confidence: 0.97
+  confidence: 1.0
+  confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
+    2017, labelled after the rules were frozen): 3 of 3 paragraphs flagged with this
+    type were correct.'
+  confidence_kind: measured_on_heldout
   review_status: approved
+  explanations:
+    mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification:
+    - rule: identify.passive_customer
+      obligation_type: verify_customer
+      message: '"customer identification every customer must be identified" is a passive
+        duty to identify the customer.'
+      spans:
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification
+        start: 8
+        end: 65
+        text: Customer Identification Every customer must be identified
+      depends_on: []
+    mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification_a:
+    - rule: list.inherit
+      obligation_type: verify_customer
+      message: The item continues a lead-in that introduces its items, so it takes
+        the lead-in's type verify_customer.
+      spans: []
+      depends_on:
+      - mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification#verify_customer
+    mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification_b:
+    - rule: list.inherit
+      obligation_type: verify_customer
+      message: The item continues a lead-in that introduces its items, so it takes
+        the lead-in's type verify_customer.
+      spans: []
+      depends_on:
+      - mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification#verify_customer
 - obligation_id: ob_identify_ubo_10_gb
   source_clause_ids:
   - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification
@@ -236,8 +876,90 @@
   - shareholder_registry
   review_flags:
   - ownership_between_10_and_25_percent
-  confidence: 0.98
+  confidence: 0.75
+  confidence_basis: 'Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations
+    2017, labelled after the rules were frozen): 3 of 4 paragraphs flagged with this
+    type were correct.'
+  confidence_kind: measured_on_heldout
   review_status: approved
+  explanations:
+    mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification:
+    - rule: identify.subject
+      obligation_type: identify_ubo
+      message: '"shall" governs "identify", whose object is a beneficial owner.'
+      spans:
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification
+        start: 54
+        end: 59
+        text: shall
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification
+        start: 60
+        end: 68
+        text: identify
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification
+        start: 109
+        end: 125
+        text: Beneficial Owner
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification
+        start: 128
+        end: 131
+        text: UBO
+      depends_on: []
+    mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a:
+    - rule: ubo.ownership_threshold
+      obligation_type: identify_ubo
+      message: '"ownership threshold" and the percentage "10%" occur in one clause,
+        read as an ownership threshold for beneficial owners.'
+      spans:
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a
+        start: 28
+        end: 47
+        text: ownership threshold
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a
+        start: 51
+        end: 54
+        text: 10%
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a
+        start: 114
+        end: 117
+        text: 25%
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a
+        start: 131
+        end: 135
+        text: UBOs
+      depends_on: []
+    mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b:
+    - rule: list.inherit
+      obligation_type: identify_ubo
+      message: The item continues a lead-in that introduces its items, so it takes
+        the lead-in's type identify_ubo.
+      spans: []
+      depends_on:
+      - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification#identify_ubo
+    mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b_i:
+    - rule: list.inherit
+      obligation_type: identify_ubo
+      message: The item continues a lead-in that introduces a list of duties (":"),
+        so it takes the lead-in's type identify_ubo.
+      spans:
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b
+        start: 119
+        end: 120
+        text: ':'
+      depends_on:
+      - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b#identify_ubo
+    mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b_ii:
+    - rule: list.inherit
+      obligation_type: identify_ubo
+      message: The item continues a lead-in that introduces a list of duties (":"),
+        so it takes the lead-in's type identify_ubo.
+      spans:
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b
+        start: 119
+        end: 120
+        text: ':'
+      depends_on:
+      - mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_b#identify_ubo
 - obligation_id: ob_pep_prohibitions_gb
   source_clause_ids:
   - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
@@ -254,8 +976,40 @@
   - rejected_onboarding_record
   review_flags:
   - pep_from_high_risk_country
-  confidence: 0.99
+  confidence: null
+  confidence_basis: 'Not measured: rules v2 flagged no paragraph with this type in
+    unseen text (Part 3 of the UK Money Laundering Regulations 2017), and the gold
+    labels give it to no paragraph there either.'
+  confidence_kind: null
   review_status: approved
+  explanations:
+    mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons:
+    - rule: pep.prohibition
+      obligation_type: pep_prohibition
+      message: '"prohibits" and "business relation" occur in a sentence that mentions
+        a politically exposed person ("politically exposed").'
+      spans:
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
+        start: 8
+        end: 27
+        text: Politically Exposed
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
+        start: 57
+        end: 66
+        text: prohibits
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
+        start: 80
+        end: 97
+        text: business relation
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
+        start: 108
+        end: 127
+        text: Politically Exposed
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons
+        start: 137
+        end: 141
+        text: PEPs
+      depends_on: []
 - obligation_id: ob_pep_approval_gb
   source_clause_ids:
   - mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a
@@ -275,5 +1029,33 @@
   - source_of_wealth_verification
   review_flags:
   - pep_without_head_compliance_signoff
-  confidence: 0.97
+  confidence: null
+  confidence_basis: 'Not measured: rules v2 flagged no paragraph with this type in
+    unseen text (Part 3 of the UK Money Laundering Regulations 2017), and the gold
+    labels give it to no paragraph there either.'
+  confidence_kind: null
   review_status: approved
+  explanations:
+    mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a:
+    - rule: pep.approval
+      obligation_type: pep_approval
+      message: '"must" and "approved by" occur in a sentence that mentions a politically
+        exposed person ("peps").'
+      spans:
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a
+        start: 18
+        end: 22
+        text: PEPs
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a
+        start: 41
+        end: 45
+        text: must
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a
+        start: 49
+        end: 60
+        text: approved by
+      - clause_id: mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a
+        start: 88
+        end: 101
+        text: signed off by
+      depends_on: []
