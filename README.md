@@ -6,9 +6,11 @@
 
 **Held-out tests:** the first rules (v1) matched every development obligation but found only 1 of 18 obligations in the 157 other paragraphs of the official MAS Notice 626, labelled and committed before the rules were run. The rules were rebuilt (v2) around how a requirement is phrased: which verb a modal governs, permissions and exemptions, who must be identified, and how list items relate to their lead-in. v2 was frozen before a second regulation was fetched and labelled: Part 3 of the UK Money Laundering Regulations 2017, which neither version had seen. There v2 found 15 of 32 labelled obligations at precision 0.88; v1 found none, and at most 3 when told to treat the text as FATF or MAS. A local open-weight LLM (qwen3.5:9b) given the same written guideline found 26 of 32, but at precision 0.43. The rules miss half and the LLM over-labels, so neither replaces the human review step.
 
+**Explanations:** every rule decision records the words that triggered it (character offsets into the clause) and the rule that fired, and the dashboard highlights them. Deletion tests in the style of ERASER check that these reasons are what the decision used: deleting the cited words removes the label, and keeping only them keeps it, for all 81 held-out labels (51 MAS, 30 UK) and for 42 of 46 development labels (the 4 exceptions come back through a second route in the list structure). The same tests on the LLM's own quoted evidence (a second prompt asks it to quote the words behind each label): deleting its quotes removed the label in 111 of 170 cases, keeping only its quotes kept the label in 88 of 164, and both held for 53 of 161, although its quotes cover about three quarters of the clause text. Confidence scores are no longer hand-set: each rule type carries its measured precision on the unseen UK text (for example 8 of 9, 3 of 4) or says it was not measured. Checklists are explained by the decision tree's actual path and by single-attribute counterfactuals; this exposed two listed risk triggers that the decision never checks.
+
 **My role:** individual final project for the IT Risk Management course at National Central University (May–June 2026). I designed and built the data contracts, gold dataset, extraction and decision rules, evaluation, API and dashboard.
 
-**How to run:** `docker compose -f deployment/docker-compose.yml up --build` starts the dashboard at `http://localhost:3000`. `PYTHONPATH=backend python -m src.pipeline` rebuilds `data/processed` and prints every number below. `PYTHONPATH=backend pytest backend/tests` runs the 102 tests. `PYTHONPATH=backend python -m src.heldout.evaluate` and `PYTHONPATH=backend python -m src.heldout.llm_compare score` recompute the held-out scores.
+**How to run:** `docker compose -f deployment/docker-compose.yml up --build` starts the dashboard at `http://localhost:3000`. `PYTHONPATH=backend python -m src.pipeline` rebuilds `data/processed` and prints every number below. `PYTHONPATH=backend pytest backend/tests` runs the 226 tests. `PYTHONPATH=backend python -m src.heldout.evaluate`, `PYTHONPATH=backend python -m src.heldout.llm_compare score` and `PYTHONPATH=backend python -m src.heldout.llm_faithfulness score` recompute the held-out scores and deletion tests from cached answers.
 
 | Number | Where it comes from |
 | --- | --- |
@@ -19,6 +21,9 @@
 | All numbers in one file | [`data/processed/summary.json`](data/processed/summary.json) |
 | Held-out MAS Notice 626 (157 paragraphs, labels committed before v1 ran): v1 1/18 (precision 0.14); v2 18/18 (0.95, but v2 was designed after studying these errors); LLM 16/18 (0.40) | [`data/heldout/results/mas_notice_626/`](data/heldout/results/mas_notice_626/) |
 | Held-out UK MLR 2017 Part 3 (137 paragraphs, labels committed after v2 was frozen): v1 0/32; v2 15/32 (0.88); LLM 26/32 (0.43), 1 of 173 returned clause IDs invented | [`data/heldout/results/uk_mlr_2017/`](data/heldout/results/uk_mlr_2017/) |
+| Rule explanations pass both deletion tests: 81/81 held-out labels, 42/46 development labels; cited words cover about 20% of the clause text they touch | [`rules_v2_faithfulness.txt`](data/heldout/results/uk_mlr_2017/rules_v2_faithfulness.txt), [`explanation_faithfulness.txt`](data/processed/explanation_faithfulness.txt) |
+| The LLM's quoted evidence on the UK text: deletion test 111/170, quotes-only test 88/164, both 53/161; its quotes cover 76% of the clause text (median 93%) | [`llm_qwen3_5_9b_evidence_faithfulness.txt`](data/heldout/results/uk_mlr_2017/llm_qwen3_5_9b_evidence_faithfulness.txt) |
+| Confidence = measured precision of the rule type on the unseen UK text (cdd_triggers 8/9, verify_customer 3/3, identify_ubo 3/4, prohibit_anonymous 1/1; PEP EDD and CDD-incomplete found 0 of 4 and 0 of 2, so no precision) | `rule_reliability` in [`summary.json`](data/processed/summary.json) |
 
 The development gold set in [`data/gold/`](data/gold/) is my own annotation of these sources and the rules were written against it, so 13/13 shows that the rules cover the annotated obligations; the held-out rows show how far they generalise. The LLM chose clause IDs from the one paragraph it was sent, so its few invalid citations do not show it would cite correctly without that list. The MAS texts are checked line by line against the official PDF in [`data/sources/official/`](data/sources/official/) by the test suite.
 
@@ -250,8 +255,13 @@ PYTHONPATH=backend pytest backend/tests
 
 # 未用於開發的測試（held-out）：規則與 LLM 在 MAS Notice 626 全文上的表現
 PYTHONPATH=backend python -m src.heldout.evaluate          # 規則式萃取器
-PYTHONPATH=backend python -m src.heldout.llm_compare score # 用快取的 LLM 回答重新計分，不需要模型
-ollama pull qwen3.5:9b && PYTHONPATH=backend python -m src.heldout.llm_compare run  # 重新呼叫模型（選用）
+PYTHONPATH=backend python -m src.heldout.llm_compare score      # 用快取的 LLM 回答重新計分，不需要模型
+PYTHONPATH=backend python -m src.heldout.llm_faithfulness score  # LLM 引用依據的刪字測試，也用快取計分
+
+# 重新呼叫本機模型（選用，需要 ollama pull qwen3.5:9b）
+PYTHONPATH=backend python -m src.heldout.llm_compare run --set uk_mlr_2017              # 標準提示詞
+PYTHONPATH=backend python -m src.heldout.llm_compare run --set uk_mlr_2017 --evidence   # 要求附上依據
+PYTHONPATH=backend python -m src.heldout.llm_faithfulness run --set uk_mlr_2017         # 對依據做刪字測試
 ```
 
 GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評估，並確認輸出和 commit 的檔案完全相同。
@@ -300,6 +310,79 @@ GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評�
 
 **這個測試的限制**：兩份標註都只有一位標註者，沒有測量標註者間的一致性；項目數不多（18 項、32 項），數字的波動會很大；英國第 3 部有幾項標註需要判斷（例如 30A 的公司登記資料、30(7) 的信託受益人），換一位標註者可能不同；LLM 只測了一個 9B 的本機模型；LLM 回傳的條文 ID 只能從送給它的那一段裡選，所以無效 ID 很少不代表它在開放情境下不會捏造引用。
 
+## 可解釋性：每個判斷都說得出依據，而且依據是真的
+
+這一節回答三個問題：每個判斷能不能指出依據？那個依據是不是系統真正用的？它對自己有幾分把握，這個數字從哪裡來？
+
+**1. 規則的判斷理由，用刪字測試檢查**
+
+第 2 版規則判斷時，會把觸發的字詞（含在原文中的位置）和規則名稱一起記下來，存在每個義務的 `explanations`，儀表板會把這些字標亮。例如 MAS 6.35 被判為「無法完成 CDD 須停止」，依據是「unable to complete」與「shall not commence」出現在同一句；條列項目則記錄它從哪一條導言繼承、靠的是導言裡哪幾個字。
+
+理由是不是真的，用 ERASER（DeYoung et al., ACL 2020，評估「模型給的理由是否可信」的公開基準）的兩個指標檢查，兩者都重新判斷整份文件：
+- **刪掉理由字詞**，判斷應該消失（comprehensiveness）；
+- **只留理由字詞**，判斷應該還在（sufficiency）。
+
+| 標記（條文, 類型） | 數量 | 刪掉理由後消失 | 只留理由仍成立 | 理由約佔相關條文文字 |
+| --- | --- | --- | --- | --- |
+| 開發資料 | 46 | 42 | 46 | 31%（中位數 22%） |
+| MAS Notice 626 其餘 157 段 | 51 | 51 | 51 | 20%（17%） |
+| 英國 MLR 2017 第 3 部（沒看過） | 30 | 30 | 30 | 22%（18%） |
+
+怎麼讀這個結果：
+- 規則的理由是從做判斷的同一段程式記下來的，所以這個測試驗證的是「理由記錄完整、判斷沒有用到理由以外的字」，不是證明判斷正確：判斷錯的標記，理由一樣會通過。
+- 開發資料上有 4 項刪掉理由後類型又回來了，都在實質受益人識別。原因是規則有第二條路：例如 MAS 6.14 的導言自己要求識別受益人，它的項目 (a)(i) 也這樣要求，刪掉導言的字，類型又從項目上推回來。這是規則本身的性質，不是漏記，測試保留這 4 個失敗。
+- MAS 的 51 項中有 32 項、英國的 30 項中有 12 項來自條列繼承或上推，它們的結果跟著導言的測試走，不是獨立的證據。報告依「本條文自己的字詞」與「條列結構」分開列出（[`rules_v2_faithfulness.txt`](data/heldout/results/uk_mlr_2017/rules_v2_faithfulness.txt)）。
+
+**2. LLM 的理由：同樣的測試**
+
+LLM 另外跑了一版提示詞（`heldout-v2-evidence`）：任務定義完全相同，只多要求每個判斷附上「從原文逐字複製、最短的依據」。在英國法規上，這一版找到 26／32、精確率 0.37。對它的每個判斷做同樣兩個測試（刪掉它引用的字、只留它引用的字，再問一次同一個模型）：
+
+| 英國 MLR 2017 第 3 部 | 判斷數 | 刪掉依據後消失 | 只留依據仍成立 | 兩者都通過 | 依據約佔相關條文文字 |
+| --- | --- | --- | --- | --- | --- |
+| 第 2 版規則 | 30 | 30／30 | 30／30 | 30／30 | 22%（中位數 18%） |
+| 本機 LLM（附依據的那一輪） | 173 | 111／170 | 88／164 | 53／161 | 76%（中位數 93%） |
+
+- LLM 寫出的依據常常不是它真正的依據：刪掉它引用的字，三分之一的判斷照樣成立；只留它引用的字，將近一半的判斷消失。兩個測試都通過的只有三分之一。
+- 它的依據平均佔相關條文的四分之三，多半是整條照抄，沒有指出是哪幾個字。
+- 只留依據時，LLM 看到的是被挖空的段落，這不是它平常的輸入；但這正是測試要問的：如果它說的依據是完整的，挖掉其他字就不該改變判斷。
+- 這裡測的是理由忠不忠實，不是判斷對不對；這一輪的判斷本身在段落層級的精確率是 0.37。格式不符的答案（兩個測試各 3 個、9 個）另外計算，不算通過也不算失敗。
+- 規則的理由是由做判斷的程式記下來的，本來就應該通過；LLM 的理由是另外生成的一段文字。這個對照說明的是：要讓人審查得快又放心，理由必須來自判斷本身，不能只是模型事後的說法。
+- 執行細節：Ollama 的 JSON 模式偶爾在 JSON 結束後停不下來，所以後來加了 2,048 token 的輸出上限。137 段中前 103 段在加上限前跑完（最長的回答 2,476 字元，遠低於上限）；有一段（34(3)）重複輸出到上限，答案無效，計為格式不符。
+
+**3. 信心分數改成實測值**
+
+以前每個義務附的 confidence（0.8–0.99）是寫在程式裡的常數，0.75 的門檻也從來沒有擋掉任何東西。現在 `confidence` 是這類規則在沒看過的英國法規上的段落精確率，`confidence_basis` 寫明樣本：
+
+| 義務類型 | 英國法規上被規則標出 | 其中正確 | confidence |
+| --- | --- | --- | --- |
+| 禁止匿名帳戶 | 1 | 1 | 1.0 |
+| CDD 觸發 | 9 | 8 | 0.89 |
+| 客戶身分驗證 | 3 | 3 | 1.0 |
+| 受益人識別 | 4 | 3 | 0.75 |
+| PEP 加強審查 | 0（標註有 4 段，全漏） | – | 無 |
+| 無法完成 CDD 須停止 | 0（標註有 2 段，全漏） | – | 無 |
+| PEP 禁止、PEP 核准 | 0（英國法規沒有這類條文） | – | 無 |
+
+樣本很小（1 到 9 段），所以這些數字只能當「量過一次」的紀錄，不是可靠的機率。PDF 匯入時 LLM 自己報的分數另外標成「模型自評、未校準」（`confidence_kind`）。
+
+同一段文字上規則和 LLM 都有答案時，報告也依「誰提出」分三級（英國法規，段落層級，標準提示詞那一輪）：兩者都提出 14 項，14 項正確；只有規則 3 項，1 項正確；只有 LLM 46 項，12 項正確。MAS 上對應的是 16／17、2／2、0／23，但 MAS 是改規則時看過的。
+
+**4. 檢查清單：真正的決策路徑與「如果…會怎樣」**
+
+以前儀表板的「推理結論」是依決策等級寫死的固定文字，不管客戶實際情況；產生審計報告用的解釋路徑（`ProvenanceEngine`）則是從文件名稱用關鍵字猜義務（例如看到「senior management」就對到 PEP 加強審查），客戶事實也是依義務寫死的。現在：
+- 決策引擎改寫成明確的決策樹，對 4,608 種客戶組合的輸出與舊版完全相同（測試保留舊版作對照）。
+- 每份清單附上決策路徑：每個判斷讀了哪些客戶資料、結果是什麼；「或」條件會列出哪幾個子條件成立。
+- 每份要收的文件依據哪個義務、哪幾條原文，原文中的依據字詞標亮；條列項目另外列出導言或被引用條文中的依據字詞。
+- 「如果…會怎樣」：只改一個客戶屬性、重跑引擎後輸出確實改變的情況，以及「讀了但單獨改變也不影響結果」的屬性（例如開曼註冊而且受益人不明的企業，兩個條件只改一個，結果不變）。
+- 列出決策樹從不讀取的客戶資料。
+
+這個改寫也讓原有設計的問題浮上來（沒有修改，因為會改變檢查清單與金標）：
+- 「受益人不明」分支列出的風險標記 `excessive_layering_5` 與 `missing_source_of_funds_evidence`，決策樹其實沒有檢查持股層數和資金來源；改掉這兩項資料，結果不變。
+- `excessive_layering_5` 在 5 層以上才成立，但它依據的銀行政策 1.2(b) 寫的是 3 層以上。
+- `missing_source_of_funds_evidence` 沒有任何義務支持：FATF 10(d) 提到資金來源但沒有抽出義務，MAS 8.3(b) 與銀行政策 1.4(a) 只對 PEP 要求。
+
+完整結果：[`data/processed/explanation_faithfulness.txt`](data/processed/explanation_faithfulness.txt)、[`rules_v2_faithfulness.txt`](data/heldout/results/uk_mlr_2017/rules_v2_faithfulness.txt)、[`llm_qwen3_5_9b_evidence_faithfulness.txt`](data/heldout/results/uk_mlr_2017/llm_qwen3_5_9b_evidence_faithfulness.txt)；API：`GET /api/v1/customers/{id}/explanation`。
+
 ## 專案目錄導覽
 
 - [`backend/`](backend/) - FastAPI 服務、資料契約、決策引擎、稽核管理器、圖建構器、匯入、評估和測試
@@ -332,6 +415,8 @@ GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評�
 - 決策用的語料只是 FATF R.10 與 MAS Notice 626 的部分段落摘錄，加上一份虛構的銀行政策。規則式萃取在沒看過的英國法規上只找到約一半的義務（32 項中 15 項，見上方 held-out 測試），漏掉的多半是要求被拆在導言與條列兩層、字面不同或需要領域知識的寫法。
 - 衝突偵測目前只涵蓋三類衝突（持股門檻、偶發交易門檻、PEP 允許與禁止）。
 - CDD 決策層刻意設計得受限且以規則驅動，以換取可解釋性：決策分支是寫好的規則，引用則由義務的出處推導。
+- 規則的判斷理由通過刪字測試，只代表理由記錄完整、判斷沒有用到理由以外的字，不代表判斷正確；信心分數只在一份沒看過的法規上量過，每類 1 到 9 段，PEP 相關類型沒有可用的精確率。
+- 決策樹忠實重現了原本的分支，也連帶保留原本的問題：兩個風險標記沒有被決策檢查，`excessive_layering_5` 的門檻（5 層）和它依據的銀行政策（3 層）不一致（見上方可解釋性一節）。
 - PDF 匯入用 LLM 切條文，條文 ID 格式和 parser 不同；重跑管線會以 `data/sources/` 重建知識庫，透過匯入主控台加入的文件不會保留。
 - 真正的 PDF 匯入時，LLM 萃取仰賴設定好的供應商金鑰。
 - 在真正用於合規之前，還需要更嚴謹的檢索評估、人工標註、存取控制和正式的治理機制。
@@ -350,6 +435,7 @@ GitHub Actions 每次 push 都會跑全部測試、重跑管線與 held-out 評�
 - **2026-11（課程結束後的修補）：** 移除兩條 PDF 匯入時 LLM 退回 mock 模式產生的合成條文；把 MAS 與 FATF 來源改成官方原文的逐字摘錄（修正 SGD 5,000 應為 S$20,000，以及 25% 門檻出自 FATF 而非 MAS Notice 626）；補上 MAS 第 6.14B 段（驗證受益人）與第 6.35 段（無法完成 CDD 時不得建立業務關係），銀行政策的 PEP 禁令與核准要求拆成兩條義務；萃取規則改成依文字判斷、不再指定條文 ID；衝突與檢查清單的引用改由解析出的條文推導，人工裁決只套用在當時裁決的條文上；評估加入出處檢查；PDF 匯入先驗證再寫檔；新增一鍵重建管線，測試不再改寫 repo 資料。課程繳交版本見 git 歷史中 2026-06 的 commit。
 - **2026-11（held-out 測試）：** 把官方 MAS Notice 626 全文轉成可解析的 Markdown；在規則沒看過的 157 段上先標註、先 commit，再跑規則，並用本機開源 LLM 做對照；新增 GitHub Actions，每次 push 都重跑測試、管線與評估並比對輸出；README 加上示範動畫；評估工具裡手寫的對照組改名為 `ScriptedRAGBaseline`，避免被誤認為真實系統。
 - **2026-11（規則第 2 版與第二份 held-out 測試）：** 依第一輪的錯誤類型重寫規則（句子結構、放寬句、主詞、條列關係、多重類型），舊版凍結在 [`extractor_v1.py`](backend/src/extraction/extractor_v1.py) 供對照；新規則先 commit 凍結，之後才下載英國《Money Laundering Regulations 2017》第 3 部、先標註再測試。新規則在開發資料上找到一條原本漏標的義務（銀行政策 1.1 客戶身分驗證），金標因此從 12 條變成 13 條。
+- **2026-11（可解釋性）：** 規則判斷記錄觸發字詞與規則，並用刪字測試檢查；LLM 另跑一輪要求逐字引用依據，對它的依據做同樣測試；拿掉寫死的信心分數，改成在沒看過的英國法規上實測的精確率；檢查清單引擎改寫成明確的決策樹（輸出與舊版相同），附上決策路徑、每份文件的依據條文與「如果…會怎樣」，取代原本的固定說明文字與關鍵字對應；儀表板顯示這些解釋。
 
 ## 免責聲明
 
