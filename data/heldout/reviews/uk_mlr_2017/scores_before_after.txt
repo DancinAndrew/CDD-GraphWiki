@@ -1,0 +1,37 @@
+Scores on held-out Part 3 of the UK Money Laundering Regulations 2017 against the pre-registered and the revised labels
+=======================================================================================================================
+
+Review: 42 candidates; 1 changed, 12 kept, 29 guideline gaps (label kept).
+Sensitivity: the revised labels plus the 7 readings that two or more adjudicators preferred without finding them required by the guideline. Not adopted; shown to bound the effect of unclear cases.
+
+pre_registered                   75 clauses (77 clause-type pairs), 30 paragraphs (32 paragraph-type pairs)
+revised                          74 clauses (76 clause-type pairs), 30 paragraphs (32 paragraph-type pairs)
+sensitivity_preferred_readings   77 clauses (83 clause-type pairs), 31 paragraphs (36 paragraph-type pairs)
+
+Paragraph level  precision / recall / F1  (TP, FP, FN)
+  rules_v1                   pre_registered                   0.00 / 0.00 / 0.00  (0, 0, 32)
+  rules_v1                   revised                          0.00 / 0.00 / 0.00  (0, 0, 32)
+  rules_v1                   sensitivity_preferred_readings   0.00 / 0.00 / 0.00  (0, 0, 36)
+  rules_v2                   pre_registered                   0.88 / 0.47 / 0.61  (15, 2, 17)
+  rules_v2                   revised                          0.88 / 0.47 / 0.61  (15, 2, 17)
+  rules_v2                   sensitivity_preferred_readings   0.88 / 0.42 / 0.57  (15, 2, 21)
+  llm_qwen3_5_9b             pre_registered                   0.43 / 0.81 / 0.57  (26, 34, 6)
+  llm_qwen3_5_9b             revised                          0.43 / 0.81 / 0.57  (26, 34, 6)
+  llm_qwen3_5_9b             sensitivity_preferred_readings   0.45 / 0.75 / 0.56  (27, 33, 9)
+  llm_qwen3_5_9b_evidence    pre_registered                   0.37 / 0.81 / 0.51  (26, 44, 6)
+  llm_qwen3_5_9b_evidence    revised                          0.37 / 0.81 / 0.51  (26, 44, 6)
+  llm_qwen3_5_9b_evidence    sensitivity_preferred_readings   0.39 / 0.75 / 0.51  (27, 43, 9)
+
+Clause level  precision / recall / F1  (TP, FP, FN)
+  rules_v1                   pre_registered                   0.00 / 0.00 / 0.00  (0, 0, 77)
+  rules_v1                   revised                          0.00 / 0.00 / 0.00  (0, 0, 76)
+  rules_v1                   sensitivity_preferred_readings   0.00 / 0.00 / 0.00  (0, 0, 83)
+  rules_v2                   pre_registered                   0.90 / 0.35 / 0.50  (27, 3, 50)
+  rules_v2                   revised                          0.90 / 0.36 / 0.51  (27, 3, 49)
+  rules_v2                   sensitivity_preferred_readings   0.90 / 0.33 / 0.48  (27, 3, 56)
+  llm_qwen3_5_9b             pre_registered                   0.36 / 0.70 / 0.47  (54, 97, 23)
+  llm_qwen3_5_9b             revised                          0.36 / 0.71 / 0.48  (54, 97, 22)
+  llm_qwen3_5_9b             sensitivity_preferred_readings   0.36 / 0.66 / 0.47  (55, 96, 28)
+  llm_qwen3_5_9b_evidence    pre_registered                   0.32 / 0.73 / 0.44  (56, 119, 21)
+  llm_qwen3_5_9b_evidence    revised                          0.32 / 0.74 / 0.45  (56, 119, 20)
+  llm_qwen3_5_9b_evidence    sensitivity_preferred_readings   0.33 / 0.69 / 0.44  (57, 118, 26)

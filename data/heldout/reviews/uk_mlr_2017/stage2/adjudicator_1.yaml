@@ -1,0 +1,497 @@
+adjudicator: 1
+decisions:
+- candidate: K001
+  clause_id: uk_mlr_2017_27_cdd_27_7b
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: Saying *how* CDD is done, or *on whom*, is not a trigger.
+  reason: 27(7B) only says on whom the 27(7A) CDD is applied (landlord and tenant); the trigger sits in 27(7A),
+    and generic 'apply customer due diligence measures' wording states no identification or verification requirement
+    of its own, so it is a scope statement, not verify_customer.
+- candidate: K002
+  clause_id: uk_mlr_2017_27_cdd_27_8_a
+  types:
+  - cdd_triggers
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'A sub-paragraph is read together with the lead-in of its paragraph. It gets type T when it is
+    part of a requirement of type T / cdd_triggers: perform CDD measures when a stated event or circumstance occurs'
+  reason: Read with the 27(8) lead-in ('must also apply customer due diligence measures'), (a) is one of the listed
+    occasions on which CDD must be applied to existing customers, so it is part of a trigger requirement and distinct
+    from the ongoing monitoring in 28(11). 'Appropriate times on a risk based approach' is a vaguer circumstance
+    than (za) or (b), which leaves room for the no-type reading.
+- candidate: K003
+  clause_id: uk_mlr_2017_27_cdd_27_9
+  types: []
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'Definitions, scope statements and paragraphs that only say how other paragraphs are read. /
+    cdd_triggers: perform CDD measures when a stated event or circumstance occurs'
+  reason: 27(9) does not require CDD when an event occurs; it requires the firm to weigh listed factors when judging
+    what is 'appropriate' under 27(8)(a), which carries the actual trigger. It has the same 'must take account of
+    ... among other things' factor-list form as 28(13), 33(6) and 37(3), so I read it as guidance on applying 27(8);
+    the functional reading of its items as triggers is reasonable but not required.
+- candidate: K004
+  clause_id: uk_mlr_2017_27_cdd_27_9_a
+  types: []
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: A sub-paragraph is read together with the lead-in of its paragraph. It gets type T when it is
+    part of a requirement of type T
+  reason: 'An item of the 27(9) factor list: an indication that the customer''s or BO''s identity has changed is
+    to be weighed in deciding when CDD is appropriate, not an event on which this clause itself requires CDD. It
+    follows the lead-in; if 27(9) were read as a trigger list this would be its strongest item.'
+- candidate: K005
+  clause_id: uk_mlr_2017_27_cdd_27_9_b
+  types: []
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: A sub-paragraph is read together with the lead-in of its paragraph. It gets type T when it is
+    part of a requirement of type T
+  reason: A factor to weigh under 27(9), not a stated CDD trigger; transactions inconsistent with knowledge of the
+    customer are also the subject of ongoing monitoring under 28(11)(a), which is excluded. Follows the lead-in.
+- candidate: K006
+  clause_id: uk_mlr_2017_27_cdd_27_9_c
+  types: []
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: A sub-paragraph is read together with the lead-in of its paragraph. It gets type T when it is
+    part of a requirement of type T
+  reason: A factor to weigh under 27(9) when judging whether CDD on an existing customer is appropriate; the clause
+    does not itself require CDD when the purpose of the relationship changes. Follows the lead-in.
+- candidate: K007
+  clause_id: uk_mlr_2017_27_cdd_27_9_d
+  types: []
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'Requirements of other kinds that the system does not model: risk assessment, screening, ongoing
+    monitoring, record keeping, reliance on third parties, correspondent banking, wire-transfer message content,
+    suspicious transaction reporting, simplified CDD, internal policies, and enhanced measures for higher-risk customers
+    who are not politically exposed persons (PEPs).'
+  reason: '''Any other matter which might affect the ... assessment of the money laundering or terrorist financing
+    risk'' names no event and is a risk-assessment input, so it is the weakest trigger candidate in the list; its
+    status still follows the reading of the 27(9) lead-in.'
+- candidate: K008
+  clause_id: uk_mlr_2017_28_cdd_measures_28_3_b_ii
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: true
+  guideline_quote: It does not cover persons acting on the customer's behalf, connected parties or life-policy beneficiaries.
+  reason: The clause requires the firm to determine and verify the names of the directors and senior managers of
+    a body-corporate customer, i.e. to identify its connected parties (the guideline's MAS term for directors and
+    persons with executive authority), not the customer itself; verify_customer expressly excludes connected parties,
+    unlike the customer's own attributes in 28(3)(a) and (b)(i).
+- candidate: K009
+  clause_id: uk_mlr_2017_28_cdd_measures_28_8
+  types:
+  - identify_ubo
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: A lead-in gets type T when its own text states a requirement of type T, or introduces a list
+    whose items have type T.
+  reason: The lead-in introduces (a), record keeping (excluded), and (b), verifying the senior managing person when
+    no beneficial owner can be found, which I read as identify_ubo; it carries identify_ubo through (b) and would
+    lose it only if (b) did.
+- candidate: K010
+  clause_id: uk_mlr_2017_28_cdd_measures_28_8_b
+  types:
+  - identify_ubo
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'identify_ubo: inquire about, identify or verify the beneficial owners of a customer, including
+    the information to obtain about them and understanding the customer''s ownership and control structure.'
+  reason: When all means of identifying the beneficial owner are exhausted (28(7)), the firm must verify the identity
+    of the senior managing person, the beneficial owner of last resort whom 28(6) lets it treat as the BO. This
+    is a 'must' duty within the BO process rather than the deeming permission itself, and the connected-party carve-out
+    applies only to verify_customer; the records part of (b) does not remove the type.
+- candidate: K011
+  clause_id: uk_mlr_2017_28_cdd_measures_28_9
+  types:
+  - identify_ubo
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'identify_ubo: inquire about, identify or verify the beneficial owners of a customer, including
+    the information to obtain about them and understanding the customer''s ownership and control structure. / Definitions,
+    scope statements and paragraphs that only say how other paragraphs are read.'
+  reason: In substance 28(9) bars the firm from meeting its 28(4) beneficial-owner duty by relying solely on the
+    company registers, a restriction on the sources for BO identification and verification (the guideline counts
+    sources as part of verification). It is not worded as a definition or a 'treated as' deeming provision, though
+    reading it as a rule on how 28(4) is satisfied, and so unlabelled, is a reasonable alternative.
+- candidate: K012
+  clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7
+  types:
+  - cdd_triggers
+  - prohibit_anonymous
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'prohibit_anonymous: not open or keep anonymous accounts or accounts in fictitious names. / cdd_triggers:
+    (... a revision of the Notice)'
+  reason: CDD must be applied to every anonymous account and passbook existing at commencement before it is used
+    in any way, so the firm may not keep operating anonymous accounts (the 'keep' half of prohibit_anonymous, which
+    29(6) does not cover), and commencement of the Regulations works as a trigger like a revision of the Notice.
+    cdd_triggers alone is defensible but drops the prohibition.
+- candidate: K013
+  clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7a
+  types:
+  - cdd_triggers
+  - prohibit_anonymous
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'prohibit_anonymous: not open or keep anonymous accounts or accounts in fictitious names. / cdd_triggers:
+    (... a revision of the Notice)'
+  reason: 'Same as 29(7), for anonymous safe-deposit boxes existing on 10 January 2019: CDD before any use means
+    they cannot be kept anonymous, and the date works as a trigger. Safe-deposit boxes are not literally ''accounts'',
+    but 29(6) treats them together with anonymous accounts and passbooks in one prohibition.'
+- candidate: K014
+  clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_8
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'prohibit_anonymous: not open or keep anonymous accounts or accounts in fictitious names.'
+  reason: The lead-in introduces a bar on a newly authorised open-ended investment company issuing bearer share
+    certificates; that concerns the firm's own shares, not opening or keeping anonymous customer accounts, so neither
+    the lead-in nor its items fit the type.
+- candidate: K015
+  clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_8_b
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'prohibit_anonymous: not open or keep anonymous accounts or accounts in fictitious names.'
+  reason: '''May not issue shares evidenced by a share certificate'' is a prohibition, but on issuing bearer shares
+    in the firm itself, not on opening or keeping anonymous accounts; the type text names accounts and nothing in
+    the guideline extends it to bearer instruments.'
+- candidate: K016
+  clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_2
+  types:
+  - verify_customer
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'Permissions and exemptions ("may", "shall not be required to", "in lieu of"), including the
+    exception conditions attached to a requirement. They relax an obligation rather than impose one. / verify_customer:
+    identify the customer or verify the customer''s identity, including the information to obtain, the sources to
+    use and when verification must be completed.'
+  reason: Although 30ZA(1) is made 'subject to' it, 30ZA(2) is itself a 'must' duty to identify the customer before
+    the account is opened; it imposes rather than relaxes an obligation, unlike 'if'/'provided that' exception conditions
+    such as 30(3)(a)-(b) or 31(5)(a), so it carries verify_customer through item (a).
+- candidate: K017
+  clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_2_a
+  types:
+  - verify_customer
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'verify_customer: identify the customer or verify the customer''s identity, including the information
+    to obtain, the sources to use and when verification must be completed.'
+  reason: '''Identify the customer in accordance with regulation 28(2)(a)'' before the account is opened is a customer-identification
+    requirement with a timing condition; the exception-condition reading is possible, but the item imposes a duty
+    rather than relaxing one.'
+- candidate: K018
+  clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_3
+  types:
+  - cdd_incomplete
+  - identify_ubo
+  - verify_customer
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: A lead-in gets type T when its own text states a requirement of type T, or introduces a list
+    whose items have type T.
+  reason: 'The lead-in states no trigger of its own: ''after permitting ... under paragraph (1)'' refers back to
+    the deferral, not to a new event that makes CDD due (the duty arises from establishing the relationship). It
+    takes the types of its items: (a) completion timing for the remaining customer and beneficial-owner verification,
+    and (b) no further transactions until CDD is complete.'
+- candidate: K019
+  clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_3_a
+  types:
+  - identify_ubo
+  - verify_customer
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'verify_customer: identify the customer or verify the customer''s identity, including the information
+    to obtain, the sources to use and when verification must be completed. / Saying *how* CDD is done, or *on whom*,
+    is not a trigger.'
+  reason: The insolvent bank customer's CDD is triggered by establishing the relationship; 30ZA(1) only defers it,
+    and (a) sets the deadline ('as soon as practicable') for the remaining regulation 28 measures, chiefly verifying
+    the customer (28(2)(b)) and its beneficial owners (28(4)). That is 'when verification must be completed', not
+    a new trigger; cdd_triggers holds only if opening the account under 30ZA(1) is treated as a trigger event.
+- candidate: K020
+  clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_3_b
+  types:
+  - cdd_incomplete
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'cdd_incomplete: not start or continue a relationship, transaction or transfer because the required
+    customer due diligence (identification and verification) could not be completed. / Permissions and exemptions
+    ("may", "shall not be required to", "in lieu of"), including the exception conditions attached to a requirement.
+    They relax an obligation rather than impose one.'
+  reason: Once a regulation 33(1) situation is apparent the bank must carry out no further transactions until CDD
+    is complete, i.e. not continue transactions because CDD is incomplete. It is a 'must' duty, not an 'if'/'provided
+    that' condition like the 30(4) proviso, so the exception-condition exclusion does not clearly reach it.
+- candidate: K021
+  clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1a
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: Definitions, scope statements and paragraphs that only say how other paragraphs are read.
+  reason: '''The information specified in this paragraph is as follows'' only defines the content of a term used
+    in 30A(1) and 30A(2A), which carry the duty to collect the register excerpt (and its identify_ubo label); the
+    paragraph''s own text states no requirement.'
+- candidate: K022
+  clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1a_a
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: A sub-paragraph is read together with the lead-in of its paragraph. It gets type T when it is
+    part of a requirement of type T / Definitions, scope statements and paragraphs that only say how other paragraphs
+    are read.
+  reason: Read with its own lead-in, which is definitional, the item is part of a definition, not of a requirement;
+    the guideline's 'list of information the bank shall obtain' example covers items whose own lead-in imposes the
+    duty to obtain.
+- candidate: K023
+  clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1a_b
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: A sub-paragraph is read together with the lead-in of its paragraph. It gets type T when it is
+    part of a requirement of type T / Definitions, scope statements and paragraphs that only say how other paragraphs
+    are read.
+  reason: 'Same as 30A(1A)(a), for overseas entities: an item of a definition read with its definitional lead-in;
+    the duty to collect the beneficial-ownership information is labelled at 30A(1) and 30A(2A).'
+- candidate: K024
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1
+  types: []
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'Requirements of other kinds that the system does not model: risk assessment, screening, ongoing
+    monitoring, record keeping, reliance on third parties, correspondent banking, wire-transfer message content,
+    suspicious transaction reporting, simplified CDD, internal policies, and enhanced measures for higher-risk customers
+    who are not politically exposed persons (PEPs).'
+  reason: The duty is to 'have in place appropriate risk-management systems and procedures' to determine PEP status
+    (screening) and to manage the enhanced risks (an internal-systems duty); the enhanced measures themselves are
+    imposed by 35(3) and 35(5). The 'manage the enhanced risks' limb makes pep_edd arguable.
+- candidate: K025
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1_a
+  types: []
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'A sub-paragraph is read together with the lead-in of its paragraph. It gets type T when it is
+    part of a requirement of type T / Requirements of other kinds that the system does not model: risk assessment,
+    screening, ongoing monitoring, record keeping, reliance on third parties, correspondent banking, wire-transfer
+    message content, suspicious transaction reporting, simplified CDD, internal policies, and enhanced measures
+    for higher-risk customers who are not politically exposed persons (PEPs).'
+  reason: Names PEPs as the status the screening systems must detect; read with the lead-in it is part of a screening
+    and internal-systems requirement, not an enhanced measure applied because of PEP status.
+- candidate: K026
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1_b
+  types: []
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'pep_edd: apply enhanced measures because the customer or a beneficial owner is a PEP, or a family
+    member or close associate of one. / Requirements of other kinds that the system does not model: risk assessment,
+    screening, ongoing monitoring, record keeping, reliance on third parties, correspondent banking, wire-transfer
+    message content, suspicious transaction reporting, simplified CDD, internal policies, and enhanced measures
+    for higher-risk customers who are not politically exposed persons (PEPs).'
+  reason: The 'to manage the enhanced risks' limb is still the object of 'have in place appropriate risk-management
+    systems and procedures', so it requires systems rather than enhanced measures on a given PEP relationship, which
+    35(5) imposes. This is the closest of the three to pep_edd and a reasonable annotator could label it.
+- candidate: K027
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_3
+  types:
+  - pep_edd
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'pep_edd: apply enhanced measures because the customer or a beneficial owner is a PEP, or a family
+    member or close associate of one. / A lead-in gets type T when its own text states a requirement of type T,
+    or introduces a list whose items have type T.'
+  reason: Once the customer is found to be a PEP or connected to one, the firm must assess the extent of the enhanced
+    CDD to apply ((b)); deciding the scope of the PEP enhanced measures is part of applying them, so the lead-in
+    carries pep_edd through (b). If (b) were read as risk assessment, the lead-in would have no type.
+- candidate: K028
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_3_a
+  types: []
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'Requirements of other kinds that the system does not model: risk assessment, screening, ongoing
+    monitoring, record keeping, reliance on third parties, correspondent banking, wire-transfer message content,
+    suspicious transaction reporting, simplified CDD, internal policies, and enhanced measures for higher-risk customers
+    who are not politically exposed persons (PEPs).'
+  reason: Assessing 'the level of risk associated with that customer' is a customer risk assessment, an excluded
+    kind, even though PEP status prompts it; items of a mixed list are typed by their own content, as 28(8)(a) record
+    keeping is not identify_ubo. The sub-paragraph rule leaves room for pep_edd.
+- candidate: K029
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_3_b
+  types:
+  - pep_edd
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'pep_edd: apply enhanced measures because the customer or a beneficial owner is a PEP, or a family
+    member or close associate of one.'
+  reason: Assessing 'the extent of the enhanced customer due diligence measures to be applied' to a PEP customer
+    sets the scope of the PEP enhanced measures, a step in applying them rather than a general risk assessment,
+    and unlike 28(12) it concerns PEP EDD specifically. Treating it as risk assessment like (a) is the reasonable
+    alternative.
+- candidate: K030
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4
+  types: []
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: Definitions, scope statements and paragraphs that only say how other paragraphs are read.
+  reason: 35(4) governs how the 35(3)(b) assessment is carried out (which information must or may be considered);
+    like 27(9) and 28(13) it is a factor list for a judgement made under another paragraph, not itself an enhanced
+    measure applied because of PEP status.
+- candidate: K031
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4_a
+  types: []
+  decided_by_guideline: false
+  pre_registered_breaks_guideline: false
+  guideline_quote: A sub-paragraph is read together with the lead-in of its paragraph. It gets type T when it is
+    part of a requirement of type T
+  reason: Taking account of information made available under regulations 17(9) and 47 is an input to the 35(3)(b)
+    assessment, closer to risk-assessment information than to an enhanced measure; labelling 35(3)(b) does not require
+    labelling its inputs.
+- candidate: K032
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5_c
+  types:
+  - pep_edd
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'Requirements of other kinds that the system does not model: risk assessment, screening, ongoing
+    monitoring, record keeping, reliance on third parties, correspondent banking, wire-transfer message content,
+    suspicious transaction reporting, simplified CDD, internal policies, and enhanced measures for higher-risk customers
+    who are not politically exposed persons (PEPs). / pep_approval: ... as a requirement of its own rather than
+    one item of a list of enhanced measures.'
+  reason: Enhanced ongoing monitoring is one item of the 35(5) list of enhanced measures required because the counterparty
+    is a PEP. The exclusions cover requirements 'of other kinds' and expressly keep enhanced measures for PEPs in
+    scope, and the guideline treats such lists as pep_edd, so the general ongoing-monitoring exclusion does not
+    remove it.
+- candidate: K033
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_8
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'beneficiaries of a trust are its beneficial owners (regulation 6), beneficiaries of a life insurance
+    policy are not / pep_edd: apply enhanced measures because the customer or a beneficial owner is a PEP, or a
+    family member or close associate of one.'
+  reason: The enhanced steps in 35(8) are prompted by the PEP status of the insurance-policy beneficiary, who under
+    the UK note is not a beneficial owner and is not the customer, so pep_edd's condition is not met; 35(9) referring
+    back to (8) does not change what (8) itself requires.
+- candidate: K034
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_8_a
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'beneficiaries of a trust are its beneficial owners (regulation 6), beneficiaries of a life insurance
+    policy are not / pep_edd: apply enhanced measures because the customer or a beneficial owner is a PEP, or a
+    family member or close associate of one.'
+  reason: Informing senior management before a pay-out where the policy beneficiary is a PEP is prompted by the
+    beneficiary's status, not the customer's or a BO's; it is also not pep_approval, since being informed is not
+    a sign-off.
+- candidate: K035
+  clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_8_b
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'pep_edd: apply enhanced measures because the customer or a beneficial owner is a PEP, or a family
+    member or close associate of one. / Requirements of other kinds that the system does not model: risk assessment,
+    screening, ongoing monitoring, record keeping, reliance on third parties, correspondent banking, wire-transfer
+    message content, suspicious transaction reporting, simplified CDD, internal policies, and enhanced measures
+    for higher-risk customers who are not politically exposed persons (PEPs).'
+  reason: Enhanced scrutiny of the policy holder's relationship applies 'whether or not the policy holder is a PEP',
+    so it is expressly not because the customer is a PEP, and it is ongoing scrutiny, which is excluded.
+- candidate: K036
+  clause_id: uk_mlr_2017_37_application_of_simplified_cdd_37_8
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'Requirements of other kinds that the system does not model: risk assessment, screening, ongoing
+    monitoring, record keeping, reliance on third parties, correspondent banking, wire-transfer message content,
+    suspicious transaction reporting, simplified CDD, internal policies, and enhanced measures for higher-risk customers
+    who are not politically exposed persons (PEPs).'
+  reason: 37(8) limits when simplified CDD may continue to be applied under 37(1); it belongs to the simplified-CDD
+    regime, which the guideline excludes, and it does not itself require CDD on an event (the suspicion and doubt
+    triggers are imposed by 27(1)(c)-(d)).
+- candidate: K037
+  clause_id: uk_mlr_2017_37_application_of_simplified_cdd_37_8_a
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'Requirements of other kinds that the system does not model: risk assessment, screening, ongoing
+    monitoring, record keeping, reliance on third parties, correspondent banking, wire-transfer message content,
+    suspicious transaction reporting, simplified CDD, internal policies, and enhanced measures for higher-risk customers
+    who are not politically exposed persons (PEPs).'
+  reason: Wording close to 27(1)(d), but here it is a condition that ends the use of simplified CDD, an excluded
+    kind; the CDD trigger for doubts about earlier information is carried by 27(1)(d).
+- candidate: K038
+  clause_id: uk_mlr_2017_37_application_of_simplified_cdd_37_8_c
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'Requirements of other kinds that the system does not model: risk assessment, screening, ongoing
+    monitoring, record keeping, reliance on third parties, correspondent banking, wire-transfer message content,
+    suspicious transaction reporting, simplified CDD, internal policies, and enhanced measures for higher-risk customers
+    who are not politically exposed persons (PEPs).'
+  reason: 'Same as 37(8)(a): a condition that ends simplified CDD; the suspicion trigger is carried by 27(1)(c).'
+- candidate: K039
+  clause_id: uk_mlr_2017_38_electronic_money_38_2
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: Definitions, scope statements and paragraphs that only say how other paragraphs are read. / Permissions
+    and exemptions ("may", "shall not be required to", "in lieu of"), including the exception conditions attached
+    to a requirement. They relax an obligation rather than impose one.
+  reason: '''Paragraph (1) does not apply to ...'' limits the scope of the 38(1) e-money exemption; it does not
+    itself require CDD at £50 (whether CDD is due still depends on regulation 27), so it is a scope statement on
+    an exemption, not a threshold trigger.'
+- candidate: K040
+  clause_id: uk_mlr_2017_38_electronic_money_38_2_a
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: A sub-paragraph is read together with the lead-in of its paragraph. It gets type T when it is
+    part of a requirement of type T / Definitions, scope statements and paragraphs that only say how other paragraphs
+    are read.
+  reason: Threshold condition of the 38(2) carve-back from the e-money exemption; read with its scope-statement
+    lead-in it is part of no typed requirement.
+- candidate: K041
+  clause_id: uk_mlr_2017_38_electronic_money_38_2_b
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: A sub-paragraph is read together with the lead-in of its paragraph. It gets type T when it is
+    part of a requirement of type T / Definitions, scope statements and paragraphs that only say how other paragraphs
+    are read.
+  reason: Same as 38(2)(a), for remote payment transactions.
+- candidate: K042
+  clause_id: uk_mlr_2017_38_electronic_money_38_4a
+  types: []
+  decided_by_guideline: true
+  pre_registered_breaks_guideline: false
+  guideline_quote: 'prohibit_anonymous: not open or keep anonymous accounts or accounts in fictitious names.'
+  reason: An acquirer accepting payments made with anonymous prepaid cards issued abroad is not opening or keeping
+    an anonymous account (the cardholder is not its account holder); a condition on accepting such payments falls
+    outside the type's text.
+guideline_questions:
+- question: Do 'must take into account, among other things' factor lists that say when CDD on existing customers
+    is appropriate (27(9)), or how the extent of EDD is assessed (35(4)), count as cdd_triggers / pep_edd, or as
+    paragraphs that only say how another paragraph is applied? 28(13), 33(6) and 37(3) have the same form.
+- question: Does 'Definitions ... and paragraphs that only say how other paragraphs are read' cover a separate paragraph
+    that defines, by cross-reference, the list of beneficial-ownership information another paragraph requires the
+    firm to collect (30A(1A))? The sub-paragraph example ('an item in the list of information the bank shall obtain
+    about a beneficial owner') pulls the other way.
+- question: Are negative compliance statements ('do not satisfy their requirements under paragraph (4) by relying
+    solely on ...', 28(9)) interpretation like the 'is to be treated as identifying' deeming provisions, or source
+    requirements? verify_customer names 'the sources to use' but identify_ubo does not; is that intentional?
+- question: Does 'exception conditions attached to a requirement' cover mandatory 'must' duties that a permission
+    is made 'subject to' (30ZA(2) and (3)), and should the 'no transactions before verification' proviso of 30(4)
+    then be treated the same as 30ZA(3)(b)?
+- question: Does prohibit_anonymous ('not open or keep anonymous accounts') cover the transitional duty to apply
+    CDD to pre-existing anonymous accounts before use (29(7), 29(7A)), and does it extend beyond accounts to safe-deposit
+    boxes, bearer shares (29(8)) or anonymous prepaid cards (38(4A))?
+- question: When generic 'apply the other customer due diligence measures ... as soon as practicable' wording sets
+    the completion deadline for deferred CDD (30ZA(3)(a)), is it verify_customer/identify_ubo (completion timing)
+    or cdd_triggers? identify_ubo does not mention timing the way verify_customer does.
+- question: Does the MAS term 'connected parties' in the verify_customer carve-out apply to UK clauses that require
+    identifying a body corporate's directors and senior managers (28(3)(b)(ii)), and is verifying the senior managing
+    person when no beneficial owner is found (28(8)(b)) identify_ubo?
+- question: 'For PEP provisions: are PEP-prompted assessments (35(3)(a) risk level, 35(3)(b) extent of EDD) pep_edd
+    or excluded risk assessment, and is ''risk-management systems and procedures ... to manage the enhanced risks''
+    (35(1)) an excluded internal policy or a pep_edd measure?'

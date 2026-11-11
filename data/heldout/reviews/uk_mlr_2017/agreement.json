@@ -1,0 +1,43 @@
+{
+  "clause": {
+    "annotator_a_vs_pre_registered": {
+      "both": 74,
+      "only_first": 18,
+      "only_second": 3,
+      "f1": 0.8757
+    },
+    "annotator_b_vs_pre_registered": {
+      "both": 74,
+      "only_first": 18,
+      "only_second": 3,
+      "f1": 0.8757
+    },
+    "annotator_a_vs_annotator_b": {
+      "both": 92,
+      "only_first": 0,
+      "only_second": 0,
+      "f1": 1.0
+    }
+  },
+  "paragraph": {
+    "annotator_a_vs_pre_registered": {
+      "both": 31,
+      "only_first": 7,
+      "only_second": 1,
+      "f1": 0.8857
+    },
+    "annotator_b_vs_pre_registered": {
+      "both": 31,
+      "only_first": 7,
+      "only_second": 1,
+      "f1": 0.8857
+    },
+    "annotator_a_vs_annotator_b": {
+      "both": 38,
+      "only_first": 0,
+      "only_second": 0,
+      "f1": 1.0
+    }
+  },
+  "note": "Annotators A and B ran on the same model; identical answers show the labels are reproducible by that model under the guideline, not that two independent readers agree."
+}

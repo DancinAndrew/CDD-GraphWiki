@@ -1,0 +1,339 @@
+annotator: B
+labels:
+# ---------------- Regulation 27: when CDD must be applied ----------------
+- clause_id: uk_mlr_2017_27_cdd_27_1
+  types: [cdd_triggers]
+  reason: "Lead-in 'must apply customer due diligence measures if the person' introduces a list of events that trigger CDD, so the lead-in carries cdd_triggers."
+- clause_id: uk_mlr_2017_27_cdd_27_1_a
+  types: [cdd_triggers]
+  reason: "Establishing a business relationship is a stated event on which CDD must be applied (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_1_b
+  types: [cdd_triggers]
+  reason: "An occasional transfer of funds exceeding GBP 800 is a threshold transaction that triggers CDD (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_1_c
+  types: [cdd_triggers]
+  reason: "Suspicion of money laundering or terrorist financing is a stated trigger for CDD (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_1_d
+  types: [cdd_triggers]
+  reason: "Doubts about the veracity or adequacy of earlier identification information trigger CDD, the guideline's own example of cdd_triggers."
+- clause_id: uk_mlr_2017_27_cdd_27_2
+  types: [cdd_triggers]
+  reason: "Requires CDD when an occasional transaction amounts to GBP 12,000 or more, a threshold trigger (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_3
+  types: [cdd_triggers]
+  reason: "Requires a high value dealer to apply CDD on an occasional cash transaction of GBP 10,000 or more, a threshold trigger (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_5
+  types: [cdd_triggers]
+  reason: "Requires a casino to apply CDD on gambling transactions of GBP 2,000 or more, a threshold trigger (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_7a
+  types: [cdd_triggers]
+  reason: "Requires a letting agent to apply CDD on lettings at a monthly rent of GBP 10,000 or more, a threshold trigger (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_7c
+  types: [cdd_triggers]
+  reason: "Lead-in 'must also apply customer due diligence measures' introduces the art-market transactions that trigger CDD (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_7c_a
+  types: [cdd_triggers]
+  reason: "Trade in a work of art of GBP 10,000 or more is a threshold trigger for CDD, read with the 27(7C) lead-in (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_7c_b
+  types: [cdd_triggers]
+  reason: "Freeport storage of works of art worth GBP 10,000 or more is a threshold trigger for CDD, read with the 27(7C) lead-in (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_7d
+  types: [cdd_triggers]
+  reason: "Requires CDD on every transaction carried out through a cryptoasset exchange machine, a stated transaction trigger (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_7e
+  types: [cdd_triggers]
+  reason: "Requires CDD on cryptoasset transfers of GBP 800 or more, a threshold trigger (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_8
+  types: [cdd_triggers]
+  reason: "Requires CDD on existing customers when the firm has a legal duty to contact them to review information (item za), a stated circumstance (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_8_i
+  types: [cdd_triggers]
+  reason: "Describes the information whose review triggers CDD under 27(8)(za), so it is part of a cdd_triggers requirement."
+- clause_id: uk_mlr_2017_27_cdd_27_8_ii
+  types: [cdd_triggers]
+  reason: "Completes the 27(8)(za) trigger and contains trigger (zb), contacting an existing customer to fulfil a tax-compliance duty (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_8_a
+  types: [cdd_triggers]
+  reason: "Requires CDD on existing customers at other appropriate times on a risk-based approach, a stated circumstance for CDD on existing customers (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_8_b
+  types: [cdd_triggers]
+  reason: "Requires CDD when an existing customer's risk-relevant circumstances change, a stated event (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_9
+  types: [cdd_triggers]
+  reason: "Requires the firm to take listed matters into account when deciding when CDD on existing customers is due, i.e. it states the circumstances that trigger CDD (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_9_a
+  types: [cdd_triggers]
+  reason: "An indication that the identity of the customer or its beneficial owner has changed is a circumstance making CDD due under 27(8)-(9) (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_9_b
+  types: [cdd_triggers]
+  reason: "Transactions inconsistent with the firm's knowledge of the customer are a circumstance making CDD due under 27(8)-(9) (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_9_c
+  types: [cdd_triggers]
+  reason: "A change in the purpose or nature of the relationship is a circumstance making CDD due under 27(8)-(9) (cdd_triggers)."
+- clause_id: uk_mlr_2017_27_cdd_27_9_d
+  types: [cdd_triggers]
+  reason: "Any other matter affecting the risk assessment of the customer is a circumstance making CDD due under 27(8)-(9) (cdd_triggers)."
+# ---------------- Regulation 28: CDD measures ----------------
+- clause_id: uk_mlr_2017_28_cdd_measures_28_2
+  types: [verify_customer]
+  reason: "Lead-in 'The relevant person must' introduces the duties to identify the customer and verify its identity, so it carries verify_customer."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_2_a
+  types: [verify_customer]
+  reason: "Requires the firm to identify the customer (verify_customer); the 'unless' clause is an attached exception and does not remove the requirement."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_2_b
+  types: [verify_customer]
+  reason: "Requires the firm to verify the customer's identity (verify_customer)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_3
+  types: [verify_customer]
+  reason: "Lead-in for a body-corporate customer introduces the identification information the firm must obtain and verify about the customer (verify_customer)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_3_a
+  types: [verify_customer]
+  reason: "Requires the firm to obtain and verify identifying information about a body-corporate customer (verify_customer)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_3_a_i
+  types: [verify_customer]
+  reason: "The customer's name is an item of identification information to obtain and verify (verify_customer)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_3_a_ii
+  types: [verify_customer]
+  reason: "The customer's company or registration number is an item of identification information to obtain and verify (verify_customer)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_3_a_iii
+  types: [verify_customer]
+  reason: "The customer's registered office and principal place of business are items of identification information to obtain and verify (verify_customer)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_3_b
+  types: [verify_customer]
+  reason: "Requires reasonable measures to determine and verify further information about the body-corporate customer, item (i) being customer identification information (verify_customer)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_3_b_i
+  types: [verify_customer]
+  reason: "The governing law and constitution of the customer are customer information to determine and verify (verify_customer)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_3a
+  types: [identify_ubo]
+  reason: "Requires reasonable measures to understand the ownership and control structure of a legal-person or trust customer, which identify_ubo expressly covers."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_4
+  types: [identify_ubo]
+  reason: "Lead-in requires measures where the customer is beneficially owned by another person and introduces the beneficial-owner duties (identify_ubo)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_4_a
+  types: [identify_ubo]
+  reason: "Requires the firm to identify the beneficial owner (identify_ubo)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_4_b
+  types: [identify_ubo]
+  reason: "Requires reasonable measures to verify the beneficial owner's identity (identify_ubo)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_4_c
+  types: [identify_ubo]
+  reason: "Requires understanding the ownership and control structure of a beneficial owner that is a legal person or arrangement (identify_ubo)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_8
+  types: [identify_ubo]
+  reason: "Lead-in for the case where no beneficial owner could be identified introduces item (b), verifying the senior managing person treated as beneficial owner (identify_ubo)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_8_b
+  types: [identify_ubo]
+  reason: "Requires reasonable measures to verify the identity of the senior managing person who stands in for the unidentified beneficial owner (identify_ubo); the record-keeping part is not a modelled type."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_9
+  types: [identify_ubo]
+  reason: "Bars meeting the beneficial-owner duties of 28(4) by relying solely on company-register information, a requirement about the sources for identifying beneficial owners (identify_ubo)."
+# ---------------- Regulation 29: credit and financial institutions ----------------
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_6
+  types: [prohibit_anonymous]
+  reason: "Prohibits setting up an anonymous account, passbook or safe-deposit box for any customer (prohibit_anonymous)."
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7
+  types: [prohibit_anonymous, cdd_triggers]
+  reason: "Requires CDD on all anonymous accounts and passbooks existing at commencement and before any use, so existing anonymous accounts may not be kept (prohibit_anonymous) and the commencement of the Regulations triggers CDD (cdd_triggers)."
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7a
+  types: [prohibit_anonymous, cdd_triggers]
+  reason: "Requires CDD on all anonymous safe-deposit boxes existing on 10 January 2019 and before any use, so they may not be kept anonymous (prohibit_anonymous) and that date triggers CDD (cdd_triggers)."
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_11
+  types: [cdd_triggers]
+  reason: "Lead-in for pooled accounts introduces item (b), which requires updated CDD when the firm is not satisfied the account's use fits its knowledge of the customer (cdd_triggers)."
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_11_b
+  types: [cdd_triggers]
+  reason: "Requires the firm to conduct updated CDD where it is not satisfied that the pooled account's purpose and use are consistent with its knowledge of the customer, a stated circumstance (cdd_triggers)."
+# ---------------- Regulation 30: timing of verification ----------------
+- clause_id: uk_mlr_2017_30_timing_of_verification_30_2
+  types: [verify_customer, identify_ubo]
+  reason: "Requires verification of the customer and any beneficial owner to be completed before the relationship is established or the transaction carried out, i.e. when verification must be completed (verify_customer, identify_ubo)."
+- clause_id: uk_mlr_2017_30_timing_of_verification_30_7
+  types: [identify_ubo]
+  reason: "Requires the firm to establish and verify the identity of trust or arrangement beneficiaries, who are beneficial owners under the UK note, before payment or exercise of vested rights (identify_ubo)."
+- clause_id: uk_mlr_2017_30_timing_of_verification_30_7_a
+  types: [identify_ubo]
+  reason: "States one deadline (before any payment) for verifying trust beneficiaries, part of the identify_ubo requirement in 30(7)."
+- clause_id: uk_mlr_2017_30_timing_of_verification_30_7_b
+  types: [identify_ubo]
+  reason: "States one deadline (before the beneficiary exercises vested rights) for verifying trust beneficiaries, part of the identify_ubo requirement in 30(7)."
+# ---------------- Regulation 30ZA: insolvent bank customers ----------------
+- clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_2
+  types: [verify_customer]
+  reason: "Lead-in requires the credit institution to identify the insolvent bank customer before letting it open an account and transact (verify_customer, timing)."
+- clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_2_a
+  types: [verify_customer]
+  reason: "Requires identification of the customer under 28(2)(a) before the account is opened (verify_customer)."
+- clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_3
+  types: [verify_customer, identify_ubo, cdd_incomplete]
+  reason: "Lead-in introduces item (a), completing the remaining regulation 28 measures as soon as practicable (verify_customer, identify_ubo), and item (b), stopping transactions until CDD is completed (cdd_incomplete)."
+- clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_3_a
+  types: [verify_customer, identify_ubo]
+  reason: "Requires the remaining regulation 28 measures (customer verification and beneficial-owner identification) to be completed as soon as practicable, i.e. when verification must be completed (verify_customer, identify_ubo)."
+- clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_3_b
+  types: [cdd_incomplete]
+  reason: "Requires the institution to carry out no further transactions from the account until it has completed the regulation 28 CDD measures (cdd_incomplete)."
+# ---------------- Regulation 30A: register excerpts ----------------
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1
+  types: [identify_ubo]
+  reason: "Lead-in of the requirement to collect the register's beneficial-ownership excerpt before establishing a relationship; under the UK note this is part of identifying beneficial owners (identify_ubo)."
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_a
+  types: [identify_ubo]
+  reason: "Names one customer type for which the register's beneficial-ownership excerpt must be collected, part of the identify_ubo requirement in 30A(1)."
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_b
+  types: [identify_ubo]
+  reason: "Names one customer type for which the register's beneficial-ownership excerpt must be collected, part of the identify_ubo requirement in 30A(1)."
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_c
+  types: [identify_ubo]
+  reason: "Names one customer type for which the register's beneficial-ownership excerpt must be collected, part of the identify_ubo requirement in 30A(1)."
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_d
+  types: [identify_ubo]
+  reason: "Names one customer type for which the register's beneficial-ownership excerpt must be collected, part of the identify_ubo requirement in 30A(1)."
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_e
+  types: [identify_ubo]
+  reason: "Names one customer type (registrable trusts) for which the register's beneficial-ownership excerpt must be collected, part of the identify_ubo requirement in 30A(1)."
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_f
+  types: [identify_ubo]
+  reason: "Contains the operative duty to collect the register excerpt of beneficial-ownership information before the relationship is established (identify_ubo per the UK note)."
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1a
+  types: [identify_ubo]
+  reason: "Specifies the information the 30A(1) excerpt must contain, i.e. the beneficial-ownership information to obtain (identify_ubo)."
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1a_a
+  types: [identify_ubo]
+  reason: "The information to collect is information on the customer's beneficial owners (identify_ubo)."
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1a_b
+  types: [identify_ubo]
+  reason: "The information to collect for overseas entities is information on registrable beneficial owners (identify_ubo)."
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_2a
+  types: [identify_ubo]
+  reason: "Requires the firm, when carrying out CDD on an established relationship, to collect the register's beneficial-ownership excerpt (identify_ubo per the UK note)."
+# ---------------- Regulation 31: cease transactions ----------------
+- clause_id: uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1
+  types: [cdd_incomplete]
+  reason: "Lead-in 'unable to apply customer due diligence measures as required by regulation 28' introduces the duties not to transact, not to establish and to terminate relationships (cdd_incomplete)."
+- clause_id: uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1_a
+  types: [cdd_incomplete]
+  reason: "Prohibits carrying out transactions through a bank account with the customer when CDD cannot be applied (cdd_incomplete)."
+- clause_id: uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1_b
+  types: [cdd_incomplete]
+  reason: "Prohibits establishing a business relationship or carrying out a transaction when CDD cannot be applied (cdd_incomplete)."
+- clause_id: uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1_c
+  types: [cdd_incomplete]
+  reason: "Requires terminating an existing business relationship when CDD cannot be applied (cdd_incomplete)."
+# ---------------- Regulation 33: enhanced CDD ----------------
+- clause_id: uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1
+  types: [pep_edd]
+  reason: "Lead-in requiring enhanced CDD introduces a list that includes item (d), PEP customers, so under the lead-in rule it carries pep_edd; the other items are non-PEP higher-risk cases, which are not labelled."
+- clause_id: uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_d
+  types: [pep_edd]
+  reason: "Requires enhanced CDD and enhanced ongoing monitoring where the customer is a PEP or a family member or close associate of one (pep_edd)."
+# ---------------- Regulation 35: PEPs ----------------
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1
+  types: [pep_edd]
+  reason: "Requires systems to determine whether a customer or beneficial owner is a PEP and to manage the enhanced risks of the relationship with such a customer; the risk-management duty is an enhanced measure because of PEP status (pep_edd)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1_a
+  types: [pep_edd]
+  reason: "Names PEPs as the customers whose enhanced risks must be managed under 35(1) (pep_edd)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1_b
+  types: [pep_edd]
+  reason: "Extends 35(1) to family members and close associates of PEPs and carries the duty to manage the enhanced risks of relationships with them (pep_edd)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_3
+  types: [pep_edd]
+  reason: "Once a customer is found to be a PEP or a family member or close associate, requires the firm to assess its risk and the extent of enhanced CDD to apply, a PEP-specific enhanced step (pep_edd)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_3_a
+  types: [pep_edd]
+  reason: "Assessing the risk of the PEP customer is part of the PEP-specific enhanced requirement in 35(3) (pep_edd)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_3_b
+  types: [pep_edd]
+  reason: "Assessing the extent of enhanced CDD to apply to the PEP customer is part of the PEP enhanced requirement in 35(3) (pep_edd)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5
+  types: [pep_edd]
+  reason: "Lead-in requires a firm dealing with a PEP or family member or close associate to apply listed measures in addition to regulation 33, a list of enhanced measures (pep_edd)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5_a
+  types: [pep_edd]
+  reason: "Senior-management approval for the PEP relationship is one item of the 35(5) list of enhanced measures, so the guideline makes it pep_edd rather than pep_approval."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5_b
+  types: [pep_edd]
+  reason: "Requires adequate measures to establish source of wealth and source of funds in a PEP relationship (pep_edd)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5_c
+  types: [pep_edd]
+  reason: "Requires enhanced ongoing monitoring of the PEP relationship (pep_edd)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_9
+  types: [pep_edd]
+  reason: "Requires the PEP measures of 35(5) and (8) to continue to apply after a person stops being a PEP (pep_edd)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_9_a
+  types: [pep_edd]
+  reason: "Sets the minimum 12-month period for which PEP enhanced measures continue, part of the 35(9) requirement (pep_edd)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_9_b
+  types: [pep_edd]
+  reason: "Sets any longer period the firm considers appropriate for continuing PEP enhanced measures, part of the 35(9) requirement (pep_edd)."
+hard_cases:
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5_a
+  decision: [pep_edd]
+  note: "Senior-management approval of a PEP relationship is the textbook pep_approval content, but the guideline reserves pep_approval for approval stated as a requirement of its own and not as one item of a list of enhanced measures; 35(5)(a) is item (a) of such a list, so it is pep_edd only. Alternative reading: pep_approval (plus pep_edd). As a result pep_approval has no clause in Part 3."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1
+  decision: [pep_edd]
+  note: "35(1) mixes PEP determination (screening) and 'have in place risk-management systems and procedures' (internal policies), both excluded, with a duty 'to manage the enhanced risks' of relationships with PEPs, which is an enhanced measure because of PEP status. I labelled the lead-in and both items pep_edd on the strength of the risk-management duty. Alternative reading: no type, as a screening/internal-systems provision whose actual measures sit in 35(3)-(5)."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_3
+  decision: [pep_edd]
+  note: "35(3) requires assessing the risk and the extent of enhanced CDD once a customer is found to be a PEP. It can be read as customer risk assessment (excluded) rather than applying an enhanced measure. I treated the PEP-specific assessment as the first step of PEP enhanced CDD and labelled the lead-in and (a)-(b). By contrast I left 35(4) (inputs to that assessment; (b) is a 'may') and 35(3A) (how the domestic-PEP assessment is read) unlabelled."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_8
+  decision: []
+  note: "35(8) requires senior management to be informed before payout, and enhanced scrutiny of the whole relationship with the policy holder, when a life-policy beneficiary is a PEP. pep_edd needs the customer or a beneficial owner to be a PEP, and the UK note says life-policy beneficiaries are not beneficial owners, so it is not labelled; (a) is notification, not sign-off, so it is not pep_approval either. Alternative reading: pep_edd for 35(8) and (b), since 35(9) treats 35(8) as a PEP measure. 35(6)-(7) (PEP determination for policy beneficiaries) are left unlabelled for the same reason."
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7
+  decision: [prohibit_anonymous, cdd_triggers]
+  note: "Requires CDD on anonymous accounts already existing when the Regulations commenced, before they are used. It fits prohibit_anonymous ('not ... keep anonymous accounts') and cdd_triggers (the commencement of the law resembles the guideline's 'revision of the Notice' trigger). Alternative: only one of the two. 29(7A) (safe-deposit boxes, not strictly 'accounts') was treated the same way."
+- clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_2
+  decision: [verify_customer]
+  note: "30ZA(2) and 30ZA(3) are duties attached to the 30ZA(1) permission to open an account before CDD is complete, and the guideline excludes exception conditions attached to a requirement. They are worded as free-standing 'must' obligations (identify before opening; complete CDD as soon as practicable; stop transactions until CDD is complete), so I labelled them. By contrast 30(3) and 30(4), whose operative verb is 'may' and whose conditions are provisos, are left unlabelled. Alternative: leave all of 30ZA(2)-(3) unlabelled."
+- clause_id: uk_mlr_2017_30za_insolvent_bank_customers_30za_3_a
+  decision: [verify_customer, identify_ubo]
+  note: "'Apply the other customer due diligence measures required by regulation 28 as soon as practicable' is generic CDD wording; I read it as setting when the remaining verification of the customer and identification of beneficial owners must be completed (the guideline puts timing of verification under verify_customer). Alternative: no type, because generic 'apply CDD' names neither identification nor beneficial owners."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_3_b_ii
+  decision: []
+  note: "The full names of the board of directors and senior persons of a body-corporate customer are customer-identification information in UK practice, but they are exactly MAS 'connected parties', which the guideline excludes from verify_customer. Not labelled. Alternative: verify_customer like its sibling 28(3)(b)(i)."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_8_b
+  decision: [identify_ubo]
+  note: "Verifying the identity of the senior managing person when no beneficial owner can be found is the fallback treatment of that person as beneficial owner (28(6)), so I labelled identify_ubo, and the 28(8) lead-in through this item. The record-keeping duties in (a), (b)(i) and (b)(ii) are left unlabelled. Alternative: no type (the senior manager is not truly a beneficial owner), or verify_customer."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_9
+  decision: [identify_ubo]
+  note: "Phrased as how compliance with 28(4) is judged (could be a 'paragraph that only says how other paragraphs are read'), but in substance it bars relying solely on register data for beneficial-owner identification, i.e. a rule about sources. Labelled identify_ubo. Alternative: no type."
+- clause_id: uk_mlr_2017_28_cdd_measures_28_18_a
+  decision: []
+  note: "Says that 'verify' means verifying on documents from a reliable, independent source, which is the source rule for customer verification, but it is worded as a definition and the guideline excludes definitions. Not labelled; same for 28(18)(b) and 28(19) (a 'may be regarded' deeming provision)."
+- clause_id: uk_mlr_2017_27_cdd_27_9
+  decision: [cdd_triggers]
+  note: "Factors the firm 'must take into account' in deciding when CDD on existing customers is appropriate; each factor (identity or beneficial owner changed, inconsistent transactions, change of purpose, other risk matters) is a circumstance that makes CDD due. Labelled cdd_triggers on the lead-in and (a)-(d). Alternative: no type, read as guidance on how 27(8)(a) is applied, or as risk assessment."
+- clause_id: uk_mlr_2017_27_cdd_27_7b
+  decision: []
+  note: "Says the letting agent's CDD applies to both landlord and tenant. The guideline says 'on whom' CDD is done is not a trigger, and the text uses generic 'apply customer due diligence measures' without naming identification or verification. Not labelled. Alternative: verify_customer (it widens who counts as the customer)."
+- clause_id: uk_mlr_2017_27_cdd_27_6
+  decision: []
+  note: "27(6) with its items, 27(4) and 27(7) define which transactions count toward the casino and cash thresholds and how amounts are computed. They shape the triggers but are definitions or reading rules, which the guideline excludes. Alternative: cdd_triggers as part of the 27(3)/27(5) trigger."
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_11
+  decision: [cdd_triggers]
+  note: "Only item (b) of the pooled-account list carries a type (updated CDD when the firm is not satisfied); (a) is purpose of the account and (c) is risk assessment. I applied the lead-in rule as 'at least one item has the type', the same reading that gives 28(2) verify_customer although 28(2)(c) has none and gives 33(1) pep_edd through item (d) alone. Alternative: the lead-in gets a type only when its items generally share it, which would drop 29(11) and 33(1)."
+- clause_id: uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1a
+  decision: [identify_ubo]
+  note: "A separate paragraph listing the beneficial-ownership information the 30A(1) register excerpt must contain; it could be read as a definition (excluded), but it functions as the list of information to obtain about beneficial owners. Labelled identify_ubo with its items. The 30A(1)(a)-(e) customer-type items are labelled because they sit inside the same requirement sentence; the discrepancy-reporting provisions are left unlabelled."
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_4
+  decision: []
+  note: "Requires verifying the identity of life-insurance beneficiaries before payout. verify_customer expressly excludes life-policy beneficiaries and the UK note says they are not beneficial owners. Not labelled, and likewise 29(3) and 29(5) (identifying a new beneficiary on assignment) and 33(4B) (beneficial owner of a high-risk life-policy beneficiary). Alternative: verify_customer or identify_ubo."
+- clause_id: uk_mlr_2017_30_timing_of_verification_30_4
+  decision: []
+  note: "A 'may' permission to verify after account opening, conditional on safeguards ensuring no transactions before verification is completed. The condition reads like cdd_incomplete, but the guideline excludes exception conditions attached to a requirement. Not labelled; 30(3) (verification may be completed during establishment, 'provided that' it is completed as soon as practicable) likewise. Alternative: cdd_incomplete for 30(4), verify_customer for the 30(3) proviso."
+- clause_id: uk_mlr_2017_37_application_of_simplified_cdd_37_8
+  decision: []
+  note: "'Must not continue to apply simplified CDD' on doubts, suspicion or a change in risk acts in substance as a trigger for full CDD, but the guideline excludes simplified CDD. Not labelled. Alternative: cdd_triggers for 37(8)(a)-(d)."
+- clause_id: uk_mlr_2017_38_electronic_money_38_2
+  decision: []
+  note: "Disapplies the e-money exemption for cash redemptions over GBP 50, which restores CDD for those transactions (a threshold trigger in effect), but it is an exception within an exemption and a scope statement. Not labelled. Alternative: cdd_triggers."
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_8_b
+  decision: []
+  note: "Prohibits a newly authorised OEIC from issuing bearer share certificates, an anonymity prohibition, but it concerns shares, not accounts. Not labelled. 38(4A) (acquirers may accept anonymous prepaid cards from third countries only under equivalent rules) was likewise left out. Alternative: prohibit_anonymous."
+- clause_id: uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_14
+  decision: []
+  note: "Requires the pooled-account customer to make available, on request, the identity of the underlying persons and their beneficial owners. The duty falls on the customer, not on the relevant person, so it is not labelled. Alternative: identify_ubo."
+- clause_id: uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_13
+  decision: []
+  note: "Extends the 35(5) PEP measures to relationships with entities a PEP beneficially owns, which matches pep_edd's 'beneficial owner is a PEP', but it is worded as a reading rule ('a reference to ... includes'). Not labelled. Alternative: pep_edd."

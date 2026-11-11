@@ -1,0 +1,1640 @@
+{
+  "label_sets": {
+    "pre_registered": {
+      "clauses": 75,
+      "pairs": 77,
+      "paragraphs": 30,
+      "paragraph_type_pairs": 32
+    },
+    "revised": {
+      "clauses": 74,
+      "pairs": 76,
+      "paragraphs": 30,
+      "paragraph_type_pairs": 32
+    },
+    "sensitivity_preferred_readings": {
+      "clauses": 77,
+      "pairs": 83,
+      "paragraphs": 31,
+      "paragraph_type_pairs": 36
+    }
+  },
+  "systems": {
+    "rules_v1": {
+      "pre_registered": {
+        "clause": {
+          "overall": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 77,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_triggers": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 25,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "verify_customer": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 14,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "identify_ubo": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 20,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 11,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 6,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 32,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_triggers": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 13,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "verify_customer": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 4,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "identify_ubo": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 4,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        }
+      },
+      "revised": {
+        "clause": {
+          "overall": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 76,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_triggers": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 25,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "verify_customer": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 13,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "identify_ubo": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 20,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 11,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 6,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 32,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_triggers": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 13,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "verify_customer": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 4,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "identify_ubo": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 8,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 4,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        }
+      },
+      "sensitivity_preferred_readings": {
+        "clause": {
+          "overall": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 83,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 3,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_triggers": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 23,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "verify_customer": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 15,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "identify_ubo": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 25,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 11,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 6,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 36,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 3,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_triggers": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 12,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "verify_customer": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 5,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "identify_ubo": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 10,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 4,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        }
+      }
+    },
+    "rules_v2": {
+      "pre_registered": {
+        "clause": {
+          "overall": {
+            "tp": 27,
+            "fp": 3,
+            "fn": 50,
+            "precision": 0.9,
+            "recall": 0.3506,
+            "f1": 0.5047
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "cdd_triggers": {
+              "tp": 16,
+              "fp": 1,
+              "fn": 9,
+              "precision": 0.9412,
+              "recall": 0.64,
+              "f1": 0.7619
+            },
+            "verify_customer": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 8,
+              "precision": 1.0,
+              "recall": 0.4286,
+              "f1": 0.6
+            },
+            "identify_ubo": {
+              "tp": 4,
+              "fp": 2,
+              "fn": 16,
+              "precision": 0.6667,
+              "recall": 0.2,
+              "f1": 0.3077
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 11,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 6,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 15,
+            "fp": 2,
+            "fn": 17,
+            "precision": 0.8824,
+            "recall": 0.4688,
+            "f1": 0.6122
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "cdd_triggers": {
+              "tp": 8,
+              "fp": 1,
+              "fn": 5,
+              "precision": 0.8889,
+              "recall": 0.6154,
+              "f1": 0.7273
+            },
+            "verify_customer": {
+              "tp": 3,
+              "fp": 0,
+              "fn": 1,
+              "precision": 1.0,
+              "recall": 0.75,
+              "f1": 0.8571
+            },
+            "identify_ubo": {
+              "tp": 3,
+              "fp": 1,
+              "fn": 5,
+              "precision": 0.75,
+              "recall": 0.375,
+              "f1": 0.5
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 4,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        }
+      },
+      "revised": {
+        "clause": {
+          "overall": {
+            "tp": 27,
+            "fp": 3,
+            "fn": 49,
+            "precision": 0.9,
+            "recall": 0.3553,
+            "f1": 0.5094
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "cdd_triggers": {
+              "tp": 16,
+              "fp": 1,
+              "fn": 9,
+              "precision": 0.9412,
+              "recall": 0.64,
+              "f1": 0.7619
+            },
+            "verify_customer": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 7,
+              "precision": 1.0,
+              "recall": 0.4615,
+              "f1": 0.6316
+            },
+            "identify_ubo": {
+              "tp": 4,
+              "fp": 2,
+              "fn": 16,
+              "precision": 0.6667,
+              "recall": 0.2,
+              "f1": 0.3077
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 11,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 6,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 15,
+            "fp": 2,
+            "fn": 17,
+            "precision": 0.8824,
+            "recall": 0.4688,
+            "f1": 0.6122
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "cdd_triggers": {
+              "tp": 8,
+              "fp": 1,
+              "fn": 5,
+              "precision": 0.8889,
+              "recall": 0.6154,
+              "f1": 0.7273
+            },
+            "verify_customer": {
+              "tp": 3,
+              "fp": 0,
+              "fn": 1,
+              "precision": 1.0,
+              "recall": 0.75,
+              "f1": 0.8571
+            },
+            "identify_ubo": {
+              "tp": 3,
+              "fp": 1,
+              "fn": 5,
+              "precision": 0.75,
+              "recall": 0.375,
+              "f1": 0.5
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 4,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        }
+      },
+      "sensitivity_preferred_readings": {
+        "clause": {
+          "overall": {
+            "tp": 27,
+            "fp": 3,
+            "fn": 56,
+            "precision": 0.9,
+            "recall": 0.3253,
+            "f1": 0.4779
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 2,
+              "precision": 1.0,
+              "recall": 0.3333,
+              "f1": 0.5
+            },
+            "cdd_triggers": {
+              "tp": 16,
+              "fp": 1,
+              "fn": 7,
+              "precision": 0.9412,
+              "recall": 0.6957,
+              "f1": 0.8
+            },
+            "verify_customer": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 9,
+              "precision": 1.0,
+              "recall": 0.4,
+              "f1": 0.5714
+            },
+            "identify_ubo": {
+              "tp": 4,
+              "fp": 2,
+              "fn": 21,
+              "precision": 0.6667,
+              "recall": 0.16,
+              "f1": 0.2581
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 11,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 6,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 15,
+            "fp": 2,
+            "fn": 21,
+            "precision": 0.8824,
+            "recall": 0.4167,
+            "f1": 0.566
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 2,
+              "precision": 1.0,
+              "recall": 0.3333,
+              "f1": 0.5
+            },
+            "cdd_triggers": {
+              "tp": 8,
+              "fp": 1,
+              "fn": 4,
+              "precision": 0.8889,
+              "recall": 0.6667,
+              "f1": 0.7619
+            },
+            "verify_customer": {
+              "tp": 3,
+              "fp": 0,
+              "fn": 2,
+              "precision": 1.0,
+              "recall": 0.6,
+              "f1": 0.75
+            },
+            "identify_ubo": {
+              "tp": 3,
+              "fp": 1,
+              "fn": 7,
+              "precision": 0.75,
+              "recall": 0.3,
+              "f1": 0.4286
+            },
+            "pep_edd": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 4,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          }
+        }
+      }
+    },
+    "llm_qwen3_5_9b": {
+      "pre_registered": {
+        "clause": {
+          "overall": {
+            "tp": 54,
+            "fp": 97,
+            "fn": 23,
+            "precision": 0.3576,
+            "recall": 0.7013,
+            "f1": 0.4737
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.3333,
+              "recall": 1.0,
+              "f1": 0.5
+            },
+            "cdd_triggers": {
+              "tp": 20,
+              "fp": 7,
+              "fn": 5,
+              "precision": 0.7407,
+              "recall": 0.8,
+              "f1": 0.7692
+            },
+            "verify_customer": {
+              "tp": 11,
+              "fp": 16,
+              "fn": 3,
+              "precision": 0.4074,
+              "recall": 0.7857,
+              "f1": 0.5366
+            },
+            "identify_ubo": {
+              "tp": 6,
+              "fp": 12,
+              "fn": 14,
+              "precision": 0.3333,
+              "recall": 0.3,
+              "f1": 0.3158
+            },
+            "pep_edd": {
+              "tp": 10,
+              "fp": 52,
+              "fn": 1,
+              "precision": 0.1613,
+              "recall": 0.9091,
+              "f1": 0.274
+            },
+            "pep_prohibition": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 6,
+              "fp": 5,
+              "fn": 0,
+              "precision": 0.5455,
+              "recall": 1.0,
+              "f1": 0.7059
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 26,
+            "fp": 34,
+            "fn": 6,
+            "precision": 0.4333,
+            "recall": 0.8125,
+            "f1": 0.5652
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.3333,
+              "recall": 1.0,
+              "f1": 0.5
+            },
+            "cdd_triggers": {
+              "tp": 12,
+              "fp": 2,
+              "fn": 1,
+              "precision": 0.8571,
+              "recall": 0.9231,
+              "f1": 0.8889
+            },
+            "verify_customer": {
+              "tp": 4,
+              "fp": 10,
+              "fn": 0,
+              "precision": 0.2857,
+              "recall": 1.0,
+              "f1": 0.4444
+            },
+            "identify_ubo": {
+              "tp": 3,
+              "fp": 5,
+              "fn": 5,
+              "precision": 0.375,
+              "recall": 0.375,
+              "f1": 0.375
+            },
+            "pep_edd": {
+              "tp": 4,
+              "fp": 11,
+              "fn": 0,
+              "precision": 0.2667,
+              "recall": 1.0,
+              "f1": 0.4211
+            },
+            "pep_prohibition": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 2,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.6667,
+              "recall": 1.0,
+              "f1": 0.8
+            }
+          }
+        }
+      },
+      "revised": {
+        "clause": {
+          "overall": {
+            "tp": 54,
+            "fp": 97,
+            "fn": 22,
+            "precision": 0.3576,
+            "recall": 0.7105,
+            "f1": 0.4758
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.3333,
+              "recall": 1.0,
+              "f1": 0.5
+            },
+            "cdd_triggers": {
+              "tp": 20,
+              "fp": 7,
+              "fn": 5,
+              "precision": 0.7407,
+              "recall": 0.8,
+              "f1": 0.7692
+            },
+            "verify_customer": {
+              "tp": 11,
+              "fp": 16,
+              "fn": 2,
+              "precision": 0.4074,
+              "recall": 0.8462,
+              "f1": 0.55
+            },
+            "identify_ubo": {
+              "tp": 6,
+              "fp": 12,
+              "fn": 14,
+              "precision": 0.3333,
+              "recall": 0.3,
+              "f1": 0.3158
+            },
+            "pep_edd": {
+              "tp": 10,
+              "fp": 52,
+              "fn": 1,
+              "precision": 0.1613,
+              "recall": 0.9091,
+              "f1": 0.274
+            },
+            "pep_prohibition": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 6,
+              "fp": 5,
+              "fn": 0,
+              "precision": 0.5455,
+              "recall": 1.0,
+              "f1": 0.7059
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 26,
+            "fp": 34,
+            "fn": 6,
+            "precision": 0.4333,
+            "recall": 0.8125,
+            "f1": 0.5652
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.3333,
+              "recall": 1.0,
+              "f1": 0.5
+            },
+            "cdd_triggers": {
+              "tp": 12,
+              "fp": 2,
+              "fn": 1,
+              "precision": 0.8571,
+              "recall": 0.9231,
+              "f1": 0.8889
+            },
+            "verify_customer": {
+              "tp": 4,
+              "fp": 10,
+              "fn": 0,
+              "precision": 0.2857,
+              "recall": 1.0,
+              "f1": 0.4444
+            },
+            "identify_ubo": {
+              "tp": 3,
+              "fp": 5,
+              "fn": 5,
+              "precision": 0.375,
+              "recall": 0.375,
+              "f1": 0.375
+            },
+            "pep_edd": {
+              "tp": 4,
+              "fp": 11,
+              "fn": 0,
+              "precision": 0.2667,
+              "recall": 1.0,
+              "f1": 0.4211
+            },
+            "pep_prohibition": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 2,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.6667,
+              "recall": 1.0,
+              "f1": 0.8
+            }
+          }
+        }
+      },
+      "sensitivity_preferred_readings": {
+        "clause": {
+          "overall": {
+            "tp": 55,
+            "fp": 96,
+            "fn": 28,
+            "precision": 0.3642,
+            "recall": 0.6627,
+            "f1": 0.4701
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 2,
+              "precision": 0.3333,
+              "recall": 0.3333,
+              "f1": 0.3333
+            },
+            "cdd_triggers": {
+              "tp": 20,
+              "fp": 7,
+              "fn": 3,
+              "precision": 0.7407,
+              "recall": 0.8696,
+              "f1": 0.8
+            },
+            "verify_customer": {
+              "tp": 12,
+              "fp": 15,
+              "fn": 3,
+              "precision": 0.4444,
+              "recall": 0.8,
+              "f1": 0.5714
+            },
+            "identify_ubo": {
+              "tp": 6,
+              "fp": 12,
+              "fn": 19,
+              "precision": 0.3333,
+              "recall": 0.24,
+              "f1": 0.2791
+            },
+            "pep_edd": {
+              "tp": 10,
+              "fp": 52,
+              "fn": 1,
+              "precision": 0.1613,
+              "recall": 0.9091,
+              "f1": 0.274
+            },
+            "pep_prohibition": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 6,
+              "fp": 5,
+              "fn": 0,
+              "precision": 0.5455,
+              "recall": 1.0,
+              "f1": 0.7059
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 27,
+            "fp": 33,
+            "fn": 9,
+            "precision": 0.45,
+            "recall": 0.75,
+            "f1": 0.5625
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 2,
+              "precision": 0.3333,
+              "recall": 0.3333,
+              "f1": 0.3333
+            },
+            "cdd_triggers": {
+              "tp": 12,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.8571,
+              "recall": 1.0,
+              "f1": 0.9231
+            },
+            "verify_customer": {
+              "tp": 5,
+              "fp": 9,
+              "fn": 0,
+              "precision": 0.3571,
+              "recall": 1.0,
+              "f1": 0.5263
+            },
+            "identify_ubo": {
+              "tp": 3,
+              "fp": 5,
+              "fn": 7,
+              "precision": 0.375,
+              "recall": 0.3,
+              "f1": 0.3333
+            },
+            "pep_edd": {
+              "tp": 4,
+              "fp": 11,
+              "fn": 0,
+              "precision": 0.2667,
+              "recall": 1.0,
+              "f1": 0.4211
+            },
+            "pep_prohibition": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 2,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.6667,
+              "recall": 1.0,
+              "f1": 0.8
+            }
+          }
+        }
+      }
+    },
+    "llm_qwen3_5_9b_evidence": {
+      "pre_registered": {
+        "clause": {
+          "overall": {
+            "tp": 56,
+            "fp": 119,
+            "fn": 21,
+            "precision": 0.32,
+            "recall": 0.7273,
+            "f1": 0.4444
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 4,
+              "fn": 0,
+              "precision": 0.2,
+              "recall": 1.0,
+              "f1": 0.3333
+            },
+            "cdd_triggers": {
+              "tp": 23,
+              "fp": 9,
+              "fn": 2,
+              "precision": 0.7188,
+              "recall": 0.92,
+              "f1": 0.807
+            },
+            "verify_customer": {
+              "tp": 10,
+              "fp": 24,
+              "fn": 4,
+              "precision": 0.2941,
+              "recall": 0.7143,
+              "f1": 0.4167
+            },
+            "identify_ubo": {
+              "tp": 6,
+              "fp": 14,
+              "fn": 14,
+              "precision": 0.3,
+              "recall": 0.3,
+              "f1": 0.3
+            },
+            "pep_edd": {
+              "tp": 10,
+              "fp": 51,
+              "fn": 1,
+              "precision": 0.1639,
+              "recall": 0.9091,
+              "f1": 0.2778
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 6,
+              "fp": 16,
+              "fn": 0,
+              "precision": 0.2727,
+              "recall": 1.0,
+              "f1": 0.4286
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 26,
+            "fp": 44,
+            "fn": 6,
+            "precision": 0.3714,
+            "recall": 0.8125,
+            "f1": 0.5098
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.3333,
+              "recall": 1.0,
+              "f1": 0.5
+            },
+            "cdd_triggers": {
+              "tp": 12,
+              "fp": 4,
+              "fn": 1,
+              "precision": 0.75,
+              "recall": 0.9231,
+              "f1": 0.8276
+            },
+            "verify_customer": {
+              "tp": 4,
+              "fp": 13,
+              "fn": 0,
+              "precision": 0.2353,
+              "recall": 1.0,
+              "f1": 0.381
+            },
+            "identify_ubo": {
+              "tp": 3,
+              "fp": 7,
+              "fn": 5,
+              "precision": 0.3,
+              "recall": 0.375,
+              "f1": 0.3333
+            },
+            "pep_edd": {
+              "tp": 4,
+              "fp": 10,
+              "fn": 0,
+              "precision": 0.2857,
+              "recall": 1.0,
+              "f1": 0.4444
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 2,
+              "fp": 7,
+              "fn": 0,
+              "precision": 0.2222,
+              "recall": 1.0,
+              "f1": 0.3636
+            }
+          }
+        }
+      },
+      "revised": {
+        "clause": {
+          "overall": {
+            "tp": 56,
+            "fp": 119,
+            "fn": 20,
+            "precision": 0.32,
+            "recall": 0.7368,
+            "f1": 0.4462
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 4,
+              "fn": 0,
+              "precision": 0.2,
+              "recall": 1.0,
+              "f1": 0.3333
+            },
+            "cdd_triggers": {
+              "tp": 23,
+              "fp": 9,
+              "fn": 2,
+              "precision": 0.7188,
+              "recall": 0.92,
+              "f1": 0.807
+            },
+            "verify_customer": {
+              "tp": 10,
+              "fp": 24,
+              "fn": 3,
+              "precision": 0.2941,
+              "recall": 0.7692,
+              "f1": 0.4255
+            },
+            "identify_ubo": {
+              "tp": 6,
+              "fp": 14,
+              "fn": 14,
+              "precision": 0.3,
+              "recall": 0.3,
+              "f1": 0.3
+            },
+            "pep_edd": {
+              "tp": 10,
+              "fp": 51,
+              "fn": 1,
+              "precision": 0.1639,
+              "recall": 0.9091,
+              "f1": 0.2778
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 6,
+              "fp": 16,
+              "fn": 0,
+              "precision": 0.2727,
+              "recall": 1.0,
+              "f1": 0.4286
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 26,
+            "fp": 44,
+            "fn": 6,
+            "precision": 0.3714,
+            "recall": 0.8125,
+            "f1": 0.5098
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.3333,
+              "recall": 1.0,
+              "f1": 0.5
+            },
+            "cdd_triggers": {
+              "tp": 12,
+              "fp": 4,
+              "fn": 1,
+              "precision": 0.75,
+              "recall": 0.9231,
+              "f1": 0.8276
+            },
+            "verify_customer": {
+              "tp": 4,
+              "fp": 13,
+              "fn": 0,
+              "precision": 0.2353,
+              "recall": 1.0,
+              "f1": 0.381
+            },
+            "identify_ubo": {
+              "tp": 3,
+              "fp": 7,
+              "fn": 5,
+              "precision": 0.3,
+              "recall": 0.375,
+              "f1": 0.3333
+            },
+            "pep_edd": {
+              "tp": 4,
+              "fp": 10,
+              "fn": 0,
+              "precision": 0.2857,
+              "recall": 1.0,
+              "f1": 0.4444
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 2,
+              "fp": 7,
+              "fn": 0,
+              "precision": 0.2222,
+              "recall": 1.0,
+              "f1": 0.3636
+            }
+          }
+        }
+      },
+      "sensitivity_preferred_readings": {
+        "clause": {
+          "overall": {
+            "tp": 57,
+            "fp": 118,
+            "fn": 26,
+            "precision": 0.3257,
+            "recall": 0.6867,
+            "f1": 0.4419
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 4,
+              "fn": 2,
+              "precision": 0.2,
+              "recall": 0.3333,
+              "f1": 0.25
+            },
+            "cdd_triggers": {
+              "tp": 23,
+              "fp": 9,
+              "fn": 0,
+              "precision": 0.7188,
+              "recall": 1.0,
+              "f1": 0.8364
+            },
+            "verify_customer": {
+              "tp": 11,
+              "fp": 23,
+              "fn": 4,
+              "precision": 0.3235,
+              "recall": 0.7333,
+              "f1": 0.449
+            },
+            "identify_ubo": {
+              "tp": 6,
+              "fp": 14,
+              "fn": 19,
+              "precision": 0.3,
+              "recall": 0.24,
+              "f1": 0.2667
+            },
+            "pep_edd": {
+              "tp": 10,
+              "fp": 51,
+              "fn": 1,
+              "precision": 0.1639,
+              "recall": 0.9091,
+              "f1": 0.2778
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 6,
+              "fp": 16,
+              "fn": 0,
+              "precision": 0.2727,
+              "recall": 1.0,
+              "f1": 0.4286
+            }
+          }
+        },
+        "paragraph": {
+          "overall": {
+            "tp": 27,
+            "fp": 43,
+            "fn": 9,
+            "precision": 0.3857,
+            "recall": 0.75,
+            "f1": 0.5094
+          },
+          "by_type": {
+            "prohibit_anonymous": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 2,
+              "precision": 0.3333,
+              "recall": 0.3333,
+              "f1": 0.3333
+            },
+            "cdd_triggers": {
+              "tp": 12,
+              "fp": 4,
+              "fn": 0,
+              "precision": 0.75,
+              "recall": 1.0,
+              "f1": 0.8571
+            },
+            "verify_customer": {
+              "tp": 5,
+              "fp": 12,
+              "fn": 0,
+              "precision": 0.2941,
+              "recall": 1.0,
+              "f1": 0.4545
+            },
+            "identify_ubo": {
+              "tp": 3,
+              "fp": 7,
+              "fn": 7,
+              "precision": 0.3,
+              "recall": 0.3,
+              "f1": 0.3
+            },
+            "pep_edd": {
+              "tp": 4,
+              "fp": 10,
+              "fn": 0,
+              "precision": 0.2857,
+              "recall": 1.0,
+              "f1": 0.4444
+            },
+            "pep_approval": {
+              "tp": 0,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "cdd_incomplete": {
+              "tp": 2,
+              "fp": 7,
+              "fn": 0,
+              "precision": 0.2222,
+              "recall": 1.0,
+              "f1": 0.3636
+            }
+          }
+        }
+      }
+    }
+  }
+}
