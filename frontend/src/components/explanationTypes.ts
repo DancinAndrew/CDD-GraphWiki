@@ -92,13 +92,16 @@ export interface DocumentItemExplanation {
 
 export interface RiskTriggerExplanation {
   trigger: string;
-  // 葉節點宣告的義務；知識庫沒有任何義務對這位客戶要求這個條件時為 null，此時 note 說明原因
-  obligation_id: string | null;
+  // 葉節點宣告的義務
+  obligation_id: string;
   // 該義務出處條文中寫出這個條件的那一條
-  clause_id: string | null;
-  note: string | null;
+  clause_id: string;
   attributes: string[];
-  tested_by_decision: boolean;
+  // 標記斷言的條件與讀到的值；只陳述分支結果時 condition 為 null
+  condition: string | null;
+  observed: Record<string, unknown>;
+  // decision_path：決策路徑保證成立；own_condition：由標記自己的條件檢查；branch_outcome：只陳述分支結果
+  checked_by: 'decision_path' | 'own_condition' | 'branch_outcome';
   holds: boolean | null;
 }
 
@@ -150,6 +153,8 @@ export interface ChecklistExplanation {
   // 每個適用義務（含不需另收文件的義務）的相關衝突
   obligation_conflicts: Record<string, ConflictRef[]>;
   risk_triggers: RiskTriggerExplanation[];
+  // 這個分支宣告、由標記自己的條件檢查過但不成立、所以沒有列出的標記
+  triggers_not_raised: RiskTriggerExplanation[];
   counterfactuals: Counterfactual[];
   attributes_read_but_not_decisive: NonDecisiveAttribute[];
   attributes_not_read: string[];
@@ -161,6 +166,9 @@ const ATTRIBUTE_LABELS: Record<string, string> = {
   ubo_country_risk: '實質受益人國家風險',
   ubo_status: '實質受益人狀態',
   registration_jurisdiction: '註冊地',
+  ownership_layers: '持股層數',
+  source_of_funds_available: '資金來源證明',
+  source_of_wealth_available: '財富來源證明',
   'custom_attributes.major_shareholder_pct': '大股東持股比例',
 };
 

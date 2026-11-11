@@ -108,26 +108,27 @@ const Badge: React.FC<{ tone: 'ok' | 'warn' | 'bad' | 'neutral'; children: React
   <span style={{ ...styles.badge, ...badgeTones[tone] }}>{children}</span>
 );
 
+const CHECKED_BY: Record<RiskTriggerExplanation['checked_by'], string> = {
+  decision_path: '由決策路徑檢查',
+  own_condition: '由標記自己的條件檢查',
+  branch_outcome: '描述分支結果',
+};
+
+const observedText = (trigger: RiskTriggerExplanation) =>
+  trigger.attributes.map((a) => `${attributeLabel(a)} = ${formatValue(trigger.observed[a], a)}`).join('、');
+
 const TriggerRow: React.FC<{ trigger: RiskTriggerExplanation }> = ({ trigger }) => (
   <li style={styles.row}>
     <div style={styles.triggerHeader}>
       <code style={styles.triggerName}>{trigger.trigger}</code>
-      {trigger.attributes.length === 0
-        ? <Badge tone="neutral">描述分支結果</Badge>
-        : trigger.tested_by_decision
-          ? <Badge tone="ok">已由決策檢查</Badge>
-          : <Badge tone="warn">決策未檢查</Badge>}
-      {trigger.holds === true && <Badge tone="ok">與客戶資料相符</Badge>}
-      {trigger.holds === false && <Badge tone="bad">與客戶資料不相符</Badge>}
-      {trigger.obligation_id
-        ? <Badge tone="neutral">{trigger.obligation_id}</Badge>
-        : <Badge tone="bad">沒有適用的義務</Badge>}
+      <Badge tone={trigger.checked_by === 'branch_outcome' ? 'neutral' : 'ok'}>{CHECKED_BY[trigger.checked_by]}</Badge>
+      {trigger.holds === false && <Badge tone="neutral">條件不成立，未列出</Badge>}
+      <Badge tone="neutral">{trigger.obligation_id}</Badge>
     </div>
-    {trigger.clause_id && <div style={styles.muted}>寫出這個條件的條文：<code style={styles.code}>{trigger.clause_id}</code></div>}
-    {trigger.note && <div style={styles.muted}>{trigger.note}</div>}
+    <div style={styles.muted}>寫出這個條件的條文：<code style={styles.code}>{trigger.clause_id}</code></div>
     <div style={styles.muted}>
-      {trigger.attributes.length > 0
-        ? `依據的客戶資料：${trigger.attributes.map(attributeLabel).join('、')}`
+      {trigger.condition
+        ? <>條件 <code style={styles.code}>{trigger.condition}</code>；客戶資料：{observedText(trigger)}</>
         : '這個標記只陳述分支的結果，不對客戶資料下斷言'}
     </div>
   </li>
@@ -179,7 +180,16 @@ export const ExplanationPanel: React.FC<ExplanationPanelProps> = ({ explanation 
           {explanation.risk_triggers.map((t) => <TriggerRow key={t.trigger} trigger={t} />)}
         </ul>
       ) : (
-        <p style={styles.muted}>這個分支沒有風險標記。</p>
+        <p style={styles.muted}>這位客戶沒有成立的風險標記。</p>
+      )}
+      {explanation.triggers_not_raised.length > 0 && (
+        <>
+          <h5 style={styles.subtitle}>檢查過但不成立</h5>
+          <p style={styles.muted}>這個分支會檢查這些標記的條件，但對這位客戶不成立，所以沒有列在檢核表上。</p>
+          <ul style={styles.list}>
+            {explanation.triggers_not_raised.map((t) => <TriggerRow key={t.trigger} trigger={t} />)}
+          </ul>
+        </>
       )}
     </section>
 
