@@ -47,15 +47,21 @@ class DecisionTest:
 
 @dataclass(frozen=True)
 class TriggerSpec:
-    """葉節點宣告的風險標記：它依據哪個義務、對哪些客戶屬性下了斷言，以及斷言對這位客戶是否成立。
-    obligation_id 必須明確宣告：只連到出處條文確實寫出這個條件的義務；知識庫沒有任何義務對這位客戶要求這個條件時為 None。
-    clause_id 是該義務出處條文中寫出這個條件的那一條（不一定是義務的錨點條文）；沒有義務時為 None。
-    attributes 為空代表它只是陳述分支的結果（例如禁止開戶），不對客戶屬性下斷言。"""
+    """葉節點宣告的風險標記：它依據哪個義務、寫出條件的是哪一條、對哪些客戶屬性下了斷言。
+    obligation_id 與 clause_id 都必須宣告：沒有義務要求的條件不能成為風險標記。
+    clause_id 是該義務出處條文中寫出這個條件的那一條（不一定是義務的錨點條文）。
+    attributes 為空代表它只是陳述分支的結果（例如禁止開戶），不對客戶屬性下斷言，一律列出。
+    有 attributes 的標記只在 holds(客戶) 成立時列出：屬性都在決策路徑上被讀取時，走到這個葉節點就保證成立；
+    否則由標記自己的條件（condition）檢查。"""
     trigger: str
-    obligation_id: Optional[str]
-    clause_id: Optional[str] = None
+    obligation_id: str
+    clause_id: str
     attributes: Tuple[str, ...] = ()
     holds: Optional[Callable[[CustomerContext], bool]] = None
+    condition: str = ""
+
+    def raised_for(self, customer: CustomerContext) -> bool:
+        return self.holds is None or bool(self.holds(customer))
 
 
 @dataclass(frozen=True)
@@ -73,9 +79,9 @@ class Leaf:
     def required_documents(self) -> List[str]:
         return [document for document, _ in self.items]
 
-    @property
-    def risk_triggers(self) -> List[str]:
-        return [t.trigger for t in self.triggers]
+    def raised_triggers(self, customer: CustomerContext) -> List[TriggerSpec]:
+        """這位客戶在這個葉節點上成立的風險標記，依宣告順序。"""
+        return [t for t in self.triggers if t.raised_for(customer)]
 
 
 @dataclass(frozen=True)
@@ -109,10 +115,16 @@ T_PEP_HIGH_RISK = DecisionTest("pep_high_risk", "政要是否與高風險地區�
 T_IS_CORPORATE = DecisionTest("is_corporate", "客戶是否為企業？", (
     Condition("customer_type", 'customer_type == "corporate"', lambda c: c.customer_type == "corporate"),
 ))
-T_CORPORATE_CDD_BLOCKED = DecisionTest("corporate_cdd_blocked", "企業 CDD 是否無法完成（實質受益人不明，或註冊地為開曼群島）？", (
+# 註冊地本身不構成「無法完成 CDD」：知識庫沒有任何條文這樣要求，所以這個測試只看實質受益人是否不明
+T_CORPORATE_CDD_BLOCKED = DecisionTest("corporate_cdd_blocked", "企業 CDD 是否無法完成（實質受益人不明）？", (
     Condition("ubo_status", 'ubo_status == "unclear"', lambda c: c.ubo_status == "unclear"),
-    Condition("registration_jurisdiction", 'registration_jurisdiction.lower() == "cayman islands"',
-              lambda c: c.registration_jurisdiction.lower() == "cayman islands"),
+))
+# 銀行政策 1.2(b)：「three or more layers of intermediary holding companies」；
+# ownership_layers 視為中間控股公司的層數
+COMPLEX_OWNERSHIP_LAYERS = 3
+T_COMPLEX_OWNERSHIP = DecisionTest("complex_ownership", "持股結構是否複雜（中間控股公司 3 層以上）？", (
+    Condition("ownership_layers", f"ownership_layers >= {COMPLEX_OWNERSHIP_LAYERS}",
+              lambda c: c.ownership_layers >= COMPLEX_OWNERSHIP_LAYERS),
 ))
 T_INTERNAL_UBO_THRESHOLD = DecisionTest("internal_ubo_threshold", "主要股東持股是否落在內部政策門檻 10% 至 25%（未提供時視為 0）？", (
     Condition(SHAREHOLDER_PCT_ATTR, "10 <= major_shareholder_pct <= 25", lambda c: 10 <= _shareholder_pct(c) <= 25),
@@ -128,7 +140,22 @@ _GB_1_2_A = f"{_GB_1_2}_a"
 _GB_1_2_B = f"{_GB_1_2}_b"
 _GB_1_4 = "mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons"
 _MAS_8_3 = "mas_notice_626_8_enhanced_cdd_8_3"
+_MAS_8_3_B = f"{_MAS_8_3}_b"
 _MAS_6_35 = "mas_notice_626_6_cdd_6_35"
+
+OWNERSHIP_CHART = "Full Ownership Chart Signed Off by Compliance Officer"
+
+# 多個葉節點共用的風險標記
+# 銀行政策 1.2(b)：「three or more layers of intermediary holding companies」→ (i)「classified as presenting a high risk」
+COMPLEX_OWNERSHIP_TRIGGER = TriggerSpec(
+    "complex_ownership_3_layers", obligation_id="ob_identify_ubo_10_gb", clause_id=_GB_1_2_B,
+    attributes=("ownership_layers",), holds=lambda c: c.ownership_layers >= COMPLEX_OWNERSHIP_LAYERS,
+    condition=f"ownership_layers >= {COMPLEX_OWNERSHIP_LAYERS}")
+# 銀行政策 1.2(a)：「an ownership threshold of 10% or more (which is stricter than the regulatory baseline of 25%)」
+INTERNAL_UBO_THRESHOLD_TRIGGER = TriggerSpec(
+    "internal_ubo_threshold_triggered_10_percent", obligation_id="ob_identify_ubo_10_gb", clause_id=_GB_1_2_A,
+    attributes=(SHAREHOLDER_PCT_ATTR,), holds=lambda c: 10 <= _shareholder_pct(c) <= 25,
+    condition="10 <= major_shareholder_pct <= 25")
 
 L_INDIVIDUAL_PEP_HIGH_RISK = Leaf(
     leaf_id="individual_pep_high_risk",
@@ -141,7 +168,9 @@ L_INDIVIDUAL_PEP_HIGH_RISK = Leaf(
                     clause_id=_GB_1_4,
                     attributes=("pep_exposure", "ubo_country_risk", "registration_jurisdiction"),
                     holds=lambda c: c.pep_exposure is True and (
-                        c.ubo_country_risk == "high" or c.registration_jurisdiction.lower() == "myanmar")),
+                        c.ubo_country_risk == "high" or c.registration_jurisdiction.lower() == "myanmar"),
+                    condition='pep_exposure is True and (ubo_country_risk == "high" or '
+                              'registration_jurisdiction.lower() == "myanmar")'),
         # 同一條（銀行政策 1.4）：「Global Bank strictly prohibits establishing business relationships」
         TriggerSpec("onboarding_prohibited_by_policy", obligation_id="ob_pep_prohibitions_gb", clause_id=_GB_1_4),
     ),
@@ -160,9 +189,20 @@ L_INDIVIDUAL_PEP = Leaf(
         ("Source of Wealth Declaration & Evidence", "ob_pep_edd_mas"),
         ("Head of Compliance Approval Form", "ob_pep_approval_gb"),
     ),
-    # MAS 8.3：「where a customer ... is determined by the bank to be a politically exposed person」
-    triggers=(TriggerSpec("pep_exposure_detected", obligation_id="ob_pep_edd_mas", clause_id=_MAS_8_3,
-                          attributes=("pep_exposure",), holds=lambda c: c.pep_exposure is True),),
+    triggers=(
+        # MAS 8.3：「where a customer ... is determined by the bank to be a politically exposed person」
+        TriggerSpec("pep_exposure_detected", obligation_id="ob_pep_edd_mas", clause_id=_MAS_8_3,
+                    attributes=("pep_exposure",), holds=lambda c: c.pep_exposure is True,
+                    condition="pep_exposure is True"),
+        # MAS 8.3(b)：「establish ... the source of wealth and source of funds of the customer」；銀行政策 1.4(a)
+        # 也要求核准前先查證兩者。缺少證明時標記出來，核准要等證明補齊
+        TriggerSpec("missing_source_of_funds_evidence", obligation_id="ob_pep_edd_mas", clause_id=_MAS_8_3_B,
+                    attributes=("source_of_funds_available",), holds=lambda c: c.source_of_funds_available is False,
+                    condition="source_of_funds_available is False"),
+        TriggerSpec("missing_source_of_wealth_evidence", obligation_id="ob_pep_edd_mas", clause_id=_MAS_8_3_B,
+                    attributes=("source_of_wealth_available",), holds=lambda c: c.source_of_wealth_available is False,
+                    condition="source_of_wealth_available is False"),
+    ),
     # MAS 8.3 的加強 CDD，加上銀行政策 1.4(a) 對非高風險地區 PEP 的核准要求
     obligations=("ob_cdd_on_relationship_mas", "ob_verify_customer_mas", "ob_pep_edd_mas", "ob_pep_approval_gb"),
     human_review_required=True,
@@ -192,18 +232,14 @@ L_CORPORATE_CDD_INCOMPLETE = Leaf(
         # 識別實質受益人是第 6 段（6.14）的措施，UBO 不明即無法完成。這是一步推論：
         # 直接寫出「unclear beneficial ownership」的銀行政策 1.3 沒有被抽成任何義務
         TriggerSpec("unclear_ubo_status", obligation_id="ob_cdd_incomplete_mas", clause_id=_MAS_6_35,
-                    attributes=("ubo_status",), holds=lambda c: c.ubo_status == "unclear"),
-        # 銀行政策 1.2(b)：「three or more layers of intermediary holding companies」→ (i)「classified as
-        # presenting a high risk」；5 層以上落在這個條件內（條文門檻是 3 層，標記用的是 5 層）
-        TriggerSpec("excessive_layering_5", obligation_id="ob_identify_ubo_10_gb", clause_id=_GB_1_2_B,
-                    attributes=("ownership_layers",), holds=lambda c: c.ownership_layers >= 5),
-        # 沒有法源：知識庫中沒有任何義務對這位客戶要求資金來源證明。FATF 第 10 項 (d) 提到資金來源，
-        # 但沒有從它抽出義務；MAS 8.3(b) 與銀行政策 1.4(a) 只對 PEP 要求
-        TriggerSpec("missing_source_of_funds_evidence", obligation_id=None,
-                    attributes=("source_of_funds_available",), holds=lambda c: c.source_of_funds_available is False),
+                    attributes=("ubo_status",), holds=lambda c: c.ubo_status == "unclear",
+                    condition='ubo_status == "unclear"'),
+        # 路徑不讀層數（UBO 不明就已拒絕），由標記自己的條件檢查：3 層以上才列出
+        COMPLEX_OWNERSHIP_TRIGGER,
+        # 不標記資金來源：知識庫只對 PEP 要求資金來源證明（MAS 8.3(b)、銀行政策 1.4(a)）；
+        # FATF 第 10 項 (d) 提到資金來源，但講的是持續監控，沒有從它抽出義務
     ),
-    # 無法完成 CDD（UBO 不明）時，MAS 6.35 要求不得建立業務關係並考慮申報 STR；
-    # 多層持股依銀行政策 1.2(b) 視為高風險
+    # 無法完成 CDD（UBO 不明）時，MAS 6.35 要求不得建立業務關係並考慮申報 STR
     obligations=("ob_cdd_on_relationship_mas", "ob_identify_ubo_mas", "ob_identify_ubo_10_gb", "ob_cdd_incomplete_mas"),
     human_review_required=True,
 )
@@ -217,10 +253,37 @@ L_CORPORATE_INTERNAL_UBO_THRESHOLD = Leaf(
         ("Shareholder Registry", "ob_identify_ubo_10_gb"),
         ("UBO 15% Shareholder Identity Document (NRIC/Passport)", "ob_identify_ubo_10_gb"),
     ),
-    # 銀行政策 1.2(a)：「an ownership threshold of 10% or more (which is stricter than the regulatory baseline of 25%)」
-    triggers=(TriggerSpec("internal_ubo_threshold_triggered_10_percent", obligation_id="ob_identify_ubo_10_gb",
-                          clause_id=_GB_1_2_A,
-                          attributes=(SHAREHOLDER_PCT_ATTR,), holds=lambda c: 10 <= _shareholder_pct(c) <= 25),),
+    triggers=(INTERNAL_UBO_THRESHOLD_TRIGGER,),
+    obligations=("ob_cdd_on_relationship_mas", "ob_verify_customer_mas", "ob_identify_ubo_mas", "ob_identify_ubo_10_gb"),
+    human_review_required=True,
+)
+# 持股結構複雜（銀行政策 1.2(b)）：(i) 自動列為高風險，所以決策為加強盡職調查；(ii) 每一層的完整持股架構圖
+# 須經合規主管簽核。知識庫裡寫出高風險客戶具體加強措施的條文只有 PEP 的 MAS 8.3，所以這裡只加 1.2(b)(ii) 的文件
+L_CORPORATE_COMPLEX_OWNERSHIP = Leaf(
+    leaf_id="corporate_complex_ownership",
+    label="企業持股結構複雜（3 層以上）：依銀行政策列為高風險，持股架構圖須經合規主管簽核",
+    decision="enhanced_due_diligence",
+    items=(
+        ("Certificate of Incorporation", "ob_verify_customer_mas"),
+        ("ACRA Company Profile", "ob_verify_customer_mas"),
+        (OWNERSHIP_CHART, "ob_identify_ubo_10_gb"),
+    ),
+    triggers=(COMPLEX_OWNERSHIP_TRIGGER,),
+    obligations=("ob_cdd_on_relationship_mas", "ob_verify_customer_mas", "ob_identify_ubo_mas", "ob_identify_ubo_10_gb"),
+    human_review_required=True,
+)
+L_CORPORATE_COMPLEX_OWNERSHIP_INTERNAL_UBO_THRESHOLD = Leaf(
+    leaf_id="corporate_complex_ownership_internal_ubo_threshold",
+    label="企業持股結構複雜且主要股東達內部 10% 門檻：高風險，加驗股東身分並簽核持股架構圖",
+    decision="enhanced_due_diligence",
+    items=(
+        ("Certificate of Incorporation", "ob_verify_customer_mas"),
+        ("ACRA Company Profile", "ob_verify_customer_mas"),
+        ("Shareholder Registry", "ob_identify_ubo_10_gb"),
+        ("UBO 15% Shareholder Identity Document (NRIC/Passport)", "ob_identify_ubo_10_gb"),
+        (OWNERSHIP_CHART, "ob_identify_ubo_10_gb"),
+    ),
+    triggers=(COMPLEX_OWNERSHIP_TRIGGER, INTERNAL_UBO_THRESHOLD_TRIGGER),
     obligations=("ob_cdd_on_relationship_mas", "ob_verify_customer_mas", "ob_identify_ubo_mas", "ob_identify_ubo_10_gb"),
     human_review_required=True,
 )
@@ -254,7 +317,13 @@ DECISION_TREE = Node(
     no=Node(T_IS_CORPORATE,
             yes=Node(T_CORPORATE_CDD_BLOCKED,
                      yes=L_CORPORATE_CDD_INCOMPLETE,
-                     no=Node(T_INTERNAL_UBO_THRESHOLD, yes=L_CORPORATE_INTERNAL_UBO_THRESHOLD, no=L_CORPORATE_STANDARD)),
+                     no=Node(T_COMPLEX_OWNERSHIP,
+                             yes=Node(T_INTERNAL_UBO_THRESHOLD,
+                                      yes=L_CORPORATE_COMPLEX_OWNERSHIP_INTERNAL_UBO_THRESHOLD,
+                                      no=L_CORPORATE_COMPLEX_OWNERSHIP),
+                             no=Node(T_INTERNAL_UBO_THRESHOLD,
+                                     yes=L_CORPORATE_INTERNAL_UBO_THRESHOLD,
+                                     no=L_CORPORATE_STANDARD))),
             no=L_OTHER),
 )
 
@@ -272,8 +341,24 @@ TESTS: Dict[str, DecisionTest] = {}
 LEAVES: Dict[str, Leaf] = {}
 _collect(DECISION_TREE, TESTS, LEAVES)
 
-# 決策樹讀取的所有客戶屬性（依首次出現順序）
-ATTRIBUTES_READ: List[str] = list(dict.fromkeys(a for t in TESTS.values() for a in t.attributes))
+# 決策樹讀取的所有客戶屬性（依首次出現順序）：測試讀的，加上風險標記自己的條件讀的
+ATTRIBUTES_READ: List[str] = list(dict.fromkeys(
+    [a for t in TESTS.values() for a in t.attributes]
+    + [a for leaf in LEAVES.values() for spec in leaf.triggers for a in spec.attributes]
+))
+
+
+def checked_by(spec: TriggerSpec, steps: List["PathStep"]) -> str:
+    """
+    風險標記由什麼保證成立：
+    - branch_outcome：不對客戶屬性下斷言，只陳述分支結果
+    - decision_path：斷言的屬性都在決策路徑上被讀取，走到這個葉節點就成立
+    - own_condition：路徑沒讀全部屬性，由標記自己的條件檢查，成立才列出
+    """
+    if not spec.attributes:
+        return "branch_outcome"
+    read_on_path = {a for step in steps for a in step.test.attributes}
+    return "decision_path" if all(a in read_on_path for a in spec.attributes) else "own_condition"
 
 
 def route(customer: CustomerContext) -> Tuple[Leaf, List[PathStep]]:
@@ -295,7 +380,8 @@ class CDDChecklistEngine:
     """
     客戶 CDD 檢核推理引擎。
     決策分支是明確的決策樹（DECISION_TREE）：節點是測試，葉節點宣告輸出（文件與其義務、風險標記、
-    適用義務、是否需人工審查），因此每個決策都能沿路徑完整解釋。引用與未決衝突則由義務的出處推導：
+    適用義務、是否需人工審查），因此每個決策都能沿路徑完整解釋。風險標記只列出對這位客戶成立的
+    （路徑保證成立，或標記自己的條件成立）。引用與未決衝突則由義務的出處推導：
     - citations：適用義務的錨點條文 ID（解析出的條文）
     - unresolved_conflicts：與適用義務相關、尚未人工裁決的衝突，有的話一律送人工審查
     """
@@ -338,7 +424,7 @@ class CDDChecklistEngine:
             customer_id=customer.customer_id,
             decision=leaf.decision,
             required_documents=leaf.required_documents,
-            risk_triggers=leaf.risk_triggers,
+            risk_triggers=[t.trigger for t in leaf.raised_triggers(customer)],
             applicable_obligations=applicable_obligations,
             unresolved_conflicts=unresolved_conflicts,
             human_review_required=human_review_required,

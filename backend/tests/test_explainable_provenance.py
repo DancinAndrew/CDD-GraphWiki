@@ -255,7 +255,8 @@ def test_explain_unclear_ubo_rejection_uses_mas_6_35():
     assert clause_node.node_id == "mas_notice_626_6_cdd_6_35"
     assert "shall not commence or continue business relations" in clause_node.properties["raw_text"]
     assert "ubo_status = unclear" in path.description
-    assert "registration_jurisdiction = Cayman Islands" in path.description
+    # 註冊地不再是「CDD 無法完成」的條件：路徑只因 UBO 不明而拒絕
+    assert "registration_jurisdiction" not in path.description
     assert "corporate_cdd_incomplete" in path.description
     assert "6.35" in path.description
     assert path.path_nodes[-1].node_id == "mas_notice_626"
@@ -299,13 +300,14 @@ def _with_pct(cust, chk, obligations, clauses, documents, target_item):
     return checklist, target_item, corp, obligations, clauses, documents
 
 
-def test_risk_trigger_reports_whether_the_path_tested_it():
-    """excessive_layering_5 斷言的是 ownership_layers，決策路徑沒有讀它，description 要說出來。"""
+def test_risk_trigger_reports_how_it_was_checked():
+    """complex_ownership_3_layers 斷言的是 ownership_layers；UBO 不明的路徑沒有讀它，由標記自己的條件檢查，
+    description 要說出條件與讀到的值，並為這個屬性加上事實節點。"""
     cust, chk, obligations, clauses, documents = _gold_inputs("cust_corp_unclear_ubo")
-    path = ProvenanceEngine().explain_item(chk, "excessive_layering_5", cust, obligations, clauses, documents)
-    assert "ownership_layers" in path.description
-    assert "未在決策路徑上檢驗" in path.description
-    assert "fact_ownership_layers" not in [n.node_id for n in path.path_nodes]
+    path = ProvenanceEngine().explain_item(chk, "complex_ownership_3_layers", cust, obligations, clauses, documents)
+    assert "決策路徑沒有讀 ownership_layers，由標記自己的條件 ownership_layers >= 3 檢查（ownership_layers = 5）" in path.description
+    fact = next(n for n in path.path_nodes if n.node_id == "fact_ownership_layers")
+    assert fact.properties["ownership_layers"] == 5 and fact.properties["trigger_condition"] == "ownership_layers >= 3"
     # 標記宣告的義務：銀行政策 1.2(b) 的多層持股條件；條文節點是寫出條件的 1.2(b)，不是義務的錨點 1.2
     assert next(n for n in path.path_nodes if n.node_type == "obligation").node_id == "ob_identify_ubo_10_gb"
     clause_node = next(n for n in path.path_nodes if n.node_type == "clause")
@@ -336,13 +338,29 @@ def test_risk_trigger_uses_the_obligation_it_declares():
     assert next(n for n in path.path_nodes if n.node_type == "obligation").node_id == "ob_pep_edd_mas"
 
 
-def test_risk_trigger_without_obligation_is_rejected():
-    """missing_source_of_funds_evidence 沒有法源：不猜一個義務，直接拋出 ValueError。"""
+def test_risk_trigger_that_does_not_hold_is_rejected():
+    """清單和客戶資料對不上（舊清單列了多層持股，但客戶只有 2 層）：不替不成立的標記編造解釋。"""
     import pytest
     cust, chk, obligations, clauses, documents = _gold_inputs("cust_corp_unclear_ubo")
-    assert "missing_source_of_funds_evidence" in chk.risk_triggers
-    with pytest.raises(ValueError, match="no obligation in the knowledge base requires this condition"):
-        ProvenanceEngine().explain_item(chk, "missing_source_of_funds_evidence", cust, obligations, clauses, documents)
+    assert "complex_ownership_3_layers" in chk.risk_triggers
+    two_layers = cust.model_copy(update={"ownership_layers": 2})
+    with pytest.raises(ValueError, match="does not hold"):
+        ProvenanceEngine().explain_item(chk, "complex_ownership_3_layers", two_layers, obligations, clauses, documents)
+
+
+def test_pep_missing_source_of_funds_traces_to_mas_8_3_b():
+    """PEP 缺少資金來源證明：標記追溯到 MAS 8.3(b)，事實節點是 source_of_funds_available。"""
+    from src.decision.engine import CDDChecklistEngine
+    cust, _, obligations, clauses, documents = _gold_inputs("cust_individual_pep")
+    cust = cust.model_copy(update={"source_of_funds_available": False})
+    chk = CDDChecklistEngine().generate_checklist(cust, obligations, [])
+    assert chk.risk_triggers == ["pep_exposure_detected", "missing_source_of_funds_evidence"]
+    path = ProvenanceEngine().explain_item(chk, "missing_source_of_funds_evidence", cust, obligations, clauses, documents)
+    assert next(n for n in path.path_nodes if n.node_type == "obligation").node_id == "ob_pep_edd_mas"
+    clause_node = next(n for n in path.path_nodes if n.node_type == "clause")
+    assert clause_node.node_id == "mas_notice_626_8_enhanced_cdd_8_3_b"
+    assert "source of wealth and source of funds" in clause_node.properties["raw_text"]
+    assert "fact_source_of_funds_available" in [n.node_id for n in path.path_nodes]
 
 
 def test_item_not_in_checklist_is_rejected():

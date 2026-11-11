@@ -8,7 +8,7 @@ from src.contracts.models import (
     ProvenanceNode,
     ExplanationPath
 )
-from src.decision.engine import PathStep, read_attribute, route
+from src.decision.engine import PathStep, TriggerSpec, checked_by, read_attribute, route
 from src.decision.explain import obligation_for_item
 
 
@@ -40,6 +40,21 @@ def _fact_nodes(steps: List[PathStep], customer: CustomerContext) -> List[Proven
     return nodes
 
 
+def _condition_fact_nodes(spec: TriggerSpec, customer: CustomerContext) -> List[ProvenanceNode]:
+    """由標記自己的條件檢查的屬性：每個屬性一個節點，附讀到的值與條件。"""
+    return [
+        ProvenanceNode(
+            node_id=f"fact_{attribute.split('.', 1)[-1]}",
+            node_type="customer_fact",
+            label=f"客戶特徵：{attribute} = {_format_value(read_attribute(customer, attribute))}"
+                  f"（標記條件 {spec.condition} 成立）",
+            properties={attribute.split(".", 1)[-1]: read_attribute(customer, attribute), "attribute": attribute,
+                        "trigger_condition": spec.condition},
+        )
+        for attribute in spec.attributes
+    ]
+
+
 def _path_sentence(steps: List[PathStep], customer: CustomerContext) -> str:
     parts = []
     for step in steps:
@@ -69,7 +84,7 @@ class ProvenanceEngine:
         為檢核清單中的特定要求文件或風險標記回溯推理，產出結構化的 ExplanationPath：
         路徑上讀到的客戶特徵 ➔ 葉節點宣告的義務 ➔ 條文 ➔ 來源文件。
         文件引用義務的錨點條文；風險標記引用 TriggerSpec 宣告、寫出這個條件的那一條出處條文。
-        項目不在清單中、與客戶的決策路徑對不上、或風險標記沒有宣告義務（沒有法源）時拋出 ValueError。
+        項目不在清單中、與客戶的決策路徑對不上、或風險標記對這位客戶不成立時拋出 ValueError。
         """
         is_document = target_item in checklist.required_documents
         is_trigger = target_item in checklist.risk_triggers
@@ -82,7 +97,11 @@ class ProvenanceEngine:
         if ob is None:
             raise ValueError(f"Obligation {ob_id} for {target_item!r} is not in the knowledge base")
         spec = None if is_document else next(t for t in leaf.triggers if t.trigger == target_item)
-        if spec is not None and spec.clause_id is not None:
+        if spec is not None and not spec.raised_for(customer):
+            # 傳入的清單和客戶資料對不上（例如舊的清單）：不替一個不成立的標記編造解釋
+            raise ValueError(f"Risk trigger {target_item!r} does not hold for {customer.customer_id}: "
+                             f"its condition {spec.condition} is false")
+        if spec is not None:
             # 風險標記：用寫出這個條件的那一條，而不是義務的錨點條文
             clause_id, clause_role = spec.clause_id, "寫出這個條件的條文"
             if clause_id not in ob.source_clause_ids:
@@ -135,11 +154,12 @@ class ProvenanceEngine:
         if is_document:
             item_sentence = f"此分支要求文件『{target_item}』，葉節點宣告它依據義務 {ob.obligation_id}"
         else:
-            if spec.attributes:
-                read_on_path = {a for step in steps for a in step.test.attributes}
-                tested = "已在決策路徑上檢驗" if all(a in read_on_path for a in spec.attributes) else "未在決策路徑上檢驗"
-                holds = "成立" if spec.holds(customer) else "不成立"
-                assertion = f"斷言的客戶屬性 {'、'.join(spec.attributes)} {tested}，對本客戶{holds}"
+            how = checked_by(spec, steps)
+            if how == "decision_path":
+                assertion = f"斷言的客戶屬性 {'、'.join(spec.attributes)} 已在決策路徑上檢驗，對本客戶成立"
+            elif how == "own_condition":
+                observed = "、".join(f"{a} = {_format_value(read_attribute(customer, a))}" for a in spec.attributes)
+                assertion = f"決策路徑沒有讀 {'、'.join(spec.attributes)}，由標記自己的條件 {spec.condition} 檢查（{observed}），成立才列出"
             else:
                 assertion = "它不對客戶屬性下斷言，只陳述分支的結果"
             item_sentence = (f"此分支標記風險『{target_item}』（{assertion}），"
@@ -153,9 +173,13 @@ class ProvenanceEngine:
             f"{reason_sentence}"
         )
 
+        facts = _fact_nodes(steps, customer)
+        if spec is not None and checked_by(spec, steps) == "own_condition":
+            on_path = {n.node_id for n in facts}
+            facts += [n for n in _condition_fact_nodes(spec, customer) if n.node_id not in on_path]
         return ExplanationPath(
             target_item=target_item,
-            path_nodes=[*_fact_nodes(steps, customer), ob_node, clause_node, doc_node],
+            path_nodes=[*facts, ob_node, clause_node, doc_node],
             description=desc
         )
 

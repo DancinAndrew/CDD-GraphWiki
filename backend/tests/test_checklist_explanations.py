@@ -1,10 +1,11 @@
 """
 檢核表決策樹與解釋的忠實度測試：
-- 決策樹與重構前的 if/else 引擎在完整格點上輸出完全相同
+- 決策樹與獨立寫成的 if/else 參考實作在完整格點上輸出完全相同
+- 和重構前引擎的差異，正好只出現在三項修正影響的客戶群
 - 五位範例客戶的分支、路徑與文件 → 義務對應
 - 每個回報的反事實套用後都能重現
-- 路徑足以決定輸出：同一路徑簽章的客戶清單完全相同
-- 風險標記宣告的義務、是否被路徑檢驗、引擎不讀的屬性
+- 路徑加上標記條件足以決定輸出：同一簽章的客戶清單完全相同
+- 風險標記宣告的義務、由什麼保證成立、列出的標記一定對客戶成立、引擎不讀的屬性
 """
 import itertools
 import os
@@ -16,7 +17,7 @@ import yaml
 from fastapi.testclient import TestClient
 
 from src.contracts.models import CDDChecklist, Clause, Conflict, CustomerContext, Obligation, SourceDocument
-from src.decision.engine import LEAVES, CDDChecklistEngine, route
+from src.decision.engine import LEAVES, OWNERSHIP_CHART, CDDChecklistEngine, checked_by, route
 from src.decision.explain import apply_change, explain
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -146,25 +147,122 @@ def reference_generate_checklist(customer: CustomerContext, obligations: List[Ob
     )
 
 
+# ---------- 修正後規格的參考實作（獨立於決策樹，用 if/else 寫） ----------
+# 與上面的舊引擎相比，三項修正：
+# 1. 風險標記只在條件對客戶成立時列出；UBO 不明分支不再無條件列出多層持股與資金來源標記
+# 2. 多層持股依銀行政策 1.2(b) 的 3 層（不是 5 層），而且 UBO 已識別時成為真正的分支：高風險、簽核持股架構圖
+# 3. 資金與財富來源只在有法源的 PEP 分支檢查（MAS 8.3(b)）；註冊在開曼群島不再等於 CDD 無法完成
+
+UBO_15_ID = "UBO 15% Shareholder Identity Document (NRIC/Passport)"
+
+
+def revised_reference_generate_checklist(customer: CustomerContext, obligations: List[Obligation],
+                                         conflicts: List[Conflict]) -> CDDChecklist:
+    decision: Literal["simplified_cdd", "standard_cdd", "enhanced_due_diligence"] = "standard_cdd"
+    required_documents: List[str] = []
+    risk_triggers: List[str] = []
+    applicable_obligations: List[str] = []
+    human_review_required = False
+    complex_ownership = customer.ownership_layers >= 3
+
+    if customer.customer_type == "individual":
+        if customer.pep_exposure:
+            if customer.ubo_country_risk == "high" or customer.registration_jurisdiction.lower() == "myanmar":
+                decision = "enhanced_due_diligence"
+                required_documents = ["Rejected Onboarding Notification"]
+                risk_triggers = ["pep_from_high_risk_jurisdiction", "onboarding_prohibited_by_policy"]
+                applicable_obligations = ["ob_pep_prohibitions_gb"]
+                human_review_required = True
+            else:
+                decision = "enhanced_due_diligence"
+                required_documents = [
+                    "National Identity Card (NRIC) or Passport", "Proof of Address", "Senior Management Approval Form",
+                    "Source of Funds Declaration & Evidence", "Source of Wealth Declaration & Evidence",
+                    "Head of Compliance Approval Form",
+                ]
+                risk_triggers = ["pep_exposure_detected"]
+                if not customer.source_of_funds_available:
+                    risk_triggers.append("missing_source_of_funds_evidence")
+                if not customer.source_of_wealth_available:
+                    risk_triggers.append("missing_source_of_wealth_evidence")
+                applicable_obligations = [
+                    "ob_cdd_on_relationship_mas", "ob_verify_customer_mas", "ob_pep_edd_mas", "ob_pep_approval_gb"]
+                human_review_required = True
+        else:
+            required_documents = ["National Identity Card (NRIC)", "Proof of Residential Address"]
+            applicable_obligations = ["ob_cdd_on_relationship_mas", "ob_verify_customer_mas"]
+
+    elif customer.customer_type == "corporate":
+        if customer.ubo_status == "unclear":
+            decision = "enhanced_due_diligence"
+            required_documents = ["Account Opening Rejection Notice", "STR Evaluation File"]
+            risk_triggers = ["unclear_ubo_status"] + (["complex_ownership_3_layers"] if complex_ownership else [])
+            applicable_obligations = [
+                "ob_cdd_on_relationship_mas", "ob_identify_ubo_mas", "ob_identify_ubo_10_gb", "ob_cdd_incomplete_mas"]
+            human_review_required = True
+        else:
+            share_pct = customer.custom_attributes.get("major_shareholder_pct", 0)
+            threshold = 10 <= share_pct <= 25
+            ubo_documents = ["Shareholder Registry", UBO_15_ID] if threshold else []
+            threshold_trigger = ["internal_ubo_threshold_triggered_10_percent"] if threshold else []
+            required_documents = ["Certificate of Incorporation", "ACRA Company Profile"] + ubo_documents
+            applicable_obligations = ["ob_cdd_on_relationship_mas", "ob_verify_customer_mas", "ob_identify_ubo_mas"]
+            if complex_ownership:
+                decision = "enhanced_due_diligence"
+                required_documents.append(OWNERSHIP_CHART)
+                risk_triggers = ["complex_ownership_3_layers"] + threshold_trigger
+                applicable_obligations.append("ob_identify_ubo_10_gb")
+                human_review_required = True
+            elif threshold:
+                risk_triggers = threshold_trigger
+                applicable_obligations.append("ob_identify_ubo_10_gb")
+                human_review_required = True
+
+    ob_dict = {ob.obligation_id: ob for ob in obligations}
+    citations: List[str] = []
+    for ob_id in applicable_obligations:
+        ob = ob_dict.get(ob_id)
+        if ob and ob.source_clause_ids and ob.source_clause_ids[0] not in citations:
+            citations.append(ob.source_clause_ids[0])
+    applicable_clause_ids = {
+        cid for ob_id in applicable_obligations if ob_id in ob_dict for cid in ob_dict[ob_id].source_clause_ids}
+    unresolved_conflicts = [
+        conflict.conflict_id for conflict in conflicts
+        if conflict.adjudication_status != "resolved" and applicable_clause_ids.intersection(conflict.source_clause_ids)
+    ]
+    return CDDChecklist(
+        checklist_id=f"chk_{customer.customer_id.replace('cust_', '')}",
+        customer_id=customer.customer_id,
+        decision=decision,
+        required_documents=required_documents,
+        risk_triggers=risk_triggers,
+        applicable_obligations=applicable_obligations,
+        unresolved_conflicts=unresolved_conflicts,
+        human_review_required=human_review_required or bool(unresolved_conflicts),
+        citations=citations,
+    )
+
+
 # ---------- 等價性：完整格點 ----------
 
 JURISDICTIONS = ["Singapore", "Myanmar", "MYANMAR", "Cayman Islands", "cayman islands", "Hong Kong"]
 SHAREHOLDER_PCTS = [None, 0, 9, 10, 15, 25, 26, 40]  # None = 未提供
+LAYERS = [0, 2, 3, 5]  # 3 層門檻兩側各兩個值
 
 
-def _customer(i, customer_type, pep, risk, ubo_status, jurisdiction, pct, layers, sof) -> CustomerContext:
+def _customer(i, customer_type, pep, risk, ubo_status, jurisdiction, pct, layers, sof, sow) -> CustomerContext:
     custom = {} if pct is None else {"major_shareholder_pct": pct}
     return CustomerContext(
         customer_id=f"cust_grid_{i}", customer_type=customer_type, registration_jurisdiction=jurisdiction,
         ownership_layers=layers, ubo_status=ubo_status, ubo_country_risk=risk, pep_exposure=pep,
-        source_of_funds_available=sof, source_of_wealth_available=False, custom_attributes=custom,
+        source_of_funds_available=sof, source_of_wealth_available=sow, custom_attributes=custom,
     )
 
 
 def _grid() -> List[CustomerContext]:
     axes = itertools.product(
         ["individual", "corporate"], [True, False], ["low", "medium", "high"], ["identified", "unclear"],
-        JURISDICTIONS, SHAREHOLDER_PCTS, [0, 5], [True, False],
+        JURISDICTIONS, SHAREHOLDER_PCTS, LAYERS, [True, False], [True, False],
     )
     return [_customer(i, *values) for i, values in enumerate(axes)]
 
@@ -173,9 +271,9 @@ def _all_pending(conflicts: List[Conflict]) -> List[Conflict]:
     return [c.model_copy(update={"adjudication_status": "pending_human_review", "resolved_by": None}) for c in conflicts]
 
 
-def test_decision_tree_matches_previous_engine_on_full_grid(kb):
+def test_decision_tree_matches_revised_reference_on_full_grid(kb):
     customers = _grid()
-    assert len(customers) == 2 * 2 * 3 * 2 * 6 * 8 * 2 * 2
+    assert len(customers) == 2 * 2 * 3 * 2 * 6 * 8 * 4 * 2 * 2
     engine = CDDChecklistEngine()
     conflict_sets = {
         "processed": kb["conflicts"],
@@ -186,9 +284,61 @@ def test_decision_tree_matches_previous_engine_on_full_grid(kb):
         mismatches = [
             c.customer_id for c in customers
             if engine.generate_checklist(c, kb["obligations"], conflicts)
-            != reference_generate_checklist(c, kb["obligations"], conflicts)
+            != revised_reference_generate_checklist(c, kb["obligations"], conflicts)
         ]
         assert mismatches == [], f"{name}: {mismatches[:5]}"
+
+
+def _fix_group(c: CustomerContext) -> str:
+    """這位客戶落在哪一項修正影響的客戶群；不受影響時為空字串。"""
+    if c.customer_type == "individual":
+        high_risk = c.ubo_country_risk == "high" or c.registration_jurisdiction.lower() == "myanmar"
+        if c.pep_exposure and not high_risk and not (c.source_of_funds_available and c.source_of_wealth_available):
+            return "pep_missing_evidence"
+        return ""
+    if c.ubo_status == "unclear":
+        return "unclear_ubo_flags"
+    if c.ownership_layers >= 3:
+        return "complex_ownership"
+    if c.registration_jurisdiction.lower() == "cayman islands":
+        return "cayman_not_blocked"
+    return ""
+
+
+def test_changes_from_the_previous_engine_are_exactly_the_intended_ones(kb):
+    """舊引擎與新引擎的輸出不同，若且唯若客戶落在三項修正影響的客戶群；每一群只改了該改的欄位。"""
+    engine = CDDChecklistEngine()
+    changed_fields: Dict[str, set] = {}
+    for customer in _grid():
+        before = reference_generate_checklist(customer, kb["obligations"], kb["conflicts"])
+        after = engine.generate_checklist(customer, kb["obligations"], kb["conflicts"])
+        group = _fix_group(customer)
+        assert (before != after) == bool(group), (customer, group)
+        if group:
+            fields = {f for f in CDDChecklist.model_fields if getattr(before, f) != getattr(after, f)}
+            changed_fields.setdefault(group, set()).update(fields)
+    # PEP 與 UBO 不明：分支不變，只有風險標記改變
+    assert changed_fields["pep_missing_evidence"] == {"risk_triggers"}
+    assert changed_fields["unclear_ubo_flags"] == {"risk_triggers"}
+    # 多層持股、開曼但 UBO 已識別：走到不同的分支
+    assert {"decision", "required_documents", "risk_triggers"} <= changed_fields["complex_ownership"]
+    assert {"decision", "required_documents", "applicable_obligations"} <= changed_fields["cayman_not_blocked"]
+
+
+def test_three_layers_is_the_boundary_and_cayman_alone_does_not_block(kb):
+    engine = CDDChecklistEngine()
+    corp = kb["customers"]["cust_corp_standard"]  # 2 層、新加坡、15% 股東、UBO 已識別
+    two = engine.generate_checklist(corp, kb["obligations"], kb["conflicts"])
+    three = engine.generate_checklist(corp.model_copy(update={"ownership_layers": 3}), kb["obligations"], kb["conflicts"])
+    assert two.decision == "standard_cdd" and "complex_ownership_3_layers" not in two.risk_triggers
+    assert three.decision == "enhanced_due_diligence"
+    assert three.risk_triggers == ["complex_ownership_3_layers", "internal_ubo_threshold_triggered_10_percent"]
+    assert three.required_documents[-1] == OWNERSHIP_CHART
+
+    cayman = corp.model_copy(update={"registration_jurisdiction": "Cayman Islands"})
+    checklist = engine.generate_checklist(cayman, kb["obligations"], kb["conflicts"])
+    assert checklist == engine.generate_checklist(corp, kb["obligations"], kb["conflicts"])
+    assert "Account Opening Rejection Notice" not in checklist.required_documents
 
 
 # ---------- 五位範例客戶 ----------
@@ -203,7 +353,7 @@ EXPECTED_FIXTURES: Dict[str, dict] = {
     "cust_corp_standard": {
         "branch": "corporate_internal_ubo_threshold",
         "path": [("is_individual", False), ("is_corporate", True), ("corporate_cdd_blocked", False),
-                 ("internal_ubo_threshold", True)],
+                 ("complex_ownership", False), ("internal_ubo_threshold", True)],
         "items": [("Certificate of Incorporation", "ob_verify_customer_mas"),
                   ("ACRA Company Profile", "ob_verify_customer_mas"),
                   ("Shareholder Registry", "ob_identify_ubo_10_gb"),
@@ -258,7 +408,7 @@ def test_fixture_customer_explanation(kb, customer_id):
                 assert clause.raw_text[hl["start"]:hl["end"]] == hl["text"]
     # OR 測試列出每個條件；單一條件測試不列
     for step in exp.path:
-        assert (len(step.parts) > 0) == (step.test_id in ("pep_high_risk", "corporate_cdd_blocked"))
+        assert (len(step.parts) > 0) == (step.test_id == "pep_high_risk")
         if step.parts:
             assert step.outcome == any(p.holds for p in step.parts)
 
@@ -351,7 +501,7 @@ def test_non_numeric_shareholder_pct_does_not_break_explain(kb):
     for value in (None, "15%"):
         customer = base.model_copy(update={"custom_attributes": {"major_shareholder_pct": value}})
         checklist = engine.generate_checklist(customer, kb["obligations"], kb["conflicts"])
-        assert checklist == reference_generate_checklist(customer, kb["obligations"], kb["conflicts"])
+        assert checklist == revised_reference_generate_checklist(customer, kb["obligations"], kb["conflicts"])
         exp = _assert_counterfactuals_reproduce(kb, customer)
         assert exp.decision == checklist.decision
         uncomputed = [(c.attribute, c.counterfactual_value) for c in exp.counterfactuals if not c.computed]
@@ -383,15 +533,33 @@ def test_counterfactual_examples(kb):
     corp = _explain(kb, kb["customers"]["cust_corp_standard"])
     pct = {c.counterfactual_value: c for c in corp.counterfactuals if c.attribute == "custom_attributes.major_shareholder_pct"}
     assert set(pct) == {9, 26}
-    assert pct[26].documents_removed == ["Shareholder Registry", "UBO 15% Shareholder Identity Document (NRIC/Passport)"]
+    assert pct[26].documents_removed == ["Shareholder Registry", UBO_15_ID]
     assert pct[26].human_review == [True, False]
-    jurisdiction = next(c for c in corp.counterfactuals if c.counterfactual_value == "Cayman Islands")
-    assert jurisdiction.decision == ["standard_cdd", "enhanced_due_diligence"]
+    # 2 層改成 3 層：持股結構複雜，升為高風險並加上持股架構圖
+    layers = next(c for c in corp.counterfactuals if c.attribute == "ownership_layers")
+    assert layers.counterfactual_value == 3
+    assert layers.decision == ["standard_cdd", "enhanced_due_diligence"]
+    assert layers.branch[1].id == "corporate_complex_ownership_internal_ubo_threshold"
+    assert layers.documents_added == [OWNERSHIP_CHART]
+    assert layers.triggers_added == ["complex_ownership_3_layers"]
+    # 註冊地只在 PEP 分支比對緬甸，對企業沒有影響
+    assert "registration_jurisdiction" not in {c.attribute for c in corp.counterfactuals}
 
     unclear = _explain(kb, kb["customers"]["cust_corp_unclear_ubo"])
-    # 開曼 + UBO 不明：兩個條件各自足以讓 CDD 無法完成，只改其中一個輸出不變；
-    # 單一屬性能改變輸出的只有客戶類型
-    assert [c.attribute for c in unclear.counterfactuals] == ["customer_type"]
+    by_attr = {c.attribute: c for c in unclear.counterfactuals}
+    assert list(by_attr) == ["customer_type", "ubo_status", "ownership_layers"]
+    # UBO 改為已識別：5 層持股仍是高風險，但不再拒絕開戶
+    assert by_attr["ubo_status"].branch[1].id == "corporate_complex_ownership"
+    assert by_attr["ubo_status"].decision is None
+    assert "Account Opening Rejection Notice" in by_attr["ubo_status"].documents_removed
+    # 層數降到 2：仍拒絕開戶，只少了多層持股標記
+    assert by_attr["ownership_layers"].branch is None
+    assert by_attr["ownership_layers"].triggers_removed == ["complex_ownership_3_layers"]
+
+    pep = _explain(kb, kb["customers"]["cust_individual_pep"])
+    funds = next(c for c in pep.counterfactuals if c.attribute == "source_of_funds_available")
+    assert funds.counterfactual_value is False and funds.branch is None
+    assert funds.triggers_added == ["missing_source_of_funds_evidence"]
 
 
 # ---------- 路徑足以決定輸出 ----------
@@ -418,17 +586,40 @@ def _random_customers(rng: random.Random, n: int) -> List[CustomerContext]:
     return customers
 
 
-def test_path_is_sufficient_for_the_checklist(kb):
+def test_path_and_trigger_conditions_are_sufficient_for_the_checklist(kb):
+    """簽章 = 路徑上每個測試的結果，加上葉節點中由標記自己條件檢查的標記是否成立；同一簽章的清單完全相同。"""
     engine = CDDChecklistEngine()
     groups: Dict[tuple, set] = {}
-    for customer in _random_customers(random.Random(20261110), 2000):
-        _, steps = route(customer)
-        signature = tuple((s.test.test_id, s.outcome) for s in steps)
+    leaves = set()
+    for customer in _random_customers(random.Random(20261110), 3000):
+        leaf, steps = route(customer)
+        leaves.add(leaf.leaf_id)
+        conditions = tuple((spec.trigger, spec.raised_for(customer)) for spec in leaf.triggers
+                           if checked_by(spec, steps) == "own_condition")
+        signature = (tuple((s.test.test_id, s.outcome) for s in steps), conditions)
         checklist = engine.generate_checklist(customer, kb["obligations"], kb["conflicts"])
         output = checklist.model_dump(exclude={"checklist_id", "customer_id"})
         groups.setdefault(signature, set()).add(repr(sorted(output.items())))
-    assert len(groups) == 6  # 六個可達的葉節點都被抽到
+    assert len(leaves) == 8  # 八個可達的葉節點都被抽到（other_customer_type 不可達）
+    # PEP 的資金、財富來源各兩種，UBO 不明的多層持股兩種，其餘六個葉節點各一種
+    assert len(groups) == 4 + 2 + 6
     assert all(len(outputs) == 1 for outputs in groups.values())
+
+
+def test_every_listed_trigger_holds_for_the_customer(kb):
+    """列出的標記對客戶一定成立；路徑保證的標記走到葉節點就成立，所以不會被濾掉；
+    沒列出的只會是由自己條件檢查、且不成立的標記。"""
+    for customer in _random_customers(random.Random(11), 1500):
+        leaf, steps = route(customer)
+        for spec in leaf.triggers:
+            if checked_by(spec, steps) == "decision_path":
+                assert spec.holds(customer) is True, (customer, spec.trigger)
+        exp = _explain(kb, customer)
+        assert all(t.holds in (True, None) for t in exp.risk_triggers)
+        assert all(t.checked_by == "own_condition" and t.holds is False for t in exp.triggers_not_raised)
+        # 兩份清單合起來正好是葉節點宣告的全部標記，不重複
+        shown = [t.trigger for t in exp.risk_triggers] + [t.trigger for t in exp.triggers_not_raised]
+        assert sorted(shown) == sorted(s.trigger for s in leaf.triggers)
 
 
 # ---------- 風險標記與未讀屬性 ----------
@@ -436,30 +627,27 @@ def test_path_is_sufficient_for_the_checklist(kb):
 # ---------- 讀到但不具決定性的屬性 ----------
 
 def test_attributes_read_but_not_decisive_examples(kb):
-    unclear = _explain(kb, kb["customers"]["cust_corp_unclear_ubo"])
-    by_attr = {a.attribute: a for a in unclear.attributes_read_but_not_decisive}
-    # 開曼 + UBO 不明：OR 的兩個條件都成立，單獨改其中一個仍是「是」
-    assert list(by_attr) == ["ubo_status", "registration_jurisdiction"]
-    assert by_attr["ubo_status"].observed == "unclear"
-    assert "registration_jurisdiction" in by_attr["ubo_status"].reason
-    assert "ubo_status" in by_attr["registration_jurisdiction"].reason
-
     high_risk = _explain(kb, kb["customers"]["cust_individual_high_risk_pep"])
-    assert [a.attribute for a in high_risk.attributes_read_but_not_decisive] == [
-        "ubo_country_risk", "registration_jurisdiction"]
-    low = _explain(kb, kb["customers"]["cust_individual_low_risk"])
-    assert low.attributes_read_but_not_decisive == []
+    by_attr = {a.attribute: a for a in high_risk.attributes_read_but_not_decisive}
+    # 緬甸 + 國家風險高：OR 的兩個條件都成立，單獨改其中一個仍是「是」
+    assert list(by_attr) == ["ubo_country_risk", "registration_jurisdiction"]
+    assert "registration_jurisdiction" in by_attr["ubo_country_risk"].reason
+    assert "ubo_country_risk" in by_attr["registration_jurisdiction"].reason
+    # 開曼不再是 CDD 無法完成的條件：UBO 不明的企業，UBO 狀態本身就是決定性的
+    assert _explain(kb, kb["customers"]["cust_corp_unclear_ubo"]).attributes_read_but_not_decisive == []
+    assert _explain(kb, kb["customers"]["cust_individual_low_risk"]).attributes_read_but_not_decisive == []
 
 
 def test_attributes_read_but_not_decisive_partition_the_path(kb):
-    """路徑上讀到的每個屬性，不是出現在反事實裡，就是列為不具決定性，兩者不重疊；
-    列為不具決定性的屬性，每個候選改值重跑引擎都得到相同的清單。"""
+    """讀到的每個屬性（路徑上的，加上標記自己條件讀的），不是出現在反事實裡，就是列為不具決定性，
+    兩者不重疊；列為不具決定性的屬性，每個候選改值重跑引擎都得到相同的清單。"""
     from src.decision.explain import counterfactual_candidates
 
     engine = CDDChecklistEngine()
     for customer in list(kb["customers"].values()) + _random_customers(random.Random(7), 150):
         exp = _explain(kb, customer)
-        read_on_path = {a for step in exp.path for a in step.attributes}
+        own_conditions = [t for t in exp.risk_triggers + exp.triggers_not_raised if t.checked_by == "own_condition"]
+        read_on_path = {a for step in exp.path for a in step.attributes} | {a for t in own_conditions for a in t.attributes}
         decisive = {c.attribute for c in exp.counterfactuals}
         not_decisive = {a.attribute for a in exp.attributes_read_but_not_decisive}
         assert not_decisive <= read_on_path
@@ -473,110 +661,109 @@ def test_attributes_read_but_not_decisive_partition_the_path(kb):
 
 
 def test_attributes_not_read(kb):
+    """標記的條件也算讀取：持股層數、資金與財富來源現在都會被讀，沒讀的只剩其他自訂屬性。"""
     for customer in kb["customers"].values():
         exp = _explain(kb, customer)
-        assert "ownership_layers" in exp.attributes_not_read
-        assert "source_of_funds_available" in exp.attributes_not_read
-        assert "source_of_wealth_available" in exp.attributes_not_read
-        assert "custom_attributes.major_shareholder_pct" not in exp.attributes_not_read
-        for key in customer.custom_attributes:
-            if key != "major_shareholder_pct":
-                assert f"custom_attributes.{key}" in exp.attributes_not_read
+        assert exp.attributes_not_read == [
+            f"custom_attributes.{key}" for key in customer.custom_attributes if key != "major_shareholder_pct"]
 
 
-def test_unclear_ubo_triggers_not_tested_by_decision(kb):
-    exp = _explain(kb, kb["customers"]["cust_corp_unclear_ubo"])
-    triggers = {t.trigger: t for t in exp.risk_triggers}
-    assert triggers["unclear_ubo_status"].tested_by_decision is True
-    assert triggers["excessive_layering_5"].tested_by_decision is False
-    assert triggers["missing_source_of_funds_evidence"].tested_by_decision is False
-    # 對這位客戶三個斷言都成立，只是後兩個不是決策依據
-    assert all(t.holds is True for t in triggers.values())
+def test_triggers_report_what_guarantees_them(kb):
+    unclear = kb["customers"]["cust_corp_unclear_ubo"]
+    triggers = {t.trigger: t for t in _explain(kb, unclear).risk_triggers}
+    assert list(triggers) == ["unclear_ubo_status", "complex_ownership_3_layers"]
+    assert triggers["unclear_ubo_status"].checked_by == "decision_path"
+    # UBO 不明就已拒絕，路徑不讀層數；多層持股由標記自己的條件檢查，5 層成立
+    layered = triggers["complex_ownership_3_layers"]
+    assert layered.checked_by == "own_condition" and layered.holds is True
+    assert layered.condition == "ownership_layers >= 3" and layered.observed == {"ownership_layers": 5}
+
+    # 同一個客戶只有 2 層：多層持股檢查過但不成立，列在 triggers_not_raised
+    two_layers = _explain(kb, unclear.model_copy(update={"ownership_layers": 2}))
+    assert [t.trigger for t in two_layers.risk_triggers] == ["unclear_ubo_status"]
+    assert [(t.trigger, t.holds, t.observed) for t in two_layers.triggers_not_raised] == [
+        ("complex_ownership_3_layers", False, {"ownership_layers": 2})]
+
+    # UBO 已識別的多層持股企業：同一個標記改由決策路徑保證
+    identified = _explain(kb, unclear.model_copy(update={"ubo_status": "identified"}))
+    assert identified.branch.id == "corporate_complex_ownership"
+    assert [(t.trigger, t.checked_by) for t in identified.risk_triggers] == [
+        ("complex_ownership_3_layers", "decision_path")]
 
 
-def test_trigger_can_be_asserted_but_false(kb):
-    """開曼註冊但 UBO 已識別：分支仍標記 unclear_ubo_status，解釋要指出這個斷言對客戶不成立。"""
-    customer = kb["customers"]["cust_corp_unclear_ubo"].model_copy(
-        update={"ubo_status": "identified", "ownership_layers": 1, "source_of_funds_available": True})
-    triggers = {t.trigger: t for t in _explain(kb, customer).risk_triggers}
-    assert triggers["unclear_ubo_status"].tested_by_decision is True
-    assert triggers["unclear_ubo_status"].holds is False
-    assert triggers["excessive_layering_5"].holds is False
-    assert triggers["missing_source_of_funds_evidence"].holds is False
+def test_pep_source_of_funds_and_wealth_are_checked(kb):
+    pep = kb["customers"]["cust_individual_pep"]
+    exp = _explain(kb, pep)
+    assert [t.trigger for t in exp.risk_triggers] == ["pep_exposure_detected"]
+    assert [t.trigger for t in exp.triggers_not_raised] == [
+        "missing_source_of_funds_evidence", "missing_source_of_wealth_evidence"]
+    missing = _explain(kb, pep.model_copy(update={"source_of_wealth_available": False}))
+    assert [t.trigger for t in missing.risk_triggers] == ["pep_exposure_detected", "missing_source_of_wealth_evidence"]
+    assert missing.decision == exp.decision and [i.document for i in missing.items] == [i.document for i in exp.items]
 
 
 def test_trigger_without_attributes(kb):
     exp = _explain(kb, kb["customers"]["cust_individual_high_risk_pep"])
     triggers = {t.trigger: t for t in exp.risk_triggers}
     assert triggers["onboarding_prohibited_by_policy"].attributes == []
-    assert triggers["onboarding_prohibited_by_policy"].tested_by_decision is True
+    assert triggers["onboarding_prohibited_by_policy"].checked_by == "branch_outcome"
     assert triggers["onboarding_prohibited_by_policy"].holds is None
-    assert triggers["pep_from_high_risk_jurisdiction"].tested_by_decision is True
+    assert triggers["pep_from_high_risk_jurisdiction"].checked_by == "decision_path"
     assert triggers["pep_from_high_risk_jurisdiction"].holds is True
 
 
-# 每個風險標記宣告的義務、寫出這個條件的那條出處條文，以及條文中的原文（None 代表沒有法源）
+# 每個風險標記宣告的義務、寫出這個條件的那條出處條文，以及條文中的原文
 GB_1_2 = "mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification"
 GB_1_4 = "mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons"
+MAS_8_3 = "mas_notice_626_8_enhanced_cdd_8_3"
 TRIGGER_OBLIGATIONS = {
     "pep_from_high_risk_jurisdiction": ("ob_pep_prohibitions_gb", GB_1_4, "(PEPs) from high-risk jurisdictions"),
     "onboarding_prohibited_by_policy": ("ob_pep_prohibitions_gb", GB_1_4,
                                         "strictly prohibits establishing business relationships"),
-    "pep_exposure_detected": ("ob_pep_edd_mas", "mas_notice_626_8_enhanced_cdd_8_3",
-                              "determined by the bank to be a politically exposed person"),
+    "pep_exposure_detected": ("ob_pep_edd_mas", MAS_8_3, "determined by the bank to be a politically exposed person"),
+    "missing_source_of_funds_evidence": ("ob_pep_edd_mas", f"{MAS_8_3}_b", "source of funds"),
+    "missing_source_of_wealth_evidence": ("ob_pep_edd_mas", f"{MAS_8_3}_b", "source of wealth"),
     "unclear_ubo_status": ("ob_cdd_incomplete_mas", "mas_notice_626_6_cdd_6_35", "unable to complete the measures"),
-    "excessive_layering_5": ("ob_identify_ubo_10_gb", f"{GB_1_2}_b",
-                             "three or more layers of intermediary holding companies"),
-    "missing_source_of_funds_evidence": (None, None, None),
+    "complex_ownership_3_layers": ("ob_identify_ubo_10_gb", f"{GB_1_2}_b",
+                                   "three or more layers of intermediary holding companies"),
     "internal_ubo_threshold_triggered_10_percent": ("ob_identify_ubo_10_gb", f"{GB_1_2}_a",
                                                     "ownership threshold of 10% or more"),
 }
 
 
 def test_every_trigger_declares_its_obligation(kb):
-    """每個標記都明確宣告義務與條文；宣告的條文是該義務的出處條文之一，且條文本身寫出這個條件。"""
-    from src.decision.engine import LEAVES
+    """每個葉節點的每個標記都宣告義務與條文；義務是這個葉節點的適用義務，宣告的條文是該義務的出處條文之一，
+    且條文本身寫出這個條件。"""
     from src.decision.explain import obligation_for_item
 
     ob_dict = {o.obligation_id: o for o in kb["obligations"]}
     clause_dict = {c.clause_id: c for c in kb["clauses"]}
-    declared = {spec.trigger: (leaf, spec) for leaf in LEAVES.values() for spec in leaf.triggers}
-    assert set(declared) == set(TRIGGER_OBLIGATIONS)
-    for trigger, (ob_id, clause_id, phrase) in TRIGGER_OBLIGATIONS.items():
-        leaf, spec = declared[trigger]
-        assert spec.obligation_id == ob_id, trigger
-        assert spec.clause_id == clause_id, trigger
-        if ob_id is None:
-            with pytest.raises(ValueError, match="no obligation in the knowledge base requires this condition"):
-                obligation_for_item(leaf, trigger)
-            continue
-        assert obligation_for_item(leaf, trigger) == ob_id
-        assert ob_id in leaf.obligations, trigger
-        assert clause_id in ob_dict[ob_id].source_clause_ids, trigger
-        assert phrase in clause_dict[clause_id].raw_text, trigger
+    declared = [(leaf, spec) for leaf in LEAVES.values() for spec in leaf.triggers]
+    assert {spec.trigger for _, spec in declared} == set(TRIGGER_OBLIGATIONS)
+    for leaf, spec in declared:
+        ob_id, clause_id, phrase = TRIGGER_OBLIGATIONS[spec.trigger]
+        assert (spec.obligation_id, spec.clause_id) == (ob_id, clause_id), (leaf.leaf_id, spec.trigger)
+        assert obligation_for_item(leaf, spec.trigger) == ob_id
+        assert ob_id in leaf.obligations, (leaf.leaf_id, spec.trigger)
+        assert clause_id in ob_dict[ob_id].source_clause_ids, spec.trigger
+        assert phrase in clause_dict[clause_id].raw_text, spec.trigger
 
 
 def test_trigger_explanation_carries_declared_obligation(kb):
     exp = _explain(kb, kb["customers"]["cust_corp_unclear_ubo"])
     triggers = {t.trigger: t for t in exp.risk_triggers}
     assert triggers["unclear_ubo_status"].obligation_id == "ob_cdd_incomplete_mas"
-    assert triggers["unclear_ubo_status"].note is None
     assert triggers["unclear_ubo_status"].clause_id == "mas_notice_626_6_cdd_6_35"
-    assert triggers["excessive_layering_5"].obligation_id == "ob_identify_ubo_10_gb"
-    assert triggers["excessive_layering_5"].clause_id == f"{GB_1_2}_b"
-    missing = triggers["missing_source_of_funds_evidence"]
-    assert missing.obligation_id is None and missing.clause_id is None
-    # 說明要講資料實際呈現的：沒有義務對這位客戶要求它；提到資金來源的條文為何不適用
-    assert "沒有任何義務對這位客戶要求這個條件" in missing.note
-    assert "FATF 第 10 項 (d)" in missing.note and "MAS 8.3(b)" in missing.note and "1.4(a)" in missing.note
+    assert triggers["complex_ownership_3_layers"].obligation_id == "ob_identify_ubo_10_gb"
+    assert triggers["complex_ownership_3_layers"].clause_id == f"{GB_1_2}_b"
     for customer in kb["customers"].values():
-        for t in _explain(kb, customer).risk_triggers:
+        exp = _explain(kb, customer)
+        for t in exp.risk_triggers + exp.triggers_not_raised:
             assert (t.obligation_id, t.clause_id) == TRIGGER_OBLIGATIONS[t.trigger][:2]
-            assert (t.note is None) == (t.obligation_id is not None)
 
 
 def test_fatf_10_d_mentions_source_of_funds_but_no_obligation_cites_it(kb):
-    """NO_OBLIGATION_DETAILS 的說法要與資料一致：FATF 10(d) 提到資金來源卻沒有義務引用；
+    """非 PEP 客戶不檢查資金來源的依據要與資料一致：FATF 10(d) 提到資金來源卻沒有義務引用；
     引用資金來源的義務出處只有 MAS 8.3(b) 與銀行政策 1.4(a)，兩者都是 PEP 義務。"""
     cited = {cid: ob for ob in kb["obligations"] for cid in ob.source_clause_ids}
     mentions = [c for c in kb["clauses"] if "source of funds" in c.raw_text.lower()]
@@ -633,9 +820,12 @@ def test_explanation_api(client):
     assert [s["test_id"] for s in data["path"]] == ["is_individual", "is_corporate", "corporate_cdd_blocked"]
     assert {i["obligation_id"] for i in data["items"]} == {"ob_cdd_incomplete_mas"}
     assert {i["obligation_confidence_kind"] for i in data["items"]} == {None}  # cdd_incomplete 在保留文本上未量測
-    assert {t["trigger"]: t["clause_id"] for t in data["risk_triggers"]}["excessive_layering_5"] == f"{GB_1_2}_b"
+    triggers = {t["trigger"]: t for t in data["risk_triggers"]}
+    assert triggers["complex_ownership_3_layers"]["clause_id"] == f"{GB_1_2}_b"
+    assert triggers["complex_ownership_3_layers"]["checked_by"] == "own_condition"
+    assert data["triggers_not_raised"] == []
     assert data["items"][0]["source_clauses"][0]["clause_id"] == "mas_notice_626_6_cdd_6_35"
-    assert "ownership_layers" in data["attributes_not_read"]
+    assert data["attributes_not_read"] == ["custom_attributes.layering_reason", "custom_attributes.has_bearer_shares"]
 
     missing = client.get("/api/v1/customers/cust_does_not_exist/explanation")
     assert missing.status_code == 404

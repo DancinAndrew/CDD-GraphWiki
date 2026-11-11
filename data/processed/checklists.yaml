@@ -81,8 +81,7 @@
   - STR Evaluation File
   risk_triggers:
   - unclear_ubo_status
-  - excessive_layering_5
-  - missing_source_of_funds_evidence
+  - complex_ownership_3_layers
   applicable_obligations:
   - ob_cdd_on_relationship_mas
   - ob_identify_ubo_mas

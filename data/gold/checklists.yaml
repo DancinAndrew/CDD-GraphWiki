@@ -86,10 +86,11 @@
   required_documents:
     - "Account Opening Rejection Notice"
     - "STR Evaluation File"
+  # 5 layers meets policy 1.2(b)'s "three or more layers". No source-of-funds flag: in the knowledge base
+  # only PEPs must evidence source of funds (MAS 8.3(b), policy 1.4(a)), and this customer is not a PEP.
   risk_triggers:
     - unclear_ubo_status
-    - excessive_layering_5
-    - missing_source_of_funds_evidence
+    - complex_ownership_3_layers
   applicable_obligations:
     - ob_cdd_on_relationship_mas
     - ob_identify_ubo_mas

@@ -6,24 +6,28 @@
 - items：每份文件依據的義務、義務的出處條文、規則理由與高亮片段（落在其他條文、例如上層引言的理由片段另列為
   context_evidence，並記下是哪一條條文的理由引用了它）、相關衝突
 - obligation_conflicts：每個適用義務（含不需另收文件的義務）的相關衝突與裁決狀態
-- risk_triggers：每個標記宣告依據的義務與寫出條件的條文（沒有法源時明說）、斷言了哪些客戶屬性，
-  這些屬性是否在路徑上被檢驗、斷言對本客戶是否成立
+- risk_triggers：列出的每個標記宣告依據的義務與寫出條件的條文、斷言了哪些客戶屬性，以及由什麼保證成立
+  （決策路徑、標記自己的條件，或只陳述分支結果）
+- triggers_not_raised：葉節點宣告、由標記自己的條件檢查過但對本客戶不成立、所以沒有列出的標記
 - counterfactuals：只改一個屬性、重跑引擎後輸出真的改變的情況（引擎無法重算的改值也列出並說明）
-- attributes_read_but_not_decisive：路徑上讀到、但單獨改成任何候選值都不會改變輸出的屬性
+- attributes_read_but_not_decisive：讀到（路徑或標記條件）、但單獨改成任何候選值都不會改變輸出的屬性
 - attributes_not_read：決策樹從不讀取的客戶屬性
 """
 import math
-from typing import Any, Dict, List, Optional, Tuple, get_args
+from typing import Any, Dict, List, Literal, Optional, Tuple, get_args
 
 from pydantic import BaseModel, Field
 
 from src.contracts.models import CDDChecklist, Clause, Conflict, CustomerContext, Obligation, SourceDocument
 from src.decision.engine import (
     ATTRIBUTES_READ,
+    COMPLEX_OWNERSHIP_LAYERS,
     SHAREHOLDER_PCT_ATTR,
     CDDChecklistEngine,
     Leaf,
     PathStep,
+    TriggerSpec,
+    checked_by,
     read_attribute,
     route,
 )
@@ -90,12 +94,14 @@ class DocumentItemExplanation(BaseModel):
 
 class RiskTriggerExplanation(BaseModel):
     trigger: str
-    obligation_id: Optional[str] = Field(
-        None, description="葉節點為這個標記宣告的義務；知識庫沒有任何義務對這位客戶要求這個條件時為 None")
-    clause_id: Optional[str] = Field(None, description="該義務出處條文中寫出這個條件的那一條；沒有義務時為 None")
-    note: Optional[str] = Field(None, description="obligation_id 為 None 時說明它沒有法源")
+    obligation_id: str = Field(..., description="葉節點為這個標記宣告的義務")
+    clause_id: str = Field(..., description="該義務出處條文中寫出這個條件的那一條")
     attributes: List[str]
-    tested_by_decision: bool = Field(..., description="斷言的屬性都在決策路徑上被讀取；沒有屬性時為 True")
+    condition: Optional[str] = Field(None, description="標記斷言的條件；只陳述分支結果時為 None")
+    observed: Dict[str, Any] = Field(default_factory=dict, description="條件讀到的客戶屬性值")
+    checked_by: Literal["decision_path", "own_condition", "branch_outcome"] = Field(
+        ..., description="decision_path：屬性都在決策路徑上被讀取，走到這個分支就成立；own_condition：由標記自己的條件"
+                         "檢查，成立才列出；branch_outcome：不對客戶屬性下斷言，只陳述分支結果")
     holds: Optional[bool] = Field(None, description="斷言對本客戶是否成立；不對屬性下斷言時為 None")
 
 
@@ -142,21 +148,15 @@ class ChecklistExplanation(BaseModel):
     obligation_conflicts: Dict[str, List[ConflictRef]] = Field(
         default_factory=dict, description="每個適用義務（依葉節點宣告順序，含不需另收文件的義務）的相關衝突")
     risk_triggers: List[RiskTriggerExplanation]
+    triggers_not_raised: List[RiskTriggerExplanation] = Field(
+        default_factory=list, description="這個分支宣告、由標記自己的條件檢查過但對本客戶不成立、所以沒有列出的標記")
     counterfactuals: List[Counterfactual]
     attributes_read_but_not_decisive: List[NonDecisiveAttribute] = Field(default_factory=list)
     attributes_not_read: List[str]
 
 
 OTHER_JURISDICTION = "Singapore"
-OTHER_JURISDICTION_NOTE = "代表緬甸與開曼群島以外的任何管轄區（決策樹只比對這兩個值）"
-NO_OBLIGATION_NOTE = "知識庫中沒有任何義務對這位客戶要求這個條件，所以這個標記不引用任何義務。"
-# 個別標記的補充：資料裡確實提到這個條件、但沒有成為適用義務的條文
-NO_OBLIGATION_DETAILS = {
-    "missing_source_of_funds_evidence": (
-        "FATF 第 10 項 (d) 提到資金來源，但沒有從它抽出義務；"
-        "MAS 8.3(b) 與銀行政策 1.4(a) 要求資金來源，但只適用於政治敏感人物（PEP）。"
-    ),
-}
+OTHER_JURISDICTION_NOTE = "代表緬甸以外的任何管轄區（決策樹只比對緬甸）"
 
 
 def _as_dict(item: Any) -> Dict[str, Any]:
@@ -168,17 +168,13 @@ def obligation_for_item(leaf: Leaf, target_item: str) -> str:
     檢核項目對應的義務，只看葉節點宣告：
     - 文件：葉節點 items 中該文件的義務
     - 風險標記：TriggerSpec 宣告的 obligation_id
-    對不上、或標記宣告沒有義務時拋出 ValueError，不做猜測。
+    對不上時拋出 ValueError，不做猜測。
     """
     for document, ob_id in leaf.items:
         if document == target_item:
             return ob_id
     for spec in leaf.triggers:
         if spec.trigger == target_item:
-            if spec.obligation_id is None:
-                raise ValueError(
-                    f"Risk trigger {target_item!r} in branch {leaf.leaf_id} declares no obligation: "
-                    "no obligation in the knowledge base requires this condition for this customer")
             return spec.obligation_id
     raise ValueError(f"{target_item!r} is not declared by branch {leaf.leaf_id}")
 
@@ -358,29 +354,37 @@ def _explain_document(document: str, ob_id: str, ob_dict: Dict[str, Obligation],
     )
 
 
-def no_obligation_note(trigger: str) -> str:
-    detail = NO_OBLIGATION_DETAILS.get(trigger)
-    return f"{NO_OBLIGATION_NOTE}{detail}" if detail else NO_OBLIGATION_NOTE
+def explain_trigger(spec: TriggerSpec, steps: List[PathStep], customer: CustomerContext) -> RiskTriggerExplanation:
+    return RiskTriggerExplanation(
+        trigger=spec.trigger,
+        obligation_id=spec.obligation_id,
+        clause_id=spec.clause_id,
+        attributes=list(spec.attributes),
+        condition=spec.condition or None,
+        observed={a: read_attribute(customer, a) for a in spec.attributes},
+        checked_by=checked_by(spec, steps),
+        holds=bool(spec.holds(customer)) if spec.attributes and spec.holds else None,
+    )
 
 
-def explain_triggers(leaf: Leaf, steps: List[PathStep], customer: CustomerContext) -> List[RiskTriggerExplanation]:
-    read_on_path = {a for step in steps for a in step.test.attributes}
-    return [
-        RiskTriggerExplanation(
-            trigger=spec.trigger,
-            obligation_id=spec.obligation_id,
-            clause_id=spec.clause_id,
-            note=no_obligation_note(spec.trigger) if spec.obligation_id is None else None,
-            attributes=list(spec.attributes),
-            tested_by_decision=all(a in read_on_path for a in spec.attributes),
-            holds=bool(spec.holds(customer)) if spec.attributes and spec.holds else None,
-        )
-        for spec in leaf.triggers
-    ]
+def explain_triggers(leaf: Leaf, steps: List[PathStep], customer: CustomerContext
+                     ) -> Tuple[List[RiskTriggerExplanation], List[RiskTriggerExplanation]]:
+    """（列出的標記, 檢查過但不成立的標記），依葉節點宣告順序。"""
+    raised = {spec.trigger for spec in leaf.raised_triggers(customer)}
+    explained = [explain_trigger(spec, steps, customer) for spec in leaf.triggers]
+    return [t for t in explained if t.trigger in raised], [t for t in explained if t.trigger not in raised]
+
+
+def attributes_read(leaf: Leaf, steps: List[PathStep]) -> List[str]:
+    """這位客戶被讀取的屬性：決策路徑上的，加上葉節點風險標記自己的條件讀的（依首次出現順序）。"""
+    return list(dict.fromkeys(
+        [a for step in steps for a in step.test.attributes]
+        + [a for spec in leaf.triggers if checked_by(spec, steps) == "own_condition" for a in spec.attributes]
+    ))
 
 
 def attributes_not_read(customer: CustomerContext) -> List[str]:
-    """決策樹從不讀取的客戶屬性（customer_id 只用來命名清單，不算決策屬性）。"""
+    """決策樹（測試與風險標記的條件）從不讀取的客戶屬性（customer_id 只用來命名清單，不算決策屬性）。"""
     fields = [
         name for name in CustomerContext.model_fields
         if name not in ("customer_id", "custom_attributes") and name not in ATTRIBUTES_READ
@@ -415,14 +419,18 @@ def counterfactual_candidates(customer: CustomerContext) -> List[Tuple[str, Any,
             if value != getattr(customer, field):
                 candidates.append((field, value, None))
 
-    jurisdiction = customer.registration_jurisdiction.lower()
-    if jurisdiction == "myanmar":
-        jurisdictions = [(OTHER_JURISDICTION, OTHER_JURISDICTION_NOTE), ("Cayman Islands", None)]
-    elif jurisdiction == "cayman islands":
-        jurisdictions = [(OTHER_JURISDICTION, OTHER_JURISDICTION_NOTE), ("Myanmar", None)]
+    if customer.registration_jurisdiction.lower() == "myanmar":
+        candidates.append(("registration_jurisdiction", OTHER_JURISDICTION, OTHER_JURISDICTION_NOTE))
     else:
-        jurisdictions = [("Myanmar", None), ("Cayman Islands", None)]
-    candidates += [("registration_jurisdiction", value, note) for value, note in jurisdictions]
+        candidates.append(("registration_jurisdiction", "Myanmar", None))
+
+    # 持股層數只比對 3 層門檻：門檻另一側最接近的值
+    layers = customer.ownership_layers
+    candidates.append(("ownership_layers",
+                       COMPLEX_OWNERSHIP_LAYERS - 1 if layers >= COMPLEX_OWNERSHIP_LAYERS else COMPLEX_OWNERSHIP_LAYERS,
+                       None))
+    for field in ("source_of_funds_available", "source_of_wealth_available"):
+        candidates.append((field, not getattr(customer, field), None))
 
     # 持股比例分三區（<10、10..25、>25），每個不在的區取最接近的值；未提供視為 0（與引擎相同）。
     # 目前值不是數字（null、字串、布林）時看不出在哪一區，三區各取一個值，並在說明裡講明
@@ -539,13 +547,12 @@ def _not_decisive_reason(attribute: str, steps: List[PathStep], customer: Custom
     return "路徑讀到這個屬性，但把它單獨改成任何候選值、重跑引擎後檢核表都不變"
 
 
-def attributes_read_but_not_decisive(customer: CustomerContext, steps: List[PathStep],
+def attributes_read_but_not_decisive(customer: CustomerContext, leaf: Leaf, steps: List[PathStep],
                                      runs: List[Tuple[str, Any, Optional[str], Optional[Dict[str, Any]]]]
                                      ) -> List[NonDecisiveAttribute]:
-    """路徑上讀到、每個候選改值都算得出來且都不改變輸出的屬性（有算不出來的改值就不下這個結論）。"""
-    read_on_path = list(dict.fromkeys(a for step in steps for a in step.test.attributes))
+    """讀到（路徑或標記條件）、每個候選改值都算得出來且都不改變輸出的屬性（有算不出來的改值就不下這個結論）。"""
     result = []
-    for attribute in read_on_path:
+    for attribute in attributes_read(leaf, steps):
         diffs = [diff for attr, _, _, diff in runs if attr == attribute]
         if not diffs or any(diff is None or any(diff.values()) for diff in diffs):
             continue
@@ -568,6 +575,7 @@ def explain(customer: CustomerContext, obligations: List[Obligation], conflicts:
     with_documents = {ob_id for _, ob_id in leaf.items}
     labels = label_reasons(obligations)
     runs = _run_candidates(customer, checklist, obligations, conflicts)
+    raised, not_raised = explain_triggers(leaf, steps, customer)
 
     return ChecklistExplanation(
         customer_id=customer.customer_id,
@@ -583,8 +591,9 @@ def explain(customer: CustomerContext, obligations: List[Obligation], conflicts:
         obligations_without_documents=[ob_id for ob_id in leaf.obligations if ob_id not in with_documents],
         obligation_conflicts={ob_id: related_conflicts(ob_dict[ob_id], conflicts)
                               for ob_id in leaf.obligations if ob_id in ob_dict},
-        risk_triggers=explain_triggers(leaf, steps, customer),
+        risk_triggers=raised,
+        triggers_not_raised=not_raised,
         counterfactuals=explain_counterfactuals(customer, runs),
-        attributes_read_but_not_decisive=attributes_read_but_not_decisive(customer, steps, runs),
+        attributes_read_but_not_decisive=attributes_read_but_not_decisive(customer, leaf, steps, runs),
         attributes_not_read=attributes_not_read(customer),
     )
