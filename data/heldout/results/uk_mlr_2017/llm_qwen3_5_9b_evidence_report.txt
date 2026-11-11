@@ -1,0 +1,274 @@
+LLM extractor (qwen3.5:9b) on held-out Part 3 of the UK Money Laundering Regulations 2017 paragraphs
+====================================================================================================
+
+Corpus: 137 numbered paragraphs (443 clause records) of Part 3 of the UK Money Laundering Regulations 2017; 0 development paragraphs excluded.
+Held out: 137 paragraphs, 429 clauses; 75 clauses in 30 paragraphs carry one of the modelled types.
+Held-out clauses containing 'shall' or 'must': 74.
+Model: qwen3.5:9b (temperature 0, seed 7, reasoning mode off, prompt heldout-v2-evidence), one request per held-out paragraph, given the task definition from ANNOTATION_GUIDELINE.md.
+Requests: 137 sent, 0 failed, 1 answers not valid JSON.
+Generation: 137 records, 34 with an output cap (num_predict 2048), 103 without (mixed settings); answers not valid JSON: 1; answers that hit the cap: 0 of the 0 that store the stop reason (stop reason not stored for 137).
+Citations: 175 clause IDs returned, 0 not among the clauses sent (0.0%).
+
+Paragraph level (unit, type) pairs: precision 0.37, recall 0.81, F1 0.51  (TP 26, FP 44, FN 6)
+  prohibit_anonymous   P 0.33  R 1.00  (TP 1, FP 2, FN 0)
+  cdd_triggers         P 0.75  R 0.92  (TP 12, FP 4, FN 1)
+  verify_customer      P 0.24  R 1.00  (TP 4, FP 13, FN 0)
+  identify_ubo         P 0.30  R 0.38  (TP 3, FP 7, FN 5)
+  pep_edd              P 0.29  R 1.00  (TP 4, FP 10, FN 0)
+  pep_approval         P 0.00  R 0.00  (TP 0, FP 1, FN 0)
+  cdd_incomplete       P 0.22  R 1.00  (TP 2, FP 7, FN 0)
+
+Clause level (unit, type) pairs: precision 0.32, recall 0.73, F1 0.44  (TP 56, FP 119, FN 21)
+  prohibit_anonymous   P 0.20  R 1.00  (TP 1, FP 4, FN 0)
+  cdd_triggers         P 0.72  R 0.92  (TP 23, FP 9, FN 2)
+  verify_customer      P 0.29  R 0.71  (TP 10, FP 24, FN 4)
+  identify_ubo         P 0.30  R 0.30  (TP 6, FP 14, FN 14)
+  pep_edd              P 0.16  R 0.91  (TP 10, FP 51, FN 1)
+  pep_approval         P 0.00  R 0.00  (TP 0, FP 1, FN 0)
+  cdd_incomplete       P 0.27  R 1.00  (TP 6, FP 16, FN 0)
+
+Disagreements with the gold labels (120 clauses):
+- 27(7B)  uk_mlr_2017_27_cdd_27_7b: spurious verify_customer
+    "The letting agent must apply customer due diligence measures under paragraph (7A) in relation to both the person by whom the land is being let, and the person who is renting the land."
+- 27(7D)  uk_mlr_2017_27_cdd_27_7d: spurious identify_ubo, verify_customer
+    "A cryptoasset exchange provider of the kind who operates a machine which utilises automated processes to exchange cryptoassets for money, or money for cryptoassets, must also apply customer due diligence measures in rela"
+- 27(9)   uk_mlr_2017_27_cdd_27_9: spurious cdd_triggers
+    "For the purposes of paragraph (8), in determining when it is appropriate to take customer due diligence measures in relation to existing customers, a relevant person must take into account, among other things—"
+- 27(9)   uk_mlr_2017_27_cdd_27_9_a: spurious cdd_triggers
+    "(a) any indication that the identity of the customer, or of the customer's beneficial owner, has changed;"
+- 27(9)   uk_mlr_2017_27_cdd_27_9_b: spurious cdd_triggers
+    "(b) any transactions which are not reasonably consistent with the relevant person's knowledge of the customer;"
+- 27(9)   uk_mlr_2017_27_cdd_27_9_c: spurious cdd_triggers
+    "(c) any change in the purpose or intended nature of the relevant person's relationship with the customer;"
+- 27(9)   uk_mlr_2017_27_cdd_27_9_d: spurious cdd_triggers
+    "(d) any other matter which might affect the relevant person's assessment of the money laundering or terrorist financing risk in relation to the customer."
+- 28(1)   uk_mlr_2017_28_cdd_measures_28_1: spurious cdd_triggers, verify_customer
+    "This regulation applies when a relevant person is required by regulation 27 to apply customer due diligence measures."
+- 28(2)   uk_mlr_2017_28_cdd_measures_28_2_c: spurious verify_customer
+    "(c) assess, and where appropriate obtain information on, the purpose and intended nature of the business relationship or occasional transaction."
+- 28(3)   uk_mlr_2017_28_cdd_measures_28_3_b: missed verify_customer; spurious identify_ubo
+    "(b) subject to paragraph (5), the relevant person must take reasonable measures to determine and verify—"
+- 28(3)   uk_mlr_2017_28_cdd_measures_28_3_b_i: missed verify_customer; spurious identify_ubo
+    "(i) the law to which the body corporate is subject, and its constitution (whether set out in its articles of association or other governing documents);"
+- 28(3)   uk_mlr_2017_28_cdd_measures_28_3_b_ii: missed verify_customer; spurious identify_ubo
+    "(ii) the full names of the board of directors (or if there is no board, the members of the equivalent management body) and the senior persons responsible for the operations of the body corporate."
+- 28(3A)  uk_mlr_2017_28_cdd_measures_28_3a: missed identify_ubo
+    "Where the customer is a legal person, trust, company, foundation or similar legal arrangement the relevant person must take reasonable measures to understand the ownership and control structure of that legal person, trus"
+- 28(8)   uk_mlr_2017_28_cdd_measures_28_8_b: missed identify_ubo; spurious verify_customer
+    "(b) take reasonable measures to verify the identity of the senior person in the body corporate responsible for managing it, and keep records in writing of—"
+- 28(8)   uk_mlr_2017_28_cdd_measures_28_8_b_i: spurious verify_customer
+    "(i) all the actions the relevant person has taken in doing so, and"
+- 28(8)   uk_mlr_2017_28_cdd_measures_28_8_b_ii: spurious verify_customer
+    "(ii) any difficulties the relevant person has encountered in doing so."
+- 28(9)   uk_mlr_2017_28_cdd_measures_28_9: spurious cdd_incomplete, verify_customer
+    "Relevant persons do not satisfy their requirements under paragraph (4) by relying solely on information delivered to the registrar under any enactment that requires information to be delivered to the registrar about regi"
+- 28(10)  uk_mlr_2017_28_cdd_measures_28_10: spurious verify_customer
+    "Where a person (“A”) purports to act on behalf of the customer, the relevant person must—"
+- 28(10)  uk_mlr_2017_28_cdd_measures_28_10_a: spurious verify_customer
+    "(a) verify that A is authorised to act on the customer's behalf;"
+- 28(10)  uk_mlr_2017_28_cdd_measures_28_10_b: spurious verify_customer
+    "(b) identify A; and"
+- 28(10)  uk_mlr_2017_28_cdd_measures_28_10_c: spurious verify_customer
+    "(c) verify A's identity on the basis of documents or information in either case obtained from a reliable source which is independent of both A and the customer."
+- 29(3)   uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_3: spurious identify_ubo
+    "As soon as the beneficiaries of the insurance policy are identified or designated, the relevant person must—"
+- 29(3)   uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_3_a: spurious identify_ubo
+    "(a) if the beneficiary is a named person or legal arrangement, take the full name of the person or arrangement; or"
+- 29(3)   uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_3_b: spurious identify_ubo
+    "(b) if the beneficiaries are designated by specified characteristics, as a class or in any other way, obtain sufficient information about the beneficiaries to satisfy itself that it will be able to establish the identity"
+- 29(4)   uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_4: spurious cdd_incomplete, verify_customer
+    "The relevant person must verify the identity of the beneficiaries (on the basis of documents or information in either case obtained from a reliable source which is independent of the customer and the beneficiaries, and r"
+- 29(5)   uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_5: spurious cdd_incomplete, identify_ubo
+    "When the relevant person becomes aware that all or part of the rights under the insurance policy are being, or have been, assigned to an individual, body corporate, trust or other legal arrangement which is receiving the"
+- 29(7A)  uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_7a: spurious verify_customer
+    "The relevant person must apply customer due diligence measures to all anonymous safe-deposit boxes in existence on 10th January 2019, and in any event before such safe-deposit boxes are used in any way."
+- 29(11)  uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_11_c: spurious cdd_triggers
+    "(c) once satisfied under sub-paragraph (b), assess the level of risk of money laundering and terrorist financing associated with the customer using the pooled account and take reasonable steps to manage and mitigate the "
+- 29(14)  uk_mlr_2017_29_additional_cdd_measures_credit_institutions_and_financial_institutions_29_14: spurious identify_ubo, verify_customer
+    "When a customer has a pooled account with a relevant person, the customer must make available to the relevant person, on request from the relevant person, information on the identity of the persons on whose behalf monies"
+- 30(2)   uk_mlr_2017_30_timing_of_verification_30_2: missed identify_ubo; spurious cdd_triggers
+    "Subject to paragraph (3) or (4), a relevant person must comply with the requirement to verify the identity of the customer, any person purporting to act on behalf of the customer and any beneficial owner of the customer "
+- 30(3)   uk_mlr_2017_30_timing_of_verification_30_3: spurious verify_customer
+    "Provided that the verification is completed as soon as practicable after contact is first established, the verification of the customer, any person purporting to act on behalf of the customer and the customer's beneficia"
+- 30(3)   uk_mlr_2017_30_timing_of_verification_30_3_a: spurious verify_customer
+    "(a) this is necessary not to interrupt the normal conduct of business; and"
+- 30(3)   uk_mlr_2017_30_timing_of_verification_30_3_b: spurious verify_customer
+    "(b) there is little risk of money laundering and terrorist financing."
+- 30(4)   uk_mlr_2017_30_timing_of_verification_30_4: spurious cdd_incomplete, identify_ubo, verify_customer
+    "The verification by a credit institution or a financial institution of the identity of a customer opening an account, any person purporting to act on behalf of the customer and any beneficial owner of the customer, may t"
+- 30(7)   uk_mlr_2017_30_timing_of_verification_30_7: missed identify_ubo; spurious verify_customer
+    "If this paragraph applies, the relevant person must establish and verify the identity of any beneficiary before—"
+- 30(7)   uk_mlr_2017_30_timing_of_verification_30_7_a: missed identify_ubo; spurious verify_customer
+    "(a) any payment is made to the beneficiary; or"
+- 30(7)   uk_mlr_2017_30_timing_of_verification_30_7_b: missed identify_ubo; spurious verify_customer
+    "(b) the beneficiary exercises its vested rights in the trust, legal entity or legal arrangement."
+- 30ZA(2) uk_mlr_2017_30za_insolvent_bank_customers_30za_2: missed verify_customer; spurious cdd_triggers
+    "Before permitting an insolvent bank customer to open an account and transact from it under paragraph (1), the credit institution must—"
+- 30ZA(2) uk_mlr_2017_30za_insolvent_bank_customers_30za_2_b: spurious verify_customer
+    "(b) where applicable, identify a person purporting to act on the customer’s behalf and verify that such person is authorised so to act in accordance with regulation 28(10)(a) and (b)."
+- 30ZA(3) uk_mlr_2017_30za_insolvent_bank_customers_30za_3: missed cdd_triggers
+    "After permitting an insolvent bank customer to open an account and transact from it under paragraph (1), the credit institution must—"
+- 30ZA(3) uk_mlr_2017_30za_insolvent_bank_customers_30za_3_a: missed cdd_triggers; spurious verify_customer
+    "(a) apply the other customer due diligence measures required by regulation 28 as soon as practicable; and"
+- 30ZA(4) uk_mlr_2017_30za_insolvent_bank_customers_30za_4: spurious identify_ubo
+    "For the purposes of this regulation, a credit institution is to be treated as identifying an insolvent bank customer that is a body corporate if the credit institution—"
+- 30ZA(4) uk_mlr_2017_30za_insolvent_bank_customers_30za_4_a: spurious identify_ubo
+    "(a) obtains the information listed in regulation 28(3)(a); and"
+- 30ZA(4) uk_mlr_2017_30za_insolvent_bank_customers_30za_4_b_i: spurious identify_ubo
+    "(i) takes reasonable measures to determine the information listed in regulation 28(3)(b); and"
+- 30ZA(4) uk_mlr_2017_30za_insolvent_bank_customers_30za_4_b_ii: spurious identify_ubo
+    "(ii) identifies the beneficial owner where the customer is beneficially owned by another person."
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1: missed identify_ubo
+    "Subject to paragraph (8A), before establishing a business relationship with—"
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_a: missed identify_ubo
+    "(a) a company which is subject to the requirements of Part 21A of the Companies Act 2006 (information about people with significant control);"
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_b: missed identify_ubo
+    "(b) an unregistered company which is subject to the requirements of the Unregistered Companies Regulations 2009;"
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_c: missed identify_ubo
+    "(c) a limited liability partnership which is subject to the requirements of the Limited Liability Partnerships (Application of Companies Act 2006) Regulations 2009;"
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_d: missed identify_ubo
+    "(d) an eligible Scottish partnership which is subject to the requirements of the Scottish Partnerships (Register of People with Significant Control) Regulations 2017, ..."
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_e: missed identify_ubo
+    "(e) a trust which is subject to registration under Part 5 of these Regulations, or"
+- 30A(1)  uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_1_f: missed identify_ubo
+    "(f) an overseas entity which is subject to registration under Part 1 of the Economic Crime (Transparency and Enforcement) Act 2022, a relevant person must collect an excerpt of the register which contains full details of"
+- 30A(2A) uk_mlr_2017_30a_requirement_to_report_discrepancies_in_registers_30a_2a: missed identify_ubo
+    "When taking measures to fulfil the duties to carry out customer due diligence and ongoing monitoring of a business relationship (including enhanced customer due diligence and enhanced ongoing monitoring) under Part 3 of "
+- 31(1)   uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1_d: spurious cdd_incomplete
+    "(d) must consider whether the relevant person is required to make a disclosure (or to make further disclosure) by—"
+- 31(1)   uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1_d_i: spurious cdd_incomplete
+    "(i) Part 3 of the Terrorism Act 2000 ; or"
+- 31(1)   uk_mlr_2017_31_requirement_to_cease_transactions_etc_31_1_d_ii: spurious cdd_incomplete
+    "(ii) Part 7 of the Proceeds of Crime Act 2002 ."
+- 33(1)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_a: spurious pep_edd
+    "(a) in any case identified as one where there is a high risk of money laundering or terrorist financing—"
+- 33(1)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_b: spurious pep_edd
+    "(b) in any business relationship ... with a person established in a FATF call for action country or in relation to any relevant transaction where either of the parties to the transaction is established in a FATF call for"
+- 33(1)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_c: spurious pep_edd
+    "(c) in relation to correspondent relationships with a credit institution or a financial institution (in accordance with regulation 34);"
+- 33(1)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_e: spurious pep_edd
+    "(e) in any case where the relevant person discovers that a customer has provided false or stolen identification documentation or information and the relevant person proposes to continue to deal with that customer;"
+- 33(1)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_f: spurious pep_edd
+    "(f) in any case where—"
+- 33(1)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_1_g: spurious pep_edd
+    "(g) in any other case which by its nature can present a higher risk of money laundering or terrorist financing."
+- 33(3A)  uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_3a: spurious pep_edd
+    "The enhanced due diligence measures taken by a relevant person for the purpose of paragraph (1)(b) must include—"
+- 33(3A)  uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_3a_a: spurious pep_edd
+    "(a) obtaining additional information on the customer and on the customer’s beneficial owner;"
+- 33(3A)  uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_3a_b: spurious pep_edd
+    "(b) obtaining additional information on the intended nature of the business relationship;"
+- 33(3A)  uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_3a_c: spurious pep_edd
+    "(c) obtaining information on the source of funds and source of wealth of the customer and of the customer’s beneficial owner;"
+- 33(3A)  uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_3a_d: spurious pep_edd
+    "(d) obtaining information on the reasons for the transactions;"
+- 33(3A)  uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_3a_e: spurious pep_edd
+    "(e) obtaining the approval of senior management for establishing or continuing the business relationship;"
+- 33(3A)  uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_3a_f: spurious pep_edd
+    "(f) conducting enhanced monitoring of the business relationship by increasing the number and timing of controls applied, and selecting patterns of transactions that need further examination."
+- 33(4)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4: spurious pep_edd
+    "The enhanced customer due diligence measures taken by a relevant person for the purpose of paragraph (1)(f) must include—"
+- 33(4)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4_a: spurious pep_edd
+    "(a) as far as reasonably possible, examining the background and purpose of the transaction, and"
+- 33(4)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4_b: spurious pep_edd
+    "(b) increasing the degree and nature of monitoring of the business relationship in which the transaction is made to determine whether that transaction or that relationship appear to be suspicious."
+- 33(4B)  uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4b: spurious pep_edd
+    "Where the beneficiary of a life insurance policy provided by a relevant person—"
+- 33(4B)  uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4b_a: spurious pep_edd
+    "(a) is a legal person or a legal arrangement, and"
+- 33(4B)  uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_4b_b: spurious pep_edd
+    "(b) presents a high risk of money laundering or terrorist financing, the relevant person must take reasonable measures to identify and verify the identity of the beneficial owner of that beneficiary before any payment is"
+- 33(5)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_5: spurious pep_edd
+    "Depending on the requirements of the case, the enhanced customer due diligence measures required under paragraph (1) may also include, among other things—"
+- 33(5)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_5_a: spurious pep_edd
+    "(a) seeking additional independent, reliable sources to verify information provided or made available to the relevant person;"
+- 33(5)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_5_b: spurious pep_edd
+    "(b) taking additional measures to understand better the background, ownership and financial situation of the customer, and other parties to the transaction;"
+- 33(5)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_5_c: spurious pep_edd
+    "(c) taking further steps to be satisfied that the transaction is consistent with the purpose and intended nature of the business relationship;"
+- 33(5)   uk_mlr_2017_33_obligation_to_apply_enhanced_cdd_33_5_d: spurious pep_edd
+    "(d) increasing the monitoring of the business relationship, including greater scrutiny of transactions."
+- 34(1)   uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1: spurious pep_edd
+    "A credit institution or financial institution (the “correspondent”) which has or proposes to have a correspondent relationship involving the execution of payments with another such institution (the “respondent”) from a t"
+- 34(1)   uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_a: spurious pep_edd
+    "(a) gather sufficient information about the respondent to understand fully the nature of its business;"
+- 34(1)   uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_b: spurious pep_edd
+    "(b) determine from publicly-available information from credible sources the reputation of the respondent and the quality of the supervision to which the respondent is subject;"
+- 34(1)   uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_c: spurious pep_edd
+    "(c) assess the respondent's controls to counter money laundering and terrorist financing;"
+- 34(1)   uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_d: spurious pep_edd
+    "(d) obtain approval from senior management before establishing a new correspondent relationship;"
+- 34(1)   uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_e: spurious pep_edd
+    "(e) document the responsibilities of the respondent and correspondent in the correspondent relationship; and"
+- 34(1)   uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_f: spurious pep_edd
+    "(f) be satisfied that, in respect of those of the respondent's customers who have direct access to accounts with the correspondent, the respondent—"
+- 34(1)   uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_f_i: spurious pep_edd
+    "(i) has verified the identity of, and conducts ongoing customer due diligence measures in relation to, such customers; and"
+- 34(1)   uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_1_f_ii: spurious pep_edd
+    "(ii) is able to provide to the correspondent, upon request, the documents or information obtained when applying such customer due diligence measures."
+- 34(2)   uk_mlr_2017_34_enhanced_cdd_credit_institutions_financial_institutions_and_correspondent_relationships_34_2: spurious cdd_incomplete, prohibit_anonymous
+    "Credit institutions and financial institutions must not enter into, or continue, a correspondent relationship with a shell bank."
+- 35(1)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1: spurious pep_edd
+    "A relevant person must have in place appropriate risk-management systems and procedures to determine whether a customer or the beneficial owner of a customer is—"
+- 35(1)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1_a: spurious pep_edd
+    "(a) a politically exposed person (a “PEP”); or"
+- 35(1)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_1_b: spurious pep_edd
+    "(b) a family member or a known close associate of a PEP, and to manage the enhanced risks arising from the relevant person's business relationship or transactions with such a customer."
+- 35(3)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_3_a: spurious pep_edd
+    "(a) the level of risk associated with that customer, and"
+- 35(4)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4: spurious pep_edd
+    "In assessing the extent of the enhanced customer due diligence measures to be taken in relation to any particular person (which may differ from case to case), a relevant person—"
+- 35(4)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4_a: spurious pep_edd
+    "(a) must take account of any relevant information made available to the relevant person under regulations 17(9) and 47; and"
+- 35(4)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4_b: spurious pep_edd
+    "(b) may take into account any guidance which has been—"
+- 35(4)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4_b_i: spurious pep_edd
+    "(i) issued by the FCA; or"
+- 35(4)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_4_b_ii: spurious pep_edd
+    "(ii) issued by any other supervisory authority or appropriate body and approved by the Treasury."
+- 35(5)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_5_a: missed pep_edd; spurious pep_approval
+    "(a) have approval from senior management for establishing or continuing the business relationship with that person;"
+- 35(6)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_6: spurious pep_edd
+    "A relevant person which is providing a customer with a contract of long-term insurance (an “insurance policy”) must take reasonable measures to determine whether one or more of the beneficiaries of the insurance policy o"
+- 35(6)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_6_a: spurious pep_edd
+    "(a) PEPs, or"
+- 35(6)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_6_b: spurious pep_edd
+    "(b) family members or known close associates of PEPs."
+- 35(7)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_7: spurious pep_edd
+    "The measures required under paragraph (6) must be taken before—"
+- 35(7)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_7_a: spurious pep_edd
+    "(a) any payment is made under the insurance policy, or"
+- 35(7)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_7_b: spurious pep_edd
+    "(b) the benefit of the insurance policy is assigned in whole or in part to another person."
+- 35(8)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_8: spurious pep_edd
+    "A relevant person must, in addition to the measures required by regulation 33, ensure that—"
+- 35(8)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_8_a: spurious pep_edd
+    "(a) its senior management is informed before it pays out any sums under an insurance policy the beneficiary of which is a PEP or a person who comes within paragraph (6)(b) in relation to a PEP, and"
+- 35(8)   uk_mlr_2017_35_enhanced_cdd_politically_exposed_persons_35_8_b: spurious pep_edd
+    "(b) its entire business relationship with the holder of the insurance policy (“the policy holder”) is scrutinised on an ongoing basis in accordance with enhanced procedures, whether or not the policy holder is a PEP or a"
+- 37(2)   uk_mlr_2017_37_application_of_simplified_cdd_37_2: spurious cdd_incomplete
+    "Where a relevant person applies simplified customer due diligence measures, it must—"
+- 37(2)   uk_mlr_2017_37_application_of_simplified_cdd_37_2_a: spurious cdd_incomplete
+    "(a) continue to comply with the requirements in regulations 28 , 29 and 30A, but it may adjust the extent, timing or type of the measures it undertakes under regulations 28 and 29(11) to (13) to reflect its determination"
+- 37(2)   uk_mlr_2017_37_application_of_simplified_cdd_37_2_b: spurious cdd_incomplete
+    "(b) carry out sufficient monitoring of any business relationships or transactions which are subject to those measures to enable it to detect any unusual or suspicious transactions."
+- 37(8)   uk_mlr_2017_37_application_of_simplified_cdd_37_8: spurious cdd_incomplete
+    "A relevant person must not continue to apply simplified customer due diligence measures under paragraph (1)—"
+- 37(8)   uk_mlr_2017_37_application_of_simplified_cdd_37_8_a: spurious cdd_incomplete
+    "(a) if it doubts the veracity or accuracy of any documents or information previously obtained for the purposes of identification or verification;"
+- 37(8)   uk_mlr_2017_37_application_of_simplified_cdd_37_8_b: spurious cdd_incomplete
+    "(b) if its risk assessment changes and it no longer considers that there is a low degree of risk of money laundering and terrorist financing;"
+- 37(8)   uk_mlr_2017_37_application_of_simplified_cdd_37_8_c: spurious cdd_incomplete
+    "(c) if it suspects money laundering or terrorist financing; or"
+- 37(8)   uk_mlr_2017_37_application_of_simplified_cdd_37_8_d: spurious cdd_incomplete
+    "(d) if any of the conditions set out in regulation 33(1) apply."
+- 38(4A)  uk_mlr_2017_38_electronic_money_38_4a: spurious prohibit_anonymous
+    "Credit institutions and financial institutions, acting as acquirers for payment using an anonymous prepaid card issued in a third country, shall only accept payment where—"
+- 38(4A)  uk_mlr_2017_38_electronic_money_38_4a_a: spurious prohibit_anonymous
+    "(a) the anonymous prepaid card is subject to requirements in national legislation having an equivalent effect to those laid down in this regulation; and"
+- 38(4A)  uk_mlr_2017_38_electronic_money_38_4a_b: spurious prohibit_anonymous
+    "(b) the anonymous prepaid card satisfies those requirements."
+
+Agreement with rules v2 on the same held-out clauses (trust tiers; correct = also a gold label):
+  Paragraph level: both 13/13 correct; rules only 2/4 correct; llm only 13/57 correct
+  Clause    level: both 24/24 correct; rules only 3/6 correct; llm only 32/151 correct

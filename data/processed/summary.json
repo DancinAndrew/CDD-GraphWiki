@@ -13,8 +13,8 @@
     "mas_notice_626": 28,
     "mock_internal_policy": 14
   },
-  "obligations": 12,
-  "clauses_sent_to_review_queue": 16,
+  "obligations": 13,
+  "clauses_sent_to_review_queue": 13,
   "conflicts": 3,
   "conflict_ids": [
     "conf_ubo_threshold",
@@ -25,15 +25,77 @@
   "checklists": 5,
   "checklists_routed_to_human_review": 4,
   "extraction_vs_gold": {
-    "extracted": 12,
-    "gold": 12,
-    "matched": 12,
+    "extracted": 13,
+    "gold": 13,
+    "matched": 13,
     "precision": 1.0,
     "recall": 1.0,
     "f1_score": 1.0,
     "field_accuracy": 1.0,
-    "provenance_matches": 12,
-    "exact_source_matches": 12
+    "provenance_matches": 13,
+    "exact_source_matches": 13
+  },
+  "rule_reliability": {
+    "set": "uk_mlr_2017",
+    "level": "paragraph",
+    "by_type": {
+      "prohibit_anonymous": {
+        "correct": 1,
+        "flagged": 1,
+        "precision": 1.0,
+        "gold": 1,
+        "missed": 0
+      },
+      "cdd_triggers": {
+        "correct": 8,
+        "flagged": 9,
+        "precision": 0.8889,
+        "gold": 13,
+        "missed": 5
+      },
+      "verify_customer": {
+        "correct": 3,
+        "flagged": 3,
+        "precision": 1.0,
+        "gold": 4,
+        "missed": 1
+      },
+      "identify_ubo": {
+        "correct": 3,
+        "flagged": 4,
+        "precision": 0.75,
+        "gold": 8,
+        "missed": 5
+      },
+      "pep_edd": {
+        "correct": 0,
+        "flagged": 0,
+        "precision": null,
+        "gold": 4,
+        "missed": 4
+      },
+      "pep_prohibition": {
+        "correct": 0,
+        "flagged": 0,
+        "precision": null,
+        "gold": 0,
+        "missed": 0
+      },
+      "pep_approval": {
+        "correct": 0,
+        "flagged": 0,
+        "precision": null,
+        "gold": 0,
+        "missed": 0
+      },
+      "cdd_incomplete": {
+        "correct": 0,
+        "flagged": 0,
+        "precision": null,
+        "gold": 2,
+        "missed": 2
+      }
+    }
   },
   "conflict_detection_vs_gold": {
     "detected": 3,
@@ -51,8 +113,222 @@
     "aligned_fields": 30.0
   },
   "provenance_check": {
-    "references_checked": 64,
+    "references_checked": 67,
     "unresolved_references": [],
     "conflicts_citing_one_source": []
+  },
+  "explanation_faithfulness": {
+    "labels": 46,
+    "comprehensive": 42,
+    "sufficient": 46,
+    "both": 42,
+    "cites_own_clause": 21,
+    "coverage_mean": 0.3073,
+    "coverage_median": 0.2182,
+    "by_type": {
+      "prohibit_anonymous": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.4161,
+        "coverage_median": 0.4161
+      },
+      "cdd_triggers": {
+        "labels": 10,
+        "comprehensive": 10,
+        "sufficient": 10,
+        "both": 10,
+        "cites_own_clause": 2,
+        "coverage_mean": 0.389,
+        "coverage_median": 0.3693
+      },
+      "verify_customer": {
+        "labels": 13,
+        "comprehensive": 13,
+        "sufficient": 13,
+        "both": 13,
+        "cites_own_clause": 5,
+        "coverage_mean": 0.466,
+        "coverage_median": 0.5303
+      },
+      "identify_ubo": {
+        "labels": 15,
+        "comprehensive": 11,
+        "sufficient": 15,
+        "both": 11,
+        "cites_own_clause": 9,
+        "coverage_mean": 0.1655,
+        "coverage_median": 0.1587
+      },
+      "pep_edd": {
+        "labels": 4,
+        "comprehensive": 4,
+        "sufficient": 4,
+        "both": 4,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.1524,
+        "coverage_median": 0.1536
+      },
+      "pep_prohibition": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.4146,
+        "coverage_median": 0.4146
+      },
+      "pep_approval": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.1468,
+        "coverage_median": 0.1468
+      },
+      "cdd_incomplete": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.1184,
+        "coverage_median": 0.1184
+      }
+    },
+    "by_evidence": {
+      "own_evidence": {
+        "labels": 21,
+        "comprehensive": 18,
+        "sufficient": 21,
+        "both": 18,
+        "cites_own_clause": 21,
+        "coverage_mean": 0.3376,
+        "coverage_median": 0.2197
+      },
+      "list_structure": {
+        "labels": 25,
+        "comprehensive": 24,
+        "sufficient": 25,
+        "both": 24,
+        "cites_own_clause": 0,
+        "coverage_mean": 0.2818,
+        "coverage_median": 0.2167
+      }
+    },
+    "by_rule": {
+      "anonymous.prohibition": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.4161,
+        "coverage_median": 0.4161
+      },
+      "identify.cross_reference": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.2161,
+        "coverage_median": 0.2161
+      },
+      "identify.information_for_purposes": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.8254,
+        "coverage_median": 0.8254
+      },
+      "identify.passive_customer": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.6404,
+        "coverage_median": 0.6404
+      },
+      "identify.subject": {
+        "labels": 9,
+        "comprehensive": 7,
+        "sufficient": 9,
+        "both": 7,
+        "cites_own_clause": 9,
+        "coverage_mean": 0.2722,
+        "coverage_median": 0.2119
+      },
+      "incomplete.unable_and_stop": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.1184,
+        "coverage_median": 0.1184
+      },
+      "list.inherit": {
+        "labels": 25,
+        "comprehensive": 24,
+        "sufficient": 25,
+        "both": 24,
+        "cites_own_clause": 0,
+        "coverage_mean": 0.2818,
+        "coverage_median": 0.2167
+      },
+      "pep.approval": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.1468,
+        "coverage_median": 0.1468
+      },
+      "pep.enhanced": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.1603,
+        "coverage_median": 0.1603
+      },
+      "pep.prohibition": {
+        "labels": 1,
+        "comprehensive": 1,
+        "sufficient": 1,
+        "both": 1,
+        "cites_own_clause": 1,
+        "coverage_mean": 0.4146,
+        "coverage_median": 0.4146
+      },
+      "trigger.cdd_on_condition": {
+        "labels": 2,
+        "comprehensive": 2,
+        "sufficient": 2,
+        "both": 2,
+        "cites_own_clause": 2,
+        "coverage_mean": 0.6616,
+        "coverage_median": 0.6616
+      },
+      "ubo.ownership_threshold": {
+        "labels": 2,
+        "comprehensive": 1,
+        "sufficient": 2,
+        "both": 1,
+        "cites_own_clause": 2,
+        "coverage_mean": 0.1892,
+        "coverage_median": 0.1892
+      }
+    },
+    "failed_tests": 4
   }
 }

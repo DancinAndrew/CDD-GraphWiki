@@ -1,0 +1,247 @@
+# Held-out gold labels for MAS Notice 626, written from the official text before the rule-based
+# extractor was run on these paragraphs. Clauses not listed have no type. See ANNOTATION_GUIDELINE.md.
+corpus: data/heldout/sources/mas_notice_626.md
+guideline: data/heldout/ANNOTATION_GUIDELINE.md
+development_paragraphs:
+- '6.3'
+- '6.5'
+- '6.6'
+- '6.9'
+- '6.13'
+- '6.14'
+- 6.14B
+- '6.35'
+- '8.2'
+- '8.3'
+types:
+- prohibit_anonymous
+- cdd_triggers
+- verify_customer
+- identify_ubo
+- pep_edd
+- pep_prohibition
+- pep_approval
+- cdd_incomplete
+labels:
+- clause_id: mas_notice_626_6_cdd_6_1
+  paragraph: '6.1'
+  types:
+  - prohibit_anonymous
+  note: No anonymous accounts or accounts in fictitious names.
+- clause_id: mas_notice_626_6_cdd_6_14a
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_a
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_a_i
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_a_ii
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_a_iii
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_a_iv
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_a_v
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_b
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_b_i
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_b_ii
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_b_iii
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_b_iv
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_b_v
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_b_vi
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_b_vii
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_b_viii
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_14a_b_ix
+  paragraph: 6.14A
+  types:
+  - identify_ubo
+  note: Information the bank shall obtain about each beneficial owner identified under 6.14.
+- clause_id: mas_notice_626_6_cdd_6_15
+  paragraph: '6.15'
+  types:
+  - identify_ubo
+  note: Understand the ownership and control structure of a customer that is not a natural person.
+- clause_id: mas_notice_626_6_cdd_6_30
+  paragraph: '6.30'
+  types:
+  - cdd_triggers
+  note: Perform the CDD measures on customers acquired with another institution's business; (a) and (b) are exception conditions
+    and are not labelled.
+- clause_id: mas_notice_626_6_cdd_6_31
+  paragraph: '6.31'
+  types:
+  - cdd_triggers
+  note: Transactions above S$20,000 and wire transfers above S$1,500 for walk-in customers trigger CDD; (b) is record keeping.
+- clause_id: mas_notice_626_6_cdd_6_31_a
+  paragraph: '6.31'
+  types:
+  - cdd_triggers
+  note: Transactions above S$20,000 and wire transfers above S$1,500 for walk-in customers trigger CDD; (b) is record keeping.
+- clause_id: mas_notice_626_6_cdd_6_31a
+  paragraph: 6.31A
+  types:
+  - cdd_triggers
+  note: Digital token transactions and value transfers for walk-in customers trigger CDD; (b) is record keeping.
+- clause_id: mas_notice_626_6_cdd_6_31a_a
+  paragraph: 6.31A
+  types:
+  - cdd_triggers
+  note: Digital token transactions and value transfers for walk-in customers trigger CDD; (b) is record keeping.
+- clause_id: mas_notice_626_6_cdd_6_32
+  paragraph: '6.32'
+  types:
+  - verify_customer
+  - identify_ubo
+  note: Complete verification of the customer and its beneficial owners before the listed events.
+- clause_id: mas_notice_626_6_cdd_6_32_a
+  paragraph: '6.32'
+  types:
+  - verify_customer
+  - identify_ubo
+  note: Complete verification of the customer and its beneficial owners before the listed events.
+- clause_id: mas_notice_626_6_cdd_6_32_b
+  paragraph: '6.32'
+  types:
+  - verify_customer
+  - identify_ubo
+  note: Complete verification of the customer and its beneficial owners before the listed events.
+- clause_id: mas_notice_626_6_cdd_6_32_c
+  paragraph: '6.32'
+  types:
+  - verify_customer
+  - identify_ubo
+  note: Complete verification of the customer and its beneficial owners before the listed events.
+- clause_id: mas_notice_626_6_cdd_6_32_d
+  paragraph: '6.32'
+  types:
+  - verify_customer
+  - identify_ubo
+  note: Complete verification of the customer and its beneficial owners before the listed events.
+- clause_id: mas_notice_626_6_cdd_6_32_e
+  paragraph: '6.32'
+  types:
+  - verify_customer
+  - identify_ubo
+  note: Complete verification of the customer and its beneficial owners before the listed events.
+- clause_id: mas_notice_626_6_cdd_6_34
+  paragraph: '6.34'
+  types:
+  - verify_customer
+  - identify_ubo
+  note: After deferred verification, complete verification of the customer and beneficial owners as soon as practicable; (a)
+    is an internal-policy duty.
+- clause_id: mas_notice_626_6_cdd_6_34_b
+  paragraph: '6.34'
+  types:
+  - verify_customer
+  - identify_ubo
+  note: After deferred verification, complete verification of the customer and beneficial owners as soon as practicable; (a)
+    is an internal-policy duty.
+- clause_id: mas_notice_626_6_cdd_6_38
+  paragraph: '6.38'
+  types:
+  - cdd_triggers
+  note: A revision of the Notice triggers the measures for existing customers.
+- clause_id: mas_notice_626_11_wire_transfers_11_3
+  paragraph: '11.3'
+  types:
+  - verify_customer
+  note: Identify and verify the wire transfer originator before effecting the transfer; (b) is record keeping.
+- clause_id: mas_notice_626_11_wire_transfers_11_3_a
+  paragraph: '11.3'
+  types:
+  - verify_customer
+  note: Identify and verify the wire transfer originator before effecting the transfer; (b) is record keeping.
+- clause_id: mas_notice_626_11_wire_transfers_11_9
+  paragraph: '11.9'
+  types:
+  - cdd_incomplete
+  note: Do not execute the wire transfer when the originator requirements in 11.3 to 11.8, including identification, cannot
+    be met.
+- clause_id: mas_notice_626_11_wire_transfers_11_11
+  paragraph: '11.11'
+  types:
+  - verify_customer
+  note: Identify and verify the beneficiary of a cross-border wire transfer.
+- clause_id: mas_notice_626_11a_value_transfers_11a_3
+  paragraph: 11A.3
+  types:
+  - verify_customer
+  note: Identify and verify the value transfer originator before effecting the transfer; (b) is record keeping.
+- clause_id: mas_notice_626_11a_value_transfers_11a_3_a
+  paragraph: 11A.3
+  types:
+  - verify_customer
+  note: Identify and verify the value transfer originator before effecting the transfer; (b) is record keeping.
+- clause_id: mas_notice_626_11a_value_transfers_11a_6
+  paragraph: 11A.6
+  types:
+  - verify_customer
+  note: Identify and verify the value transfer originator for transfers above S$1,500; items (a)-(c) are message content.
+- clause_id: mas_notice_626_11a_value_transfers_11a_11
+  paragraph: 11A.11
+  types:
+  - cdd_incomplete
+  note: Do not execute the value transfer when the originator requirements, including identification, cannot be met.
+- clause_id: mas_notice_626_11a_value_transfers_11a_13
+  paragraph: 11A.13
+  types:
+  - verify_customer
+  note: Identify and verify the value transfer beneficiary before a cash payout.

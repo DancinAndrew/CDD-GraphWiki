@@ -1,0 +1,121 @@
+Rule-based extractor v1 (frozen, written against the development excerpts) on held-out MAS Notice 626 paragraphs
+================================================================================================================
+
+Corpus: 167 numbered paragraphs (419 clause records) of MAS Notice 626; 10 development paragraphs excluded.
+Held out: 157 paragraphs, 360 clauses; 42 clauses in 16 paragraphs carry one of the modelled types.
+Held-out clauses containing 'shall' or 'must': 147.
+The rules assign at most one type per clause; clauses with two gold types can only be half found.
+
+Paragraph level (unit, type) pairs: precision 0.14, recall 0.06, F1 0.08  (TP 1, FP 6, FN 17)
+  prohibit_anonymous   P 0.00  R 0.00  (TP 0, FP 0, FN 1)
+  cdd_triggers         P 0.00  R 0.00  (TP 0, FP 1, FN 4)
+  verify_customer      P 0.00  R 0.00  (TP 0, FP 1, FN 7)
+  identify_ubo         P 0.25  R 0.25  (TP 1, FP 3, FN 3)
+  pep_edd              P 0.00  R 0.00  (TP 0, FP 1, FN 0)
+  cdd_incomplete       P 0.00  R 0.00  (TP 0, FP 0, FN 2)
+
+Clause level (unit, type) pairs: precision 0.41, recall 0.32, F1 0.36  (TP 16, FP 23, FN 34)
+  prohibit_anonymous   P 0.00  R 0.00  (TP 0, FP 0, FN 1)
+  cdd_triggers         P 0.00  R 0.00  (TP 0, FP 7, FN 6)
+  verify_customer      P 0.00  R 0.00  (TP 0, FP 1, FN 15)
+  identify_ubo         P 0.57  R 0.62  (TP 16, FP 12, FN 10)
+  pep_edd              P 0.00  R 0.00  (TP 0, FP 3, FN 0)
+  cdd_incomplete       P 0.00  R 0.00  (TP 0, FP 0, FN 2)
+
+Disagreements with the gold labels (48 clauses):
+- 6.1     mas_notice_626_6_cdd_6_1: missed prohibit_anonymous
+    "No bank shall open or maintain an anonymous account or an account in a fictitious name."
+- 6.14A   mas_notice_626_6_cdd_6_14a: missed identify_ubo; spurious verify_customer
+    "For the purposes of paragraph 6.14, the bank shall obtain at least the following information:"
+- 6.14C   mas_notice_626_6_cdd_6_14c_b: spurious identify_ubo
+    "(b) is unable to obtain the unique identification number and/or residential address of the beneficial owner after taking reasonable measures, the bank may obtain the date of birth and nationality of the beneficial owner,"
+- 6.15    mas_notice_626_6_cdd_6_15: missed identify_ubo
+    "Where the customer is not a natural person, the bank shall understand the nature of the customer’s business and its ownership and control structure."
+- 6.16    mas_notice_626_6_cdd_6_16: spurious identify_ubo
+    "A bank shall not be required to inquire if there exists any beneficial owner in relation to a customer that is -"
+- 6.16    mas_notice_626_6_cdd_6_16_a: spurious identify_ubo
+    "(a) an entity listed and traded on the Singapore Exchange;"
+- 6.16    mas_notice_626_6_cdd_6_16_b: spurious identify_ubo
+    "(b) an entity listed on a stock exchange outside of Singapore that is subject to –"
+- 6.16    mas_notice_626_6_cdd_6_16_b_i: spurious identify_ubo
+    "(i) regulatory disclosure requirements; and"
+- 6.16    mas_notice_626_6_cdd_6_16_b_ii: spurious identify_ubo
+    "(ii) requirements relating to adequate transparency in respect of its beneficial owners (imposed through stock exchange rules, law or other enforceable means);"
+- 6.16    mas_notice_626_6_cdd_6_16_c: spurious identify_ubo
+    "(c) a financial institution set out in Appendix 1;"
+- 6.16    mas_notice_626_6_cdd_6_16_d: spurious identify_ubo
+    "(d) a financial institution incorporated or established outside Singapore that is subject to and supervised for compliance with AML/CFT requirements consistent with standards set by the FATF; or"
+- 6.16    mas_notice_626_6_cdd_6_16_e: spurious identify_ubo
+    "(e) an investment vehicle where the managers are financial institutions6 -"
+- 6.16    mas_notice_626_6_cdd_6_16_e_i: spurious identify_ubo
+    "(i) set out in Appendix 1; or"
+- 6.16    mas_notice_626_6_cdd_6_16_e_ii: spurious identify_ubo
+    "(ii) incorporated or established outside Singapore but are subject to and supervised for compliance with AML/CFT requirements consistent with standards set by the FATF, unless the bank has doubts about the veracity of th"
+- 6.30    mas_notice_626_6_cdd_6_30: missed cdd_triggers
+    "When a bank (“acquiring bank”) acquires, either in whole or in part, the business of another financial institution (whether in Singapore or elsewhere), the acquiring bank shall perform the measures as required by paragra"
+- 6.31    mas_notice_626_6_cdd_6_31: missed cdd_triggers
+    "A bank that undertakes any transaction of a value exceeding S$20,000, other than any digital token transaction referred to in paragraph 6.31A, or effects or receives any funds by domestic wire transfer, or by cross-borde"
+- 6.31    mas_notice_626_6_cdd_6_31_a: missed cdd_triggers
+    "(a) perform CDD measures as if the customer had applied to the bank to establish business relations; and"
+- 6.31A   mas_notice_626_6_cdd_6_31a: missed cdd_triggers
+    "A bank that undertakes any digital token transaction, or effects or receives any digital token by value transfer, for any customer who does not otherwise have business relations with the bank shall –"
+- 6.31A   mas_notice_626_6_cdd_6_31a_a: missed cdd_triggers
+    "(a) perform CDD measures as if the customer had applied to the bank to establish business relations; and"
+- 6.32    mas_notice_626_6_cdd_6_32: missed identify_ubo, verify_customer
+    "Subject to paragraphs 6.33 and 6.34, a bank shall complete verification of the identity of a customer as required by paragraph 6.9, natural persons appointed to act on behalf of the customer as required by paragraph 6.10"
+- 6.32    mas_notice_626_6_cdd_6_32_a: missed identify_ubo, verify_customer
+    "(a) before the bank establishes business relations with the customer;"
+- 6.32    mas_notice_626_6_cdd_6_32_b: missed identify_ubo, verify_customer
+    "(b) before the bank undertakes any transaction of a value exceeding S$20,000 for the customer, other than any digital token transaction referred to in paragraph 6.32(d), where the customer has not otherwise established b"
+- 6.32    mas_notice_626_6_cdd_6_32_c: missed identify_ubo, verify_customer
+    "(c) before the bank effects or receives any funds by domestic wire transfer, or by cross-border wire transfer that exceeds S$1,500, for any customer who has not otherwise established business relations with the bank;"
+- 6.32    mas_notice_626_6_cdd_6_32_d: missed identify_ubo, verify_customer
+    "(d) before the bank undertakes any digital token transaction, where the customer has not otherwise established business relations with the bank; or"
+- 6.32    mas_notice_626_6_cdd_6_32_e: missed identify_ubo, verify_customer
+    "(e) before the bank effects or receives any digital token by value transfer, for any customer who has not otherwise established business relations with the bank."
+- 6.34    mas_notice_626_6_cdd_6_34: missed identify_ubo, verify_customer
+    "Where the bank establishes business relations with a customer before verifying the identity of the customer as required by paragraph 6.9, natural persons appointed to act on behalf of the customer as required by paragrap"
+- 6.34    mas_notice_626_6_cdd_6_34_b: missed identify_ubo, verify_customer
+    "(b) complete such verification as soon as is reasonably practicable."
+- 6.38    mas_notice_626_6_cdd_6_38: missed cdd_triggers
+    "Where there is any subsequent revision to this Notice resulting in a change in the measures as required under paragraphs 6, 7 and 8, a bank shall perform the measures as required by paragraphs 6, 7 and 8 in relation to i"
+- 8.4     mas_notice_626_8_enhanced_cdd_8_4_a: spurious pep_edd
+    "(a) domestic politically exposed persons, their family members and close associates;"
+- 8.4     mas_notice_626_8_enhanced_cdd_8_4_b: spurious pep_edd
+    "(b) international organisation politically exposed persons, their family members and close associates; or"
+- 8.4     mas_notice_626_8_enhanced_cdd_8_4_c: spurious pep_edd
+    "(c) politically exposed persons who have stepped down from their prominent public functions, taking into consideration the level of influence such persons may continue to exercise after stepping down from their prominent"
+- 10.3    mas_notice_626_10_correspondent_banking_10_3: spurious cdd_triggers
+    "A bank in Singapore shall perform the following measures, in addition to the measures as required by paragraphs 6, 7 and 8, when providing correspondent banking or other similar services:"
+- 10.3    mas_notice_626_10_correspondent_banking_10_3_a: spurious cdd_triggers
+    "(a) assess the suitability of the respondent financial institution by taking the following steps:"
+- 10.3    mas_notice_626_10_correspondent_banking_10_3_a_i: spurious cdd_triggers
+    "(i) gather adequate information about the respondent financial institution to understand fully the nature of the respondent financial institution’s business, including making appropriate inquiries on its management, its "
+- 10.3    mas_notice_626_10_correspondent_banking_10_3_a_ii: spurious cdd_triggers
+    "(ii) determine from any available sources the reputation of the respondent financial institution and the quality of supervision over the respondent financial institution, including whether it has been the subject of mone"
+- 10.3    mas_notice_626_10_correspondent_banking_10_3_a_iii: spurious cdd_triggers
+    "(iii) assess the respondent financial institution’s AML/CFT controls and ascertain that they are adequate and effective, having regard to the AML/CFT measures of the country or jurisdiction in which the respondent financ"
+- 10.3    mas_notice_626_10_correspondent_banking_10_3_b: spurious cdd_triggers
+    "(b) clearly understand and document the respective AML/CFT responsibilities of each financial institution; and"
+- 10.3    mas_notice_626_10_correspondent_banking_10_3_c: spurious cdd_triggers
+    "(c) obtain approval from the bank’s senior management before providing correspondent banking or similar services to a new financial institution."
+- 11.3    mas_notice_626_11_wire_transfers_11_3: missed verify_customer
+    "Before effecting a wire transfer, every bank that is an ordering institution shall -"
+- 11.3    mas_notice_626_11_wire_transfers_11_3_a: missed verify_customer
+    "(a) identify the wire transfer originator and verify the wire transfer originator’s identity, as the case may be (if the bank has not already done so by virtue of paragraph 6); and"
+- 11.9    mas_notice_626_11_wire_transfers_11_9: missed cdd_incomplete
+    "Where the ordering institution is unable to comply with the requirements in paragraphs 11.3 to 11.8, it shall not execute the wire transfer."
+- 11.11   mas_notice_626_11_wire_transfers_11_11: missed verify_customer
+    "For cross-border wire transfers, a beneficiary institution shall identify and verify the identity of the wire transfer beneficiary if the identity has not been previously verified."
+- 11A.3   mas_notice_626_11a_value_transfers_11a_3: missed verify_customer
+    "Before effecting a value transfer, every bank that is an ordering institution shall –"
+- 11A.3   mas_notice_626_11a_value_transfers_11a_3_a: missed verify_customer
+    "(a) identify the value transfer originator and take reasonable measures to verify the value transfer originator’s identity, as the case may be (if the bank has not already done so by virtue of paragraph 6); and"
+- 11A.6   mas_notice_626_11a_value_transfers_11a_6: missed verify_customer
+    "Subject to paragraph 11A.8, in a value transfer where the amount to be transferred exceeds S$1,500, every bank which is an ordering institution shall identify the value transfer originator and verify the value transfer o"
+- 11A.11  mas_notice_626_11a_value_transfers_11a_11: missed cdd_incomplete
+    "Where the ordering institution is unable to comply with the requirements in paragraphs 11A.3 to 11A.10, it shall not execute the value transfer."
+- 11A.13  mas_notice_626_11a_value_transfers_11a_13: missed verify_customer
+    "For value transfers where the beneficiary institution pays out the transferred digital token(s) in cash or cash equivalent to the value transfer beneficiary in Singapore, a beneficiary institution shall identify and veri"
+- 13.3    mas_notice_626_13_personal_data_13_3_a_ii: spurious identify_ubo
+    "(ii) the individual’s unique identification number (such as an identity card number, birth certificate number or passport number);"

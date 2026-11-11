@@ -12,7 +12,7 @@ from src.contracts.models import (
     Clause
 )
 from src.decision.engine import CDDChecklistEngine
-from src.evaluation.baseline import VectorRAGBaseline
+from src.evaluation.baseline import ScriptedRAGBaseline
 from src.evaluation.harness import EvaluationHarness
 
 GOLD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/gold"))
@@ -305,8 +305,8 @@ def test_decoupled_diagnostic_tree():
 
 def test_comparison_report_generation():
     """
-    驗證一鍵生成系統與對照組的 Comparison Report。
-    並且斷言 CDD-GraphWiki 在決策準確度與引用忠實性上都完勝 VectorRAGBaseline。
+    驗證一鍵生成系統與對照組的 Comparison Report，並確認評估工具抓得出
+    ScriptedRAGBaseline 裡刻意寫入的錯判與幻覺引用（這個對照組是測試 fixture，不是真實系統）。
     """
     raw_customers = load_yaml("customer_contexts.yaml")
     raw_obligations = load_yaml("obligations.yaml")
@@ -326,8 +326,8 @@ def test_comparison_report_generation():
     engine = CDDChecklistEngine()
     cdd_checklists = [engine.generate_checklist(c, obligations, conflicts) for c in customers]
 
-    # 2. 運行對照組 (VectorRAGBaseline)
-    baseline = VectorRAGBaseline()
+    # 2. 運行手寫的對照組 fixture
+    baseline = ScriptedRAGBaseline()
     base_checklists = [baseline.generate_checklist(c) for c in customers]
 
     # 3. 實例化 Harness 並產出 Comparison Report
@@ -343,7 +343,7 @@ def test_comparison_report_generation():
 
     assert isinstance(report, ComparisonReport)
 
-    # 4. 斷言 CDD-GraphWiki 指標完勝 Baseline
+    # 4. 評估工具必須抓出 fixture 裡刻意寫入的錯誤
     cdd_wiki_check_metrics = report.cdd_wiki_metrics["checklist"]
     base_check_metrics = report.baseline_metrics["checklist"]
 
@@ -361,7 +361,7 @@ def test_comparison_report_generation():
     # 5. 輸出報告結果以進行 manual verification
     print("\n================ EVALUATION COMPARISON REPORT ================")
     print(f"CDD-GraphWiki Checklist Accuracy: {cdd_wiki_check_metrics.accuracy * 100:.2f}%")
-    print(f"Vector-RAG Baseline Checklist Accuracy: {base_check_metrics.accuracy * 100:.2f}%")
+    print(f"Scripted baseline fixture Checklist Accuracy: {base_check_metrics.accuracy * 100:.2f}%")
     print(f"CDD-GraphWiki Citation Faithfulness (Anti-hallucination): {cdd_wiki_faith * 100:.2f}%")
-    print(f"Vector-RAG Baseline Citation Faithfulness (Anti-hallucination): {base_faith * 100:.2f}%")
+    print(f"Scripted baseline fixture Citation Faithfulness (Anti-hallucination): {base_faith * 100:.2f}%")
     print("==============================================================")

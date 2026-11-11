@@ -75,6 +75,40 @@ class TestComplianceDataContracts:
         schema = load_json_schema("Obligation.schema.json")
         validate(instance=data, schema=schema)
 
+    def test_obligation_schema_matches_model_and_takes_explanations(self):
+        # Schema 由模型生成：confidence 選填且可為空，另有 confidence_basis 與 explanations（RuleReason / EvidenceSpan）
+        schema = load_json_schema("Obligation.schema.json")
+        assert schema == Obligation.model_json_schema()
+        assert "confidence" not in schema["required"]
+        assert {"RuleReason", "EvidenceSpan"} <= set(schema["$defs"])
+
+        data = load_yaml("Obligation_valid.yaml")
+        # 範例是規則義務：信心值是實測精確率，附出處說明與種類
+        assert data["confidence_kind"] == "measured_on_heldout" and data["confidence_basis"]
+        for field in ("confidence", "confidence_basis", "confidence_kind"):
+            data.pop(field)
+        validate(instance=data, schema=schema)
+        assert Obligation(**data).confidence is None
+        assert Obligation(**data).confidence_kind is None
+
+        bad_kind = dict(data, confidence=0.9, confidence_kind="hand_set")
+        with pytest.raises(JsonSchemaValidationError):
+            validate(instance=bad_kind, schema=schema)
+
+        rule_ob = Obligation(**data, confidence=None,
+                             confidence_basis="Not measured: no reliability data was given to the extractor.",
+                             explanations={"mas626_cdd_001": [{
+                                 "rule": "identify.subject", "obligation_type": "identify_ubo",
+                                 "message": "\"shall\" governs \"identify\", whose object is the beneficial owner.",
+                                 "spans": [{"clause_id": "mas626_cdd_001", "start": 0, "end": 5, "text": "shall"}],
+                                 "depends_on": []}]})
+        validate(instance=rule_ob.model_dump(), schema=schema)
+
+        bad = rule_ob.model_dump()
+        bad["explanations"]["mas626_cdd_001"][0]["spans"][0].pop("text")
+        with pytest.raises(JsonSchemaValidationError):
+            validate(instance=bad, schema=schema)
+
     def test_customer_context_valid(self):
         data = load_yaml("CustomerContext_valid.yaml")
         model = CustomerContext(**data)

@@ -1,0 +1,58 @@
+Rule explanations on the development corpus: deletion tests
+===========================================================
+
+Each label is one (clause, type) pair given by rules v2; its rationale is the text its reasons cite.
+
+Labels (clause, type) checked: 46
+Comprehensiveness (deleting the rationale removes the type): 42/46
+Sufficiency (the rationale alone keeps the type): 46/46
+Both: 42/46
+Labels whose rationale cites text in their own clause: 21/46
+Rationale coverage of the touched clauses' text (the clauses it cites plus the label's own clause): mean 0.31, median 0.22
+
+By evidence (list-structure labels take their type from another label, so their tests largely repeat that label's):
+  own evidence                                   labels  21  comprehensive  18  sufficient  21  both  18  own clause cited  21  coverage mean 0.34
+  list structure (list.inherit, list.propagate)  labels  25  comprehensive  24  sufficient  25  both  24  own clause cited   0  coverage mean 0.28
+
+By first rule:
+  anonymous.prohibition              labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.42
+  identify.cross_reference           labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.22
+  identify.information_for_purposes  labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.83
+  identify.passive_customer          labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.64
+  identify.subject                   labels   9  comprehensive   7  sufficient   9  both   7  own clause cited   9  coverage mean 0.27
+  incomplete.unable_and_stop         labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.12
+  list.inherit                       labels  25  comprehensive  24  sufficient  25  both  24  own clause cited   0  coverage mean 0.28
+  pep.approval                       labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.15
+  pep.enhanced                       labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.16
+  pep.prohibition                    labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.41
+  trigger.cdd_on_condition           labels   2  comprehensive   2  sufficient   2  both   2  own clause cited   2  coverage mean 0.66
+  ubo.ownership_threshold            labels   2  comprehensive   1  sufficient   2  both   1  own clause cited   2  coverage mean 0.19
+
+By type:
+  prohibit_anonymous  labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.42
+  cdd_triggers        labels  10  comprehensive  10  sufficient  10  both  10  own clause cited   2  coverage mean 0.39
+  verify_customer     labels  13  comprehensive  13  sufficient  13  both  13  own clause cited   5  coverage mean 0.47
+  identify_ubo        labels  15  comprehensive  11  sufficient  15  both  11  own clause cited   9  coverage mean 0.17
+  pep_edd             labels   4  comprehensive   4  sufficient   4  both   4  own clause cited   1  coverage mean 0.15
+  pep_prohibition     labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.41
+  pep_approval        labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.15
+  cdd_incomplete      labels   1  comprehensive   1  sufficient   1  both   1  own clause cited   1  coverage mean 0.12
+
+Failed tests (4):
+- mas_notice_626_6_cdd_6_14 identify_ubo: comprehensiveness failed (rules: identify.subject); types before ['identify_ubo'], after ['identify_ubo']
+    rationale  mas_notice_626_6_cdd_6_14: shall
+    rationale  mas_notice_626_6_cdd_6_14: identify
+    rationale  mas_notice_626_6_cdd_6_14: beneficial owner
+- mas_notice_626_6_cdd_6_14_a identify_ubo: comprehensiveness failed (rules: list.inherit); types before ['identify_ubo'], after ['identify_ubo']
+    rationale  mas_notice_626_6_cdd_6_14: shall
+    rationale  mas_notice_626_6_cdd_6_14: identify
+    rationale  mas_notice_626_6_cdd_6_14: beneficial owner
+    rationale  mas_notice_626_6_cdd_6_14: –
+- mas_notice_626_6_cdd_6_14_a_i identify_ubo: comprehensiveness failed (rules: identify.subject); types before ['identify_ubo'], after ['identify_ubo']
+    rationale  mas_notice_626_6_cdd_6_14_a_i: identify
+    rationale  mas_notice_626_6_cdd_6_14_a_i: ultimately own
+- mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a identify_ubo: comprehensiveness failed (rules: ubo.ownership_threshold); types before ['identify_ubo'], after ['identify_ubo']
+    rationale  mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a: ownership threshold
+    rationale  mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a: 10%
+    rationale  mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a: 25%
+    rationale  mock_internal_policy_s_1_customer_onboarding_standards_1_2_beneficial_ownership_verification_a: UBOs

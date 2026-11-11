@@ -277,6 +277,7 @@ class LLMClient:
                 
         # 2. 處理合規義務 (Obligation 提取結果)
         elif "obligation" in schema_name.lower():
+            # 這些 confidence 只是 mock 回應的示範數字；用到 mock 的匯入會在寫入知識庫前被拒絕
             if "mas" in prompt_lower or "626" in prompt_lower:
                 mock_obs = [
                     {

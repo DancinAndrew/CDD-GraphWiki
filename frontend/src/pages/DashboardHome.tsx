@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Users, Shield, CheckSquare, ShieldCheck, ArrowRight, Activity, ChevronRight } from 'lucide-react';
+import { ChecklistExplanation, buildSummary, decisionLabel } from '../components/explanationTypes';
+import { ExplanationPanel } from '../components/ExplanationPanel';
+import { ChecklistItemList } from '../components/ChecklistItemList';
 
+// 對應 API 的 CustomerContext（只列出畫面用到的欄位）
 interface Customer {
   customer_id: string;
   customer_type: 'individual' | 'corporate';
+  registration_jurisdiction: string;
   pep_exposure: boolean;
   ownership_layers: number;
-  ubo_status: 'clear' | 'unclear';
-  associated_pep_id: string | null;
-  risk_score: number;
+  ubo_status: 'identified' | 'unclear';
 }
 
 interface CitationDetail {
@@ -83,6 +86,9 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({
   const [selectedCust, setSelectedCust] = useState<Customer | null>(null);
   const [checklist, setChecklist] = useState<CDDChecklist | null>(null);
   const [checklistLoading, setChecklistLoading] = useState(false);
+  // 解釋請求的狀態：載入中顯示載入提示，只有請求失敗才退回舊的通用說明
+  const [explanation, setExplanation] = useState<ChecklistExplanation | null>(null);
+  const [explanationStatus, setExplanationStatus] = useState<'loading' | 'ready' | 'failed'>('loading');
 
   useEffect(() => {
     fetch('http://localhost:8000/api/v1/customers')
@@ -102,18 +108,63 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({
 
   useEffect(() => {
     if (!selectedCust) return;
+    // 切換客戶後，舊客戶較晚回來的回應不得覆蓋目前的清單
+    let cancelled = false;
     setChecklistLoading(true);
     fetch(`http://localhost:8000/api/v1/customers/${selectedCust.customer_id}/checklist`)
       .then(res => res.json())
       .then(data => {
+        if (cancelled) return;
         setChecklist(data);
         setChecklistLoading(false);
       })
       .catch(err => {
         console.error('Error fetching checklist:', err);
-        setChecklistLoading(false);
+        if (!cancelled) setChecklistLoading(false);
       });
+    return () => {
+      cancelled = true;
+    };
   }, [selectedCust]);
+
+  useEffect(() => {
+    if (!selectedCust) return;
+    let cancelled = false;
+    setExplanation(null);
+    setExplanationStatus('loading');
+    fetch(`http://localhost:8000/api/v1/customers/${selectedCust.customer_id}/explanation`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((data: ChecklistExplanation) => {
+        if (cancelled) return;
+        setExplanation(data);
+        setExplanationStatus('ready');
+      })
+      .catch(err => {
+        console.error('Error fetching explanation:', err);
+        if (!cancelled) setExplanationStatus('failed');
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedCust]);
+
+  // 清單與解釋都必須屬於目前選取的客戶，才會顯示或互相比對
+  const currentChecklist =
+    checklist && selectedCust && checklist.customer_id === selectedCust.customer_id ? checklist : null;
+  const currentExplanation =
+    explanation && selectedCust && explanation.customer_id === selectedCust.customer_id ? explanation : null;
+  const summary = currentExplanation ? buildSummary(currentExplanation) : null;
+  const explanationLoading = !currentExplanation && explanationStatus === 'loading';
+  // 解釋是引擎重新推理的初審結果；人工審查後清單的決策或審查狀態可能已經更新
+  const reviewedSinceEngine = Boolean(
+    currentExplanation && currentChecklist && (
+      currentExplanation.decision !== currentChecklist.decision ||
+      currentExplanation.human_review_required !== currentChecklist.human_review_required
+    )
+  );
 
   const getDecisionBadge = (decision: string) => {
     switch (decision) {
@@ -252,7 +303,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({
                       </span>
                     </div>
                     <div style={styles.custDetails}>
-                      <span>風險分數: {cust.risk_score}</span>
+                      <span>註冊地: {cust.registration_jurisdiction}</span>
                       <span>股權層級: {cust.ownership_layers} 層</span>
                     </div>
                     <ChevronRight size={16} color="var(--text-muted)" style={styles.arrow} />
@@ -275,36 +326,59 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({
                   <p style={styles.sectionDesc}>由法規推理引擎實時演算生成的合規審核清單</p>
                 </div>
                 <div>
-                  {checklist && getDecisionBadge(checklist.decision)}
+                  {currentChecklist && getDecisionBadge(currentChecklist.decision)}
                 </div>
               </div>
 
               {checklistLoading ? (
                 <div style={styles.loadingWrapper}>實時合規推理中...</div>
-              ) : checklist ? (
+              ) : currentChecklist ? (
                 <div style={styles.checklistContent}>
                   {/* 推理依據與說明 */}
                   <div style={styles.infoBox}>
                     <h4 style={styles.infoBoxTitle}>🤖 引擎推理合規結論</h4>
-                    <p style={styles.infoBoxText}>{getExplanationText(checklist)}</p>
+                    {summary ? (
+                      <>
+                        <p style={styles.infoBoxText}>{summary.headline}</p>
+                        <p style={styles.summaryChain}>{summary.chain}</p>
+                        {currentExplanation && reviewedSinceEngine && (
+                          <p style={styles.summaryWarning}>
+                            注意：目前檢核表與引擎初審不同（
+                            {currentExplanation.decision !== currentChecklist.decision
+                              ? `決策已改為${decisionLabel(currentChecklist.decision)}`
+                              : '決策相同'}
+                            {currentExplanation.human_review_required !== currentChecklist.human_review_required
+                              ? currentChecklist.human_review_required
+                                ? '，且目前需要人工審查'
+                                : '，人工審查已完成'
+                              : ''}
+                            ），檢核表可能已經人工審查或覆寫；以下解釋描述的是引擎初審的推理。
+                          </p>
+                        )}
+                      </>
+                    ) : explanationLoading ? (
+                      <p style={styles.sectionHint}>正在載入推理解釋…</p>
+                    ) : (
+                      <p style={styles.infoBoxText}>{getExplanationText(currentChecklist)}</p>
+                    )}
                   </div>
 
                   {/* 人工覆寫狀態 */}
                   <div style={{
                     ...styles.statusBox,
-                    border: checklist.human_review_required 
+                    border: currentChecklist.human_review_required 
                       ? '1px dashed rgba(255, 179, 0, 0.4)' 
                       : '1px solid rgba(0, 230, 118, 0.3)',
-                    background: checklist.human_review_required
+                    background: currentChecklist.human_review_required
                       ? 'rgba(255, 179, 0, 0.05)'
                       : 'rgba(0, 230, 118, 0.03)'
                   }}>
                     <span style={{
                       ...styles.statusBoxDot,
-                      backgroundColor: checklist.human_review_required ? 'var(--warning)' : 'var(--success)'
+                      backgroundColor: currentChecklist.human_review_required ? 'var(--warning)' : 'var(--success)'
                     }} />
                     <span>
-                      {checklist.human_review_required 
+                      {currentChecklist.human_review_required 
                         ? '需人工合規官覆寫：系統檢測到高風險特徵，已自動路由至審批隊列。' 
                         : '合規狀態：目前沒有待處理的人工審查。'}
                     </span>
@@ -313,28 +387,31 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({
                   {/* 應收集證據 Checklist */}
                   <div style={styles.subSection}>
                     <h4 style={styles.subTitle}>🛡️ 應收集之合規證據清單 (Checklist)</h4>
-                    <div style={styles.checklistGrid}>
-                      {(checklist.required_documents || checklist.required_evidence || []).map((evidence, idx) => (
-                        <div key={idx} style={styles.checkItem}>
-                          <input type="checkbox" readOnly checked={!checklist.human_review_required} style={styles.checkbox} />
-                          <span style={styles.evidenceText}>{evidence}</span>
-                        </div>
-                      ))}
-                    </div>
+                    {currentExplanation && <p style={styles.sectionHint}>點選文件可展開它依據的義務、條文原文與判斷理由。</p>}
+                    <ChecklistItemList
+                      key={selectedCust.customer_id}
+                      documents={currentChecklist.required_documents || currentChecklist.required_evidence || []}
+                      items={currentExplanation ? currentExplanation.items : null}
+                      obligationsWithoutDocuments={currentExplanation ? currentExplanation.obligations_without_documents : []}
+                      obligationConflicts={currentExplanation ? currentExplanation.obligation_conflicts : {}}
+                      checked={!currentChecklist.human_review_required}
+                    />
                   </div>
+
+                  {currentExplanation && <ExplanationPanel explanation={currentExplanation} />}
 
                   {/* 條款級法規溯源 Provenance */}
                   <div style={styles.subSection}>
                     <h4 style={styles.subTitle}>📜 條款級法規依據溯源 (Provenance)</h4>
                     <div style={styles.provenanceList}>
-                      {checklist.citation_details && checklist.citation_details.length > 0
-                        ? checklist.citation_details.map((detail) => (
+                      {currentChecklist.citation_details && currentChecklist.citation_details.length > 0
+                        ? currentChecklist.citation_details.map((detail) => (
                             <div key={detail.clause_id} style={styles.provenanceItem} title={detail.raw_text}>
                               <span style={styles.clauseCode}>{shortSectionRef(detail.section_ref)}</span>
                               <span style={styles.clauseSource}>{shortDocTitle(detail.document_title)}</span>
                             </div>
                           ))
-                        : (checklist.citations || checklist.applied_clauses || []).map((clause, idx) => (
+                        : (currentChecklist.citations || currentChecklist.applied_clauses || []).map((clause, idx) => (
                             <div key={idx} style={styles.provenanceItem}>
                               <span style={styles.clauseCode}>{clause}</span>
                               <span style={styles.clauseSource}>{sourceFromClauseId(clause)}</span>
@@ -567,6 +644,21 @@ const styles = {
     lineHeight: '1.5',
     color: '#e2e8f0',
   },
+  summaryChain: {
+    fontSize: '0.8rem',
+    lineHeight: '1.6',
+    color: 'var(--text-muted)',
+    marginTop: '8px',
+  },
+  summaryWarning: {
+    fontSize: '0.8rem',
+    color: 'var(--warning)',
+    marginTop: '8px',
+  },
+  sectionHint: {
+    fontSize: '0.78rem',
+    color: 'var(--text-muted)',
+  },
   statusBox: {
     display: 'flex',
     alignItems: 'center',
@@ -591,30 +683,6 @@ const styles = {
     fontSize: '0.95rem',
     fontWeight: 600,
     color: '#f8fafc',
-  },
-  checklistGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '12px',
-  },
-  checkItem: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '10px',
-    background: 'rgba(255, 255, 255, 0.02)',
-    border: '1px solid rgba(255, 255, 255, 0.04)',
-    padding: '12px',
-    borderRadius: '8px',
-  },
-  checkbox: {
-    marginTop: '3px',
-    accentColor: 'var(--primary)',
-    cursor: 'default',
-  },
-  evidenceText: {
-    fontSize: '0.85rem',
-    lineHeight: '1.4',
-    color: '#e2e8f0',
   },
   provenanceList: {
     display: 'flex',

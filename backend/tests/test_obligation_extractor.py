@@ -24,7 +24,7 @@ class TestObligationExtractor:
     
     @pytest.fixture
     def extractor(self):
-        return RuleBasedObligationExtractor(confidence_threshold=0.75)
+        return RuleBasedObligationExtractor()
 
     def test_extractor_success_and_json_schema(self, extractor):
         # MAS Notice 626 第 6.3(a) 段（逐字原文），上層段落是 CDD 觸發句
@@ -88,10 +88,8 @@ class TestObligationExtractor:
         assert ob is None
         assert reason == "MISSING_CORE_ELEMENTS"
 
-    def test_extractor_failure_low_confidence(self):
-        # 使用極高的 confidence_threshold 來迫使低置信度分類生效
-        strict_extractor = RuleBasedObligationExtractor(confidence_threshold=0.99)
-        
+    def test_extractor_without_reliability_leaves_confidence_empty(self, extractor):
+        # 沒有給量測資料時不填信心值，出處說明寫明沒有量測；不再有 LOW_CONFIDENCE 這種未命中原因
         clause = Clause(
             clause_id="mas_notice_626_6_cdd_6_3_a",
             source_document_id="mas_notice_626",
@@ -102,10 +100,30 @@ class TestObligationExtractor:
         )
         context = "### 6.3 a bank shall perform the measures as required by paragraphs 6, 7 and 8 when -"
 
-        ob, reason = strict_extractor.extract_obligation(clause, context)
-        # MAS CDD 觸發規則的信心值是 0.96，低於 0.99 應被拒絕
-        assert ob is None
-        assert reason == "LOW_CONFIDENCE"
+        ob, reason = extractor.extract_obligation(clause, context)
+        assert reason is None
+        assert ob.confidence is None
+        assert ob.confidence_basis == "Not measured: no reliability data was given to the extractor."
+        assert ob.confidence_kind is None
+        assert not hasattr(extractor, "confidence_threshold")
+
+    def test_extractor_uses_given_reliability(self):
+        # 信心值 = 給定的量測精確率四捨五入到小數兩位，出處說明照抄
+        reliability = {"cdd_triggers": {"correct": 8, "flagged": 9, "precision": 0.8889, "basis": "measured on X"}}
+        extractor = RuleBasedObligationExtractor(reliability=reliability)
+        clause = Clause(
+            clause_id="mas_notice_626_6_cdd_6_3_a",
+            source_document_id="mas_notice_626",
+            section_ref="6 Customer Due Diligence > 6.3 > (a)",
+            raw_text="(a) the bank establishes business relations with any customer;",
+            normalized_text="(a) the bank establishes business relations with any customer;",
+            citations=["mas_notice_626_6_cdd_6_3_a"]
+        )
+        ob, _ = extractor.extract_obligation(
+            clause, "### 6.3 a bank shall perform the measures as required by paragraphs 6, 7 and 8 when -")
+        assert ob.confidence == 0.89
+        assert ob.confidence_basis == "measured on X"
+        assert ob.confidence_kind == "measured_on_heldout"
 
     def test_evaluation_metrics_calculation(self, tmp_path):
         # 手動測試 evaluate_against_gold 計算精度、召回率與 F1-score 的正確性
@@ -235,7 +253,7 @@ def test_rules_do_not_depend_on_clause_ids():
 
 
 def test_extraction_on_parsed_sources_matches_gold_with_provenance(tmp_path):
-    """在解析出的條文上跑抽取：12 條金標義務全部命中，且錨點條文、管轄區、出處集合都對。"""
+    """在解析出的條文上跑抽取：13 條金標義務全部命中，且錨點條文、管轄區、出處集合都對。"""
     from src.extraction.extractor import extract_obligations, load_jurisdictions
     clauses = [Clause(**c) for c in _load("data/gold/clauses.yaml")]
     extractor = RuleBasedObligationExtractor(jurisdictions=load_jurisdictions(os.path.join(REPO_ROOT, "data/gold/source_documents.yaml")))
@@ -243,9 +261,9 @@ def test_extraction_on_parsed_sources_matches_gold_with_provenance(tmp_path):
 
     metrics = ObligationExtractionPipeline().evaluate_against_gold(
         obligations, os.path.join(REPO_ROOT, "data/gold/obligations.yaml"), tmp_path / "report.txt")
-    assert metrics["matched"] == metrics["gold"] == metrics["extracted"] == 12
-    assert metrics["provenance_matches"] == 12
-    assert metrics["exact_source_matches"] == 12
+    assert metrics["matched"] == metrics["gold"] == metrics["extracted"] == 13
+    assert metrics["provenance_matches"] == 13
+    assert metrics["exact_source_matches"] == 13
 
     by_id = {o.obligation_id: o for o in obligations}
     # MAS Notice 626 沒有數字門檻：實質受益人義務不應帶 25% 條件
@@ -258,6 +276,8 @@ def test_extraction_on_parsed_sources_matches_gold_with_provenance(tmp_path):
     assert by_id["ob_pep_prohibitions_gb"].source_clause_ids == ["mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons"]
     assert by_id["ob_pep_approval_gb"].source_clause_ids == ["mock_internal_policy_s_1_customer_onboarding_standards_1_4_politically_exposed_persons_a"]
     assert by_id["ob_cdd_incomplete_mas"].source_clause_ids == ["mas_notice_626_6_cdd_6_35"]
+    # 銀行政策 1.1「Every customer must be identified and verified」是第 2 版規則找到、原本漏標的義務
+    assert by_id["ob_verify_customer_gb"].source_clause_ids[0] == "mock_internal_policy_s_1_customer_onboarding_standards_1_1_customer_identification"
 
 
 def test_provenance_mismatch_is_reported(tmp_path):

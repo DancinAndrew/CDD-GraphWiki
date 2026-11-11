@@ -1,16 +1,62 @@
 import logging
+import math
 from typing import List, Dict, Any, Tuple, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from src.contracts.models import SourceDocument, Clause, Obligation
 from src.extraction.llm_client import LLMClient
 
 logger = logging.getLogger(__name__)
 
+# 大模型匯入的義務：confidence 是模型自評的數字，沒有在任何標註資料上校準過
+LLM_CONFIDENCE_BASIS = "Self-reported by the LLM during PDF import; not calibrated."
+
 class ClausesExtractionResult(BaseModel):
     clauses: List[Clause] = Field(..., description="從文本中智能提取的所有樹狀層級 Clause 條款列表")
 
+# 模型回應裡的一筆義務：只有模型該填的欄位。Obligation 的 explanations（規則理由）、confidence_basis、
+# confidence_kind 與 review_status 由程式決定，不放進回應 schema（這份 schema 會貼進 NIM 的 prompt）；模型若還是
+# 寫了，pydantic 當成多餘欄位忽略，不會因為格式不合讓整個 Section 驗證失敗。後處理完再轉成 Obligation。
+# docstring 會成為 schema 的說明文字，所以只寫給模型看的一句。
+class LLMObligation(BaseModel):
+    """One compliance obligation extracted from the clauses."""
+    obligation_id: str = Field(..., description="e.g., identify_beneficial_owner")
+    source_clause_ids: List[str] = Field(..., min_length=1, description="List of clause IDs, ensuring clause-level provenance")
+    jurisdiction: str = Field(..., description="Jurisdiction of the obligation")
+    actor: str = Field(..., description="e.g., financial_institution")
+    action: str = Field(..., description="e.g., identify_and_verify")
+    object: str = Field(..., description="e.g., beneficial_owner")
+    applies_to: Dict[str, Any] = Field(default_factory=dict, description="Entity constraints")
+    conditions: List[str] = Field(default_factory=list, description="Factual triggers")
+    exceptions: List[str] = Field(default_factory=list, description="Exemptions")
+    required_evidence: List[str] = Field(default_factory=list, description="Required evidence")
+    review_flags: List[str] = Field(default_factory=list, description="Triggers for human review")
+    confidence: Optional[float] = Field(None, ge=0, le=1, description="Your own score for this extraction, from 0 to 1")
+
+    @field_validator("confidence", mode="before")
+    @classmethod
+    def _ignore_out_of_range(cls, value: Any) -> Optional[float]:
+        """不在 0 到 1 之間（例如 95）或不是數字的自評分數不採用，當成沒給。"""
+        if value is None or isinstance(value, bool):
+            return None
+        try:
+            number = float(value)
+        except (TypeError, ValueError):
+            return None
+        return number if math.isfinite(number) and 0 <= number <= 1 else None
+
+    def to_obligation(self) -> Obligation:
+        """大模型匯入的義務一律待人工審查、沒有規則理由；有自評分數才標成 self_reported，並註明未經校準。"""
+        self_reported = self.confidence is not None
+        return Obligation(
+            **self.model_dump(),
+            review_status="pending_human_review",
+            explanations={},
+            confidence_basis=LLM_CONFIDENCE_BASIS if self_reported else None,
+            confidence_kind="self_reported" if self_reported else None,
+        )
+
 class ObligationsExtractionResult(BaseModel):
-    obligations: List[Obligation] = Field(..., description="從 Clause 條文中精準提取的強型別合規義務規則列表")
+    obligations: List[LLMObligation] = Field(..., description="從 Clause 條文中精準提取的強型別合規義務規則列表")
 
 class LLMHierarchicalChunker:
     """
@@ -97,7 +143,8 @@ class LLMStructuredExtractor:
                 "7. conditions 包含觸發此義務的事實條件列表。\n"
                 "8. exceptions 包含例外免除條件列表。\n"
                 "9. required_evidence 包含執行此義務所需的合規憑證（如 'ubo_declaration'）。\n"
-                "10. review_flags 包含觸發人工合規審查的特徵信號。"
+                "10. review_flags 包含觸發人工合規審查的特徵信號。\n"
+                "11. confidence 是你對這筆抽取的自評分數（0 到 1）。"
             )
             
             # 打包 clauses Context
@@ -133,9 +180,7 @@ class LLMStructuredExtractor:
                         ob.jurisdiction = "Singapore" if "mas" in ref_id else ("Global" if "fatf" in ref_id else "Internal")
                     else:
                         ob.jurisdiction = "Singapore"
-                    
-                    ob.review_status = "pending_human_review"
-                    all_obligations.append(ob)
+                    all_obligations.append(ob.to_obligation())
             except Exception as e:
                 logger.error(f"Section {sec_name} 義務抽取失敗，Error: {e}")
                 

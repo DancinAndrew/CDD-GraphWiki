@@ -11,7 +11,7 @@ The MVP SHALL include at least 10 manually segmented clause examples before auto
 - **THEN** its output can be compared against the 10 manually segmented clause examples
 
 ### Requirement: Create Manual Gold Obligations
-The MVP SHALL include at least 10 manually extracted obligation examples with actor, action, object, conditions, exceptions, required evidence, source clauses, confidence, and review status.
+The MVP SHALL include at least 10 manually extracted obligation examples with actor, action, object, conditions, exceptions, required evidence, source clauses, and review status. Gold examples SHALL NOT carry a `confidence`: confidence is measured on unseen held-out text for rule-extracted obligations (see compliance-data-contracts), not written by hand.
 
 #### Scenario: Obligation extraction is evaluated
 - **WHEN** an extraction prompt or rule pipeline produces obligations

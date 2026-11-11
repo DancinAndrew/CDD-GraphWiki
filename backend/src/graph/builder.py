@@ -125,7 +125,8 @@ class GraphBuilder:
                 label=ob.obligation_id,
                 properties=ob.model_dump()
             )
-            # 建立與來源 Clauses 的關係邊
+            # 建立與來源 Clauses 的關係邊；規則式抽取的義務在邊上附上這條條文的判斷理由
+            explanations = getattr(ob, "explanations", {}) or {}
             for cl_id in ob.source_clause_ids:
                 if cl_id in nodes:
                     edge_id = f"{ob.obligation_id}_references_clause_{cl_id}"
@@ -134,7 +135,8 @@ class GraphBuilder:
                         source_id=ob.obligation_id,
                         target_id=cl_id,
                         edge_type="references_clause",
-                        label="引用條文"
+                        label="引用條文",
+                        properties={"reasons": [r.message for r in explanations.get(cl_id, [])]}
                     ))
 
             # 建立 Obligation ➔ EvidenceRequirement 節點與邊

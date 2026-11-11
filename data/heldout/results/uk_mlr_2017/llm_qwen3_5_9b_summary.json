@@ -1,0 +1,209 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt_version": "heldout-v1",
+  "requests": {
+    "paragraphs_sent": 137,
+    "failed_requests": 0,
+    "unparseable_answers": 0,
+    "cited_clause_ids": 173,
+    "invalid_clause_ids": [
+      "27(8): uk_mlr_2017_27_cdd_27_8_zb"
+    ],
+    "invalid_type_names": [],
+    "paragraphs_missing_from_run": []
+  },
+  "generation": {
+    "records": 137,
+    "answers": 137,
+    "with_num_predict": 0,
+    "without_num_predict": 137,
+    "num_predict_values": [],
+    "invalid_json": 0,
+    "with_done_reason": 0,
+    "hit_cap": 0
+  },
+  "scores": {
+    "clause": {
+      "overall": {
+        "tp": 54,
+        "fp": 97,
+        "fn": 23,
+        "precision": 0.3576,
+        "recall": 0.7013,
+        "f1": 0.4737
+      },
+      "by_type": {
+        "prohibit_anonymous": {
+          "tp": 1,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.3333,
+          "recall": 1.0,
+          "f1": 0.5
+        },
+        "cdd_triggers": {
+          "tp": 20,
+          "fp": 7,
+          "fn": 5,
+          "precision": 0.7407,
+          "recall": 0.8,
+          "f1": 0.7692
+        },
+        "verify_customer": {
+          "tp": 11,
+          "fp": 16,
+          "fn": 3,
+          "precision": 0.4074,
+          "recall": 0.7857,
+          "f1": 0.5366
+        },
+        "identify_ubo": {
+          "tp": 6,
+          "fp": 12,
+          "fn": 14,
+          "precision": 0.3333,
+          "recall": 0.3,
+          "f1": 0.3158
+        },
+        "pep_edd": {
+          "tp": 10,
+          "fp": 52,
+          "fn": 1,
+          "precision": 0.1613,
+          "recall": 0.9091,
+          "f1": 0.274
+        },
+        "pep_prohibition": {
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "pep_approval": {
+          "tp": 0,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "cdd_incomplete": {
+          "tp": 6,
+          "fp": 5,
+          "fn": 0,
+          "precision": 0.5455,
+          "recall": 1.0,
+          "f1": 0.7059
+        }
+      }
+    },
+    "paragraph": {
+      "overall": {
+        "tp": 26,
+        "fp": 34,
+        "fn": 6,
+        "precision": 0.4333,
+        "recall": 0.8125,
+        "f1": 0.5652
+      },
+      "by_type": {
+        "prohibit_anonymous": {
+          "tp": 1,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.3333,
+          "recall": 1.0,
+          "f1": 0.5
+        },
+        "cdd_triggers": {
+          "tp": 12,
+          "fp": 2,
+          "fn": 1,
+          "precision": 0.8571,
+          "recall": 0.9231,
+          "f1": 0.8889
+        },
+        "verify_customer": {
+          "tp": 4,
+          "fp": 10,
+          "fn": 0,
+          "precision": 0.2857,
+          "recall": 1.0,
+          "f1": 0.4444
+        },
+        "identify_ubo": {
+          "tp": 3,
+          "fp": 5,
+          "fn": 5,
+          "precision": 0.375,
+          "recall": 0.375,
+          "f1": 0.375
+        },
+        "pep_edd": {
+          "tp": 4,
+          "fp": 11,
+          "fn": 0,
+          "precision": 0.2667,
+          "recall": 1.0,
+          "f1": 0.4211
+        },
+        "pep_prohibition": {
+          "tp": 0,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "pep_approval": {
+          "tp": 0,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "cdd_incomplete": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.6667,
+          "recall": 1.0,
+          "f1": 0.8
+        }
+      }
+    }
+  },
+  "agreement_with_rules_v2": {
+    "paragraph": {
+      "both": {
+        "items": 14,
+        "correct": 14
+      },
+      "rules_only": {
+        "items": 3,
+        "correct": 1
+      },
+      "llm_only": {
+        "items": 46,
+        "correct": 12
+      }
+    },
+    "clause": {
+      "both": {
+        "items": 23,
+        "correct": 23
+      },
+      "rules_only": {
+        "items": 7,
+        "correct": 4
+      },
+      "llm_only": {
+        "items": 128,
+        "correct": 31
+      }
+    }
+  }
+}

@@ -48,7 +48,12 @@ def generate_examples():
         "exceptions": [],
         "required_evidence": ["ubo_identity_document"],
         "review_flags": ["complex_structure"],
-        "confidence": 0.95,
+        # 規則式抽取的義務：confidence 是該規則類型（identify_ubo）在保留文本上實測的精確率，basis 寫出樣本與計數
+        "confidence": 0.75,
+        "confidence_basis": ("Rules v2 on unseen text (Part 3 of the UK Money Laundering Regulations 2017, "
+                             "labelled after the rules were frozen): 3 of 4 paragraphs flagged with this type "
+                             "were correct."),
+        "confidence_kind": "measured_on_heldout",
         "review_status": "approved"
     }
 

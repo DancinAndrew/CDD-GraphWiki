@@ -31,11 +31,11 @@ The evaluation harness MUST inspect the citations generated within the checklist
 * **AND** it SHALL trigger a citation hallucination warning in the final comparison report.
 
 ### Requirement: Baseline Comparison Benchmarking
-The system SHALL support benchmarking against a naive `VectorRAGBaseline` chatbot simulator.
+The system SHALL support benchmarking against `ScriptedRAGBaseline`, a hand-written RAG-style fixture whose errors are planted on purpose. It tests that the harness catches wrong decisions and hallucinated citations; it is not a real retrieval system. A comparison with a real LLM on held-out paragraphs lives in `backend/src/heldout/llm_compare.py`.
 
 #### Scenario: Benchmarking Comparison Report Generation
-* **GIVEN** the `EvaluationHarness` runs benchmarking on both CDD-GraphWiki and `VectorRAGBaseline`
+* **GIVEN** the `EvaluationHarness` runs benchmarking on both CDD-GraphWiki and `ScriptedRAGBaseline`
 * **WHEN** the comparison is completed
 * **THEN** it MUST generate a `ComparisonReport` summarizing metrics for both systems
-* **AND** it SHALL demonstrate lower citation hallucination rate and higher checklist accuracy for CDD-GraphWiki.
+* **AND** it SHALL flag every planted wrong decision and hallucinated citation in the fixture.
 

@@ -1,4 +1,82 @@
 {
+  "$defs": {
+    "EvidenceSpan": {
+      "description": "規則判斷所依據的一段條文原文：位置是該條文 raw_text 的字元索引，text 恰為 raw_text[start:end]。",
+      "properties": {
+        "clause_id": {
+          "description": "Clause whose raw_text holds the span",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "start": {
+          "description": "Character offset into that clause's raw_text",
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "description": "End offset (exclusive)",
+          "title": "End",
+          "type": "integer"
+        },
+        "text": {
+          "description": "Exactly raw_text[start:end]",
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "clause_id",
+        "start",
+        "end",
+        "text"
+      ],
+      "title": "EvidenceSpan",
+      "type": "object"
+    },
+    "RuleReason": {
+      "description": "規則式抽取器為某條文標上某義務類型的一個理由：哪條規則、一句說明，以及讓規則成立的所有原文證據。",
+      "properties": {
+        "rule": {
+          "description": "Stable rule id, e.g. 'identify.subject'",
+          "title": "Rule",
+          "type": "string"
+        },
+        "obligation_type": {
+          "description": "One of the rule types in src/extraction/frames.py",
+          "title": "Obligation Type",
+          "type": "string"
+        },
+        "message": {
+          "description": "One plain English sentence saying why",
+          "title": "Message",
+          "type": "string"
+        },
+        "spans": {
+          "description": "All text that made the rule fire",
+          "items": {
+            "$ref": "#/$defs/EvidenceSpan"
+          },
+          "title": "Spans",
+          "type": "array"
+        },
+        "depends_on": {
+          "description": "Other labels this reason relies on, as '<clause_id>#<type>'",
+          "items": {
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        }
+      },
+      "required": [
+        "rule",
+        "obligation_type",
+        "message"
+      ],
+      "title": "RuleReason",
+      "type": "object"
+    }
+  },
   "description": "從條款中抽取的機器可讀合規義務規則。",
   "properties": {
     "obligation_id": {
@@ -74,9 +152,47 @@
       "type": "array"
     },
     "confidence": {
-      "description": "Extraction confidence score",
-      "title": "Confidence",
-      "type": "number"
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Rule-extracted: measured precision of this rule type on unseen held-out text (None when not measured). LLM-imported: the model's self-reported, uncalibrated score.",
+      "title": "Confidence"
+    },
+    "confidence_basis": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "One sentence saying where the confidence comes from, including the sample it was measured on",
+      "title": "Confidence Basis"
+    },
+    "confidence_kind": {
+      "anyOf": [
+        {
+          "enum": [
+            "measured_on_heldout",
+            "self_reported"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "What the confidence is: 'measured_on_heldout' = precision measured on unseen held-out text; 'self_reported' = the LLM's own uncalibrated score; None = no confidence",
+      "title": "Confidence Kind"
     },
     "review_status": {
       "default": "pending_human_review",
@@ -87,6 +203,17 @@
       ],
       "title": "Review Status",
       "type": "string"
+    },
+    "explanations": {
+      "additionalProperties": {
+        "items": {
+          "$ref": "#/$defs/RuleReason"
+        },
+        "type": "array"
+      },
+      "description": "Rule reasons per source clause ID (rule-extracted obligations only)",
+      "title": "Explanations",
+      "type": "object"
     }
   },
   "required": [
@@ -95,8 +222,7 @@
     "jurisdiction",
     "actor",
     "action",
-    "object",
-    "confidence"
+    "object"
   ],
   "title": "Obligation",
   "type": "object"

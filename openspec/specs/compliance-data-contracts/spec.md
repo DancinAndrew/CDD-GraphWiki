@@ -21,9 +21,25 @@ TBD - created by archiving change bootstrap-cdd-graphwiki. Update Purpose after 
 ### Requirement: 在高風險對象上包含審核狀態 (Include Review Status On Risky Objects)
 凡是會影響法律解釋、監管閾值、衝突解決、所需證據或升級路由要求的合規對象，**應 (SHALL)** 包含審核狀態。
 
-#### Scenario: 低置信度義務 (Low-confidence obligation)
-- **當 (WHEN)** 抽取出的義務具有低置信度或模糊條件時
-- **則 (THEN)** 該義務必須被標記為 `pending_human_review` (待人工審核)。
+#### Scenario: 大模型匯入的義務 (LLM-imported obligation)
+- **當 (WHEN)** 義務由大模型從 PDF 匯入時
+- **則 (THEN)** 不論模型自評的 `confidence` 多高，該義務都必須被標記為 `pending_human_review` (待人工審核)。
+
+#### Scenario: 信心值不決定審核狀態 (Confidence does not set review status)
+- **當 (WHEN)** 規則式抽取器產生義務時
+- **則 (THEN)** `review_status` 不由 `confidence` 決定；`confidence` 只說明該規則類型在保留文本上的實測精確率。
+
+### Requirement: 信心值必須有可重算的依據 (Confidence Must Have A Reproducible Basis)
+`Obligation.confidence` 是選填欄位，**不得 (MUST NOT)** 是人工設定的常數。有值時，`confidence_basis` **應 (SHALL)** 用一句話說明數字從哪裡來、在什麼樣本上量到：
+- 規則式抽取的義務：`confidence` 是該規則類型在未見過的保留文本上量到的精確率（目前是規則 v2 在英國 2017 年洗錢防制條例第 3 部分、規則凍結後才標註的段落上的結果，段落層級，由管線執行時以程式重算）；`confidence_basis` 寫出樣本與「k of n 個被標上此類型的段落是對的」；`confidence_kind` 為 `measured_on_heldout`。保留文本上從未被標上的類型，`confidence` 與 `confidence_kind` 為空，`confidence_basis` 說明沒有量測。
+- 大模型匯入（PDF 匯入）的義務：`confidence` 保留模型自評的分數，`confidence_basis` 說明它是自評且未經校準，`confidence_kind` 為 `self_reported`；模型沒給分數時三者皆為空。大模型匯入的義務不帶規則理由（`explanations` 為空）。
+- 人工金標義務不帶 `confidence`。
+
+`confidence_kind` 是區分實測與自評的唯一依據；使用者介面與下游程式**不得 (MUST NOT)** 靠解析 `confidence_basis` 的文字來判斷。
+
+#### Scenario: 規則義務的信心值來自保留文本 (Rule obligation confidence comes from held-out text)
+- **當 (WHEN)** 管線以規則式抽取器產生義務時
+- **則 (THEN)** 每個義務的 `confidence` 等於其類型在保留文本上的段落層級精確率（四捨五入到小數兩位，未量測為空），`confidence_basis` 說明樣本與計數，有量測值時 `confidence_kind` 為 `measured_on_heldout`、否則為空。
 
 ### Requirement: 保持客戶畫像情境結構化 (Keep Customer Context Structured)
 客戶輸入**應 (SHALL)** 表示為結構化的 `CustomerContext` 對象，而非僅僅是自然語言提示詞。
@@ -36,7 +52,7 @@ TBD - created by archiving change bootstrap-cdd-graphwiki. Update Purpose after 
 核心 Schemas **應 (SHALL)** 嚴格強制要求存在關鍵的元數據、來源追溯和結構欄位，以保證可審計性。每個契約在編譯生成的 Schema 中，**必須 (MUST)** 宣告以下欄位為必要 (mandatory)：
 - `SourceDocument` **應 (SHALL)** 要求：`source_document_id`, `title`, `issuer`, `jurisdiction`, `version`, `retrieval_date`, `local_path`。
 - `Clause` **應 (SHALL)** 要求：`clause_id`, `source_document_id`, `section_ref`, `raw_text`, `normalized_text`, `citations`。
-- `Obligation` **應 (SHALL)** 要求：`obligation_id`, `source_clause_ids`, `jurisdiction`, `actor`, `action`, `object`, `confidence`, `review_status`。
+- `Obligation` **應 (SHALL)** 要求：`obligation_id`, `source_clause_ids`, `jurisdiction`, `actor`, `action`, `object`, `review_status`。`confidence`、`confidence_basis` 與 `confidence_kind` 是選填欄位（見「信心值必須有可重算的依據」）。
 - `CustomerContext` **應 (SHALL)** 要求：`customer_id`, `customer_type`, `registration_jurisdiction`, `ownership_layers`, `ubo_status`, `ubo_country_risk`, `pep_exposure`, `source_of_funds_available`, `source_of_wealth_available`。
 - `Conflict` **應 (SHALL)** 要求：`conflict_id`, `conflict_type`, `source_clause_ids`, `verifiability`, `description`, `adjudication_status`。
 - `CDDChecklist` **應 (SHALL)** 要求：`checklist_id`, `customer_id`, `decision`, `required_documents`, `risk_triggers`, `applicable_obligations`, `unresolved_conflicts`, `human_review_required`, `citations`。

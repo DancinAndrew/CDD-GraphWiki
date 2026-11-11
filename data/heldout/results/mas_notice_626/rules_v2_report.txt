@@ -1,0 +1,25 @@
+Rule-based extractor v2 (language frames) on held-out MAS Notice 626 paragraphs
+===============================================================================
+
+Corpus: 167 numbered paragraphs (419 clause records) of MAS Notice 626; 10 development paragraphs excluded.
+Held out: 157 paragraphs, 360 clauses; 42 clauses in 16 paragraphs carry one of the modelled types.
+Held-out clauses containing 'shall' or 'must': 147.
+v2 was designed after studying the v1 errors on these paragraphs, so this is not an unseen-data score.
+
+Paragraph level (unit, type) pairs: precision 0.95, recall 1.00, F1 0.97  (TP 18, FP 1, FN 0)
+  prohibit_anonymous   P 1.00  R 1.00  (TP 1, FP 0, FN 0)
+  cdd_triggers         P 0.80  R 1.00  (TP 4, FP 1, FN 0)
+  verify_customer      P 1.00  R 1.00  (TP 7, FP 0, FN 0)
+  identify_ubo         P 1.00  R 1.00  (TP 4, FP 0, FN 0)
+  cdd_incomplete       P 1.00  R 1.00  (TP 2, FP 0, FN 0)
+
+Clause level (unit, type) pairs: precision 0.98, recall 1.00, F1 0.99  (TP 50, FP 1, FN 0)
+  prohibit_anonymous   P 1.00  R 1.00  (TP 1, FP 0, FN 0)
+  cdd_triggers         P 0.86  R 1.00  (TP 6, FP 1, FN 0)
+  verify_customer      P 1.00  R 1.00  (TP 15, FP 0, FN 0)
+  identify_ubo         P 1.00  R 1.00  (TP 26, FP 0, FN 0)
+  cdd_incomplete       P 1.00  R 1.00  (TP 2, FP 0, FN 0)
+
+Disagreements with the gold labels (1 clauses):
+- 6.29    mas_notice_626_6_cdd_6_29: spurious cdd_triggers
+    "Where there is no face-to-face contact, the bank shall perform CDD measures that are at least as robust as those that would be required to be performed if there was face-to-face contact."

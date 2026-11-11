@@ -1,0 +1,176 @@
+{
+  "model": "qwen3.5:9b",
+  "prompt_version": "heldout-v1",
+  "requests": {
+    "paragraphs_sent": 157,
+    "failed_requests": 0,
+    "unparseable_answers": 0,
+    "cited_clause_ids": 108,
+    "invalid_clause_ids": [],
+    "invalid_type_names": [],
+    "paragraphs_missing_from_run": []
+  },
+  "generation": {
+    "records": 157,
+    "answers": 157,
+    "with_num_predict": 0,
+    "without_num_predict": 157,
+    "num_predict_values": [],
+    "invalid_json": 0,
+    "with_done_reason": 0,
+    "hit_cap": 0
+  },
+  "scores": {
+    "clause": {
+      "overall": {
+        "tp": 28,
+        "fp": 66,
+        "fn": 22,
+        "precision": 0.2979,
+        "recall": 0.56,
+        "f1": 0.3889
+      },
+      "by_type": {
+        "prohibit_anonymous": {
+          "tp": 1,
+          "fp": 3,
+          "fn": 0,
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1": 0.4
+        },
+        "cdd_triggers": {
+          "tp": 6,
+          "fp": 21,
+          "fn": 0,
+          "precision": 0.2222,
+          "recall": 1.0,
+          "f1": 0.3636
+        },
+        "verify_customer": {
+          "tp": 8,
+          "fp": 28,
+          "fn": 7,
+          "precision": 0.2222,
+          "recall": 0.5333,
+          "f1": 0.3137
+        },
+        "identify_ubo": {
+          "tp": 11,
+          "fp": 4,
+          "fn": 15,
+          "precision": 0.7333,
+          "recall": 0.4231,
+          "f1": 0.5366
+        },
+        "pep_edd": {
+          "tp": 0,
+          "fp": 9,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "cdd_incomplete": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.6667,
+          "recall": 1.0,
+          "f1": 0.8
+        }
+      }
+    },
+    "paragraph": {
+      "overall": {
+        "tp": 16,
+        "fp": 24,
+        "fn": 2,
+        "precision": 0.4,
+        "recall": 0.8889,
+        "f1": 0.5517
+      },
+      "by_type": {
+        "prohibit_anonymous": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667
+        },
+        "cdd_triggers": {
+          "tp": 4,
+          "fp": 8,
+          "fn": 0,
+          "precision": 0.3333,
+          "recall": 1.0,
+          "f1": 0.5
+        },
+        "verify_customer": {
+          "tp": 7,
+          "fp": 8,
+          "fn": 0,
+          "precision": 0.4667,
+          "recall": 1.0,
+          "f1": 0.6364
+        },
+        "identify_ubo": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 2,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5
+        },
+        "pep_edd": {
+          "tp": 0,
+          "fp": 4,
+          "fn": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "cdd_incomplete": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.6667,
+          "recall": 1.0,
+          "f1": 0.8
+        }
+      }
+    }
+  },
+  "agreement_with_rules_v2": {
+    "paragraph": {
+      "both": {
+        "items": 17,
+        "correct": 16
+      },
+      "rules_only": {
+        "items": 2,
+        "correct": 2
+      },
+      "llm_only": {
+        "items": 23,
+        "correct": 0
+      }
+    },
+    "clause": {
+      "both": {
+        "items": 29,
+        "correct": 28
+      },
+      "rules_only": {
+        "items": 22,
+        "correct": 22
+      },
+      "llm_only": {
+        "items": 65,
+        "correct": 0
+      }
+    },
+    "note": "Rules v2 were designed after studying their errors on this set, so the rules' side of this comparison is not an unseen-data result."
+  }
+}
