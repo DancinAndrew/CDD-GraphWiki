@@ -25,7 +25,7 @@ Individual final project for the IT Risk Management course at National Central U
 ## Architecture
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph Sources
         S1[FATF R.10 excerpts]
         S2[MAS Notice 626 excerpts]
