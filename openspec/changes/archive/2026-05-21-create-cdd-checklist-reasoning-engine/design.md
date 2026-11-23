@@ -84,10 +84,10 @@ flowchart TD
 
 ## 2. 架構決策關聯 (ADR Alignment)
 
-* **[ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的強型別合約設計**：
+* **[ADR-0004](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的強型別合約設計**：
   * 我們使用 `src/contracts/models.py` 中已定義的 `CustomerContext` 作為輸入，`CDDChecklist` 作為強型別輸出。
   * 引擎生成的 `CDDChecklist` 物件將透過 JSON / YAML 序列化為合規產物，保證資料合約與 schemas 規範一致。
-* **[ADR-0003](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0003-start-with-manual-gold-dataset-before-automation.md) 的金標先行與評鑑閉環**：
+* **[ADR-0003](/docs/adr/0003-start-with-manual-gold-dataset-before-automation.md) 的金標先行與評鑑閉環**：
   * 引擎直接與 `data/gold/checklists.yaml` 的黃金數據進行比對校驗。
   * 任何推理決策的分歧將直接被 `ChecklistEvaluator` 檢出並導致指標下降，迫使引擎進行防禦性校驗。
 
@@ -95,8 +95,8 @@ flowchart TD
 
 ## 3. 預計變更的檔案列表 (Files to Change)
 
-* **[NEW]** [engine.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/decision/engine.py)：客戶 CDD 檢核推理引擎及評量對齊工具。
-* **[NEW]** [test_cdd_reasoning.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/tests/test_cdd_reasoning.py)：涵蓋 5 大場景與 1.00 對齊指標的完整單元測試。
+* **[NEW]** [engine.py](/src/decision/engine.py)：客戶 CDD 檢核推理引擎及評量對齊工具。
+* **[NEW]** [test_cdd_reasoning.py](/tests/test_cdd_reasoning.py)：涵蓋 5 大場景與 1.00 對齊指標的完整單元測試。
 
 ---
 

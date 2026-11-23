@@ -71,8 +71,8 @@
 
 | 類型 | 來源 |
 | --- | --- |
-| PDF | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 15 頁，章節標題為「4. 解決方案與防禦技術」。 |
-| 論文 | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組.md:48-62` 說明 CDD-GraphWiki、知識編譯、雙圖對齊與人工審查路由。 |
+| PDF | `AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 15 頁，章節標題為「4. 解決方案與防禦技術」。 |
+| 論文 | `AI在金融業的導入風險與監理治理框架_第12組.md:48-62` 說明 CDD-GraphWiki、知識編譯、雙圖對齊與人工審查路由。 |
 | Repo | `README.md:3-8` 說明本專案不是一般 RAG chatbot，而是 wiki concept pages、regulatory knowledge graph、CDD / EDD checklist、human review log。 |
 | Repo | `docs/SPEC.md:10-12` 定義 product thesis，明確排除 generic upload PDFs and chat RAG app。 |
 
@@ -111,7 +111,7 @@
 
 | 類型 | 來源 |
 | --- | --- |
-| PDF | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 16 頁，畫面為「智能合規工作台」，展示 5 個客戶情境、Checklist 推理結果、文件清單與 Provenance。 |
+| PDF | `AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 16 頁，畫面為「智能合規工作台」，展示 5 個客戶情境、Checklist 推理結果、文件清單與 Provenance。 |
 | Spec | `docs/SPEC.md:37-49` 要求 primary output 是 evidence-backed CDD / EDD checklist，包含 decision category、obligations、required evidence、risk triggers、human review flags、source citations。 |
 | Spec | `docs/SPEC.md:96-107` 要求 manual gold dataset 至少包含 5 個 customer profiles 與 5 個 checklist outputs。 |
 | Data | `data/gold/customer_contexts.yaml:1-64` 定義 5 個典型客戶情境。 |
@@ -132,8 +132,8 @@
 
 | 類型 | 來源 |
 | --- | --- |
-| PDF | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 17 頁，畫面為「人工審查工作台 (HITL)」，展示 pending review case、觸發理由、approval status、CDD 等級覆寫、reviewer ID 與 notes。 |
-| 論文 | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組.md:61-62` 說明高風險、衝突、缺乏證據鏈的決策會觸發人工審查路由。 |
+| PDF | `AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 17 頁，畫面為「人工審查工作台 (HITL)」，展示 pending review case、觸發理由、approval status、CDD 等級覆寫、reviewer ID 與 notes。 |
+| 論文 | `AI在金融業的導入風險與監理治理框架_第12組.md:61-62` 說明高風險、衝突、缺乏證據鏈的決策會觸發人工審查路由。 |
 | Spec | `docs/SPEC.md:115-119` 要求涉及 regulatory thresholds、risk classification、required evidence 或 escalation rules 的輸出需人工審查。 |
 | Data | `data/gold/customer_contexts.yaml:53-64` 定義 `cust_corp_unclear_ubo`，包含 Cayman Islands、5 層股權、UBO unclear。 |
 | Data | `data/gold/checklists.yaml:73-90` 定義 `cust_corp_unclear_ubo` 的 enhanced due diligence、risk triggers、human review required 與 citations。 |
@@ -153,7 +153,7 @@
 
 | 類型 | 來源 |
 | --- | --- |
-| PDF | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 18 頁，畫面為「防篡改日誌審計稽核」，展示完整性狀態、Audit Trail、事件類型與 hash。 |
+| PDF | `AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 18 頁，畫面為「防篡改日誌審計稽核」，展示完整性狀態、Audit Trail、事件類型與 hash。 |
 | Code | `backend/src/audit/logger.py:8-12` 說明 AuditLogger 是 tamper-evident hash chain；`backend/src/audit/logger.py:29-39` 定義 hash 計算資料；`backend/src/audit/logger.py:41-85` 寫入新事件並串接 previous hash；`backend/src/audit/logger.py:87-115` 驗證完整性。 |
 | Code | `backend/src/api/main.py:233-254` 提供 `/api/v1/audit/logs` 與 `/api/v1/audit/verify`。 |
 | Frontend | `frontend/src/pages/AuditTimeline.tsx:32-63` 抓取 logs 與 verify API；`frontend/src/pages/AuditTimeline.tsx:92-214` 顯示時間線、event badge、hash、payload。 |
@@ -172,8 +172,8 @@
 
 | 類型 | 來源 |
 | --- | --- |
-| PDF | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 19 頁，畫面為「法規與決策可視化圖譜」，展示 D3 力導向圖與右側 decision payload。 |
-| 論文 | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組.md:54-59` 說明政策圖譜、客戶情境圖與圖對齊決策。 |
+| PDF | `AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 19 頁，畫面為「法規與決策可視化圖譜」，展示 D3 力導向圖與右側 decision payload。 |
+| 論文 | `AI在金融業的導入風險與監理治理框架_第12組.md:54-59` 說明政策圖譜、客戶情境圖與圖對齊決策。 |
 | Code | `backend/src/contracts/models.py:148-207` 定義 `GraphNode`、`GraphEdge`、`RegulatoryGraph` 與 edge types。 |
 | Code | `backend/src/graph/builder.py:18-49` 定義圖譜構建器；`backend/src/graph/builder.py:53-237` 將 documents、clauses、obligations、conflicts、customers、checklists 組成圖節點與邊。 |
 | Code | `backend/src/api/main.py:261-302` 提供 `/api/v1/graph` 給 D3 前端。 |
@@ -193,8 +193,8 @@
 
 | 類型 | 來源 |
 | --- | --- |
-| PDF | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 20 頁，畫面為「真實法規 Inflow Ingestion 工作台」，展示 PDF 上傳、metadata、pipeline logs、progress 與導入成功狀態。 |
-| 論文 | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組.md:52-53` 說明 knowledge compilation pipeline、資料合約、條款切分與義務抽取。 |
+| PDF | `AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 20 頁，畫面為「真實法規 Inflow Ingestion 工作台」，展示 PDF 上傳、metadata、pipeline logs、progress 與導入成功狀態。 |
+| 論文 | `AI在金融業的導入風險與監理治理框架_第12組.md:52-53` 說明 knowledge compilation pipeline、資料合約、條款切分與義務抽取。 |
 | Code | `backend/src/api/main.py:466-623` 實作 ingestion worker：PDF parsing、clause extraction、obligation extraction、YAML merge、Neo4j sync、cache clear、checklist 熱更新。 |
 | Code | `backend/src/api/main.py:624-709` 實作 PDF 上傳 endpoint 與 task polling endpoint。 |
 | Code | `backend/src/ingestion/pdf_parser.py:9-38` 實作 PDF text extraction；`backend/src/ingestion/pdf_parser.py:40-72` 實作清洗、頁首頁尾過濾與跨行斷字修補。 |
@@ -214,8 +214,8 @@
 
 | 類型 | 來源 |
 | --- | --- |
-| PDF | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 21 頁，畫面為「系統使用教學手冊」，展示 compiled compliance、data compilation pipeline 與各分頁模組。 |
-| 論文 | `/Users/hushsueh/Downloads/AI在金融業的導入風險與監理治理框架_第12組.md:48-62` 對應 CDD-GraphWiki、knowledge compilation、dual-graph alignment、review routing 與 governance。 |
+| PDF | `AI在金融業的導入風險與監理治理框架_第12組 (1).pdf` 第 21 頁，畫面為「系統使用教學手冊」，展示 compiled compliance、data compilation pipeline 與各分頁模組。 |
+| 論文 | `AI在金融業的導入風險與監理治理框架_第12組.md:48-62` 對應 CDD-GraphWiki、knowledge compilation、dual-graph alignment、review routing 與 governance。 |
 | Spec | `docs/SPEC.md:61-71` 明確列出 non-goals，包括不以 chatbot UI 為 primary product、不做 production legal judgment automation、不做 automatic policy updates without human review。 |
 | Frontend | `frontend/src/components/UserGuide.tsx:144-155` 說明核心設計哲學為 compiled compliance，不是一般 PDF RAG；`frontend/src/components/UserGuide.tsx:158-192` 展示 data compilation pipeline。 |
 | Frontend | `frontend/src/components/UserGuide.tsx:39-129` 定義 dashboard、review queue、audit timeline、regulatory graph、ingestion console 五個模組的用途與技術說明。 |

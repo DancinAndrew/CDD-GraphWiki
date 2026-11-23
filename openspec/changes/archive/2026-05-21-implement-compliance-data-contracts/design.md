@@ -1,7 +1,7 @@
 ## Context (背景脈絡)
 
 本專案是一個合規知識編譯與推理系統，對資料的嚴謹性與可追溯性要求極高。
-根據 [ADR-0004 (Schema Representation and Python Dataclass Strategy)](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md)，我們決定採用 **混合元模型策略 (Hybrid Metamodel Strategy)**：
+根據 [ADR-0004 (Schema Representation and Python Dataclass Strategy)](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md)，我們決定採用 **混合元模型策略 (Hybrid Metamodel Strategy)**：
 - **Python Dataclasses** 作為單一事實來源 (Single Source of Truth, SSOT)，用於定義資料合約的語意欄位與型態。
 - 自動化編譯指令碼 `scripts/compile_schemas.py` 負責將 Dataclasses 動態翻譯為標準的 **JSON Schema (`schemas/*.schema.json`)**，以供外部系統或跨語言校驗使用。
 - 實作應包含對 YAML 和 JSON 的雙重支援，且必須嚴格落實法規來源追溯（Provenance）與審核狀態（Review Status）。

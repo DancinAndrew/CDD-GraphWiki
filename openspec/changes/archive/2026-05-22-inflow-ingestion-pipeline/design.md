@@ -7,10 +7,10 @@
 ## 1. 架構決策紀錄 (ADR) 對齊
 
 本設計完美遵循並延續了 CDD-GraphWiki 專案的架構決策原則：
-* **對齊 [ADR-0003](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0003-start-with-manual-gold-dataset-before-automation.md) (先黃金數據集再自動化)**：
+* **對齊 [ADR-0003](/docs/adr/0003-start-with-manual-gold-dataset-before-automation.md) (先黃金數據集再自動化)**：
   * 在 Phase 1 與 Phase 2 中，我們藉由人工編寫的黃金數據集（MAS 626 核心條款與 FATF Rec 10）確立了合規推理引擎與防篡改審計的正確性。
   * 本設計代表我們正式邁向 **自動化 Ingestion 階段**，但我們將保留原有手動黃金數據集的比對測試模組，並在新管線中加入「與黃金數據集比對評估 (F1 / Precision)」的評量環節，確保自動化抽取質量可量化。
-* **對齊 [ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) (強型別 Python 數據合約)**：
+* **對齊 [ADR-0004](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) (強型別 Python 數據合約)**：
   * Ingestion 與 Extraction 的核心產出必須 100% 符合併映射至 `src/contracts/models.py` 中定義的 `SourceDocument`、`Clause` 與 `Obligation` 的 Pydantic BaseModel。
   * 我們將藉由大語言模型的 **Structured Outputs (Pydantic Schema JSON Mode)** 來強行保障生成的資料結構合法性，免去傳統二次格式轉譯與驗證。
 

@@ -77,20 +77,20 @@ class ExplanationPath(BaseModel):
 
 ## 2. 架構決策關聯 (ADR Alignment)
 
-* **[ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的強型別合約設計**：
+* **[ADR-0004](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的強型別合約設計**：
   * 我們新增的 `ProvenanceNode` 與 `ExplanationPath` 使用 `Pydantic` 實作權威代碼模型。
   * 執行 `scripts/compile_schemas.py` 將自動把新模型編譯為 `ProvenanceNode.schema.json` 與 `ExplanationPath.schema.json`，實現嚴格的事實來源控制。
-* **[ADR-0003](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0003-start-with-manual-gold-dataset-before-automation.md) 的金標先行與無幻覺引述**：
+* **[ADR-0003](/docs/adr/0003-start-with-manual-gold-dataset-before-automation.md) 的金標先行與無幻覺引述**：
   * 引擎直接與 `data/gold/clauses.yaml` 及 `data/gold/source_documents.yaml` 進行無縫鏈結，引述內容 100% 來自已編譯的金標，完全杜絕傳統 AI 系統的隨意生成與法理幻覺。
 
 ---
 
 ## 3. 預計變更的檔案列表 (Files to Change)
 
-* **[MODIFY]** [models.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/contracts/models.py)：新增 `ProvenanceNode` 與 `ExplanationPath` Pydantic 類。
-* **[MODIFY]** [__init__.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/contracts/__init__.py)：將新類納入 `__all__`。
-* **[NEW]** [provenance.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/decision/provenance.py)：實作合規解釋與溯源引擎核心。
-* **[NEW]** [test_explainable_provenance.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/tests/test_explainable_provenance.py)：針對溯源引擎、精確引述明文與審計報告導出的完整單元測試。
+* **[MODIFY]** [models.py](/src/contracts/models.py)：新增 `ProvenanceNode` 與 `ExplanationPath` Pydantic 類。
+* **[MODIFY]** [__init__.py](/src/contracts/__init__.py)：將新類納入 `__all__`。
+* **[NEW]** [provenance.py](/src/decision/provenance.py)：實作合規解釋與溯源引擎核心。
+* **[NEW]** [test_explainable_provenance.py](/tests/test_explainable_provenance.py)：針對溯源引擎、精確引述明文與審計報告導出的完整單元測試。
 
 ---
 

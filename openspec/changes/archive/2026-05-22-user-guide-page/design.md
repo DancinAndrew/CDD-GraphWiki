@@ -14,14 +14,14 @@
 3. **導航按鈕配置**：選單項目 ID 命名為 `guide`，顯示名稱為「系統使用手冊」，使用 `BookOpen` 圖標（來自 `lucide-react`），並精確安插在左側導航選單中「法規自主導入」的下方。
 
 ## 3. 預計變更的檔案列表 (Files to Change)
-- **`[NEW]` [UserGuide.tsx](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/frontend/src/components/UserGuide.tsx)**：
+- **`[NEW]` [UserGuide.tsx](/frontend/src/components/UserGuide.tsx)**：
   - 新增系統手冊核心組件。
   - 採用高級磨砂玻璃外觀與細微的邊框霓虹漸變。
   - 包含系統五大分頁的極致中文介紹，並畫出 Mermaid 流程圖。
-- **`[MODIFY]` [Sidebar.tsx](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/frontend/src/components/Sidebar.tsx)**：
+- **`[MODIFY]` [Sidebar.tsx](/frontend/src/components/Sidebar.tsx)**：
   - 引入 `BookOpen` 圖標。
   - 在 `menuItems` 中新增 `guide` 頁面按鈕，並對齊點擊態及選中樣式。
-- **`[MODIFY]` [App.tsx](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/frontend/src/App.tsx)**：
+- **`[MODIFY]` [App.tsx](/frontend/src/App.tsx)**：
   - 引入 `UserGuide` 組件。
   - 在 `renderContent` 路由分發中，新增 `case 'guide'`，當選中此頁面時渲染該組件。
 

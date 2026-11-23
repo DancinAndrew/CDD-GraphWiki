@@ -1,6 +1,6 @@
 # Design - Phase 9: Evaluation Harness
 
-本設計文檔詳細說明了 **Phase 9: Evaluation Harness (評估框架：Retrieval / Reasoning 分離與對比)** 的技術架構與實作方案。本設計嚴格依循 [ADR-0002](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0002-build-compliance-knowledge-compilation-before-chat-ui.md) 的「合規優先於 Chat UI」與 [ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的強型別契約設計原則，旨在透過嚴謹的軟體工程指標量化證明 CDD-GraphWiki 的高可靠性。
+本設計文檔詳細說明了 **Phase 9: Evaluation Harness (評估框架：Retrieval / Reasoning 分離與對比)** 的技術架構與實作方案。本設計嚴格依循 [ADR-0002](/docs/adr/0002-build-compliance-knowledge-compilation-before-chat-ui.md) 的「合規優先於 Chat UI」與 [ADR-0004](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的強型別契約設計原則，旨在透過嚴謹的軟體工程指標量化證明 CDD-GraphWiki 的高可靠性。
 
 ---
 
@@ -100,12 +100,12 @@ graph TD
 
 我們將採用手術式修改，僅新增評估模組並擴充合約：
 
-*   **[MODIFY] [models.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/contracts/models.py)**：擴充 Pydantic 資料合約，新增評估相關的強型別資料模型。
-*   **[MODIFY] [__init__.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/contracts/__init__.py)**：導出評估強型別模型。
-*   **[NEW] [__init__.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/evaluation/__init__.py)**：評估模組接口。
-*   **[NEW] [harness.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/evaluation/harness.py)**：實作 `EvaluationHarness` 引擎與錯誤診斷樹。
-*   **[NEW] [baseline.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/evaluation/baseline.py)**：實作 `VectorRAGBaseline` 對照組。
-*   **[NEW] [test_evaluation.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/tests/test_evaluation.py)**：自動化單元測試。
+*   **[MODIFY] [models.py](/src/contracts/models.py)**：擴充 Pydantic 資料合約，新增評估相關的強型別資料模型。
+*   **[MODIFY] [__init__.py](/src/contracts/__init__.py)**：導出評估強型別模型。
+*   **[NEW] [__init__.py](/src/evaluation/__init__.py)**：評估模組接口。
+*   **[NEW] [harness.py](/src/evaluation/harness.py)**：實作 `EvaluationHarness` 引擎與錯誤診斷樹。
+*   **[NEW] [baseline.py](/src/evaluation/baseline.py)**：實作 `VectorRAGBaseline` 對照組。
+*   **[NEW] [test_evaluation.py](/tests/test_evaluation.py)**：自動化單元測試。
 
 ---
 

@@ -3,8 +3,8 @@
 ## Architectural Context & Decisions
 
 本變更的技術設計嚴格對齊並依循以下架構決策紀錄 (ADRs)：
-- **[ADR-0004: Schema 表示法與 Python Dataclass 策略](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md)**：我們將在 `src/contracts/models.py` 中使用強型別 Pydantic 模型定義 `GraphNode`、`GraphEdge` 與 `RegulatoryGraph`。隨後，利用現有的編譯指令碼自動將其導出為獨立的 JSON Schemas 契約，保持「具權威性的代碼模型」與「聲明式契約」的混合元模型策略。
-- **[ADR-0002: Build compliance knowledge compilation before chat UI](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0002-build-compliance-knowledge-compilation-before-chat-ui.md)**：本圖譜並不引入 Neo4j、RDF 或其他重型圖數據庫依賴，而是先在 Python 記憶體中使用鄰接結構進行高效推理與表達。透過將圖譜序列化為標準 JSON，結合輕量級 D3.js，輸出單一 HTML 即可實現極致可視化，既保持系統輕量，又具備強大的圖譜功能。
+- **[ADR-0004: Schema 表示法與 Python Dataclass 策略](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md)**：我們將在 `src/contracts/models.py` 中使用強型別 Pydantic 模型定義 `GraphNode`、`GraphEdge` 與 `RegulatoryGraph`。隨後，利用現有的編譯指令碼自動將其導出為獨立的 JSON Schemas 契約，保持「具權威性的代碼模型」與「聲明式契約」的混合元模型策略。
+- **[ADR-0002: Build compliance knowledge compilation before chat UI](/docs/adr/0002-build-compliance-knowledge-compilation-before-chat-ui.md)**：本圖譜並不引入 Neo4j、RDF 或其他重型圖數據庫依賴，而是先在 Python 記憶體中使用鄰接結構進行高效推理與表達。透過將圖譜序列化為標準 JSON，結合輕量級 D3.js，輸出單一 HTML 即可實現極致可視化，既保持系統輕量，又具備強大的圖譜功能。
 
 ---
 

@@ -20,8 +20,8 @@
 
 ### 2.1 階段一：調研與文件閱讀 (Research)
 在動手寫任何代碼或規劃前，必須：
-1. 全面閱讀相關背景文件，包含專案的 [SPEC.md](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/SPEC.md)。
-2. 閱讀 `docs/adr/` 目錄下的架構決策紀錄 (ADRs)，理解系統架構的設計哲學（例如 [ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的混合元模型策略）。
+1. 全面閱讀相關背景文件，包含專案的 [SPEC.md](/docs/SPEC.md)。
+2. 閱讀 `docs/adr/` 目錄下的架構決策紀錄 (ADRs)，理解系統架構的設計哲學（例如 [ADR-0004](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的混合元模型策略）。
 3. 檢查現有的程式碼與已有的 OpenSpec changes，避免重複造輪子。
 
 ### 2.2 階段二：建立變更與提案 (Propose & Plan)
@@ -81,7 +81,7 @@
    - 撰寫符合 Conventional Commits 規範的 commit message（例如 `feat(cdd): add manual gold dataset validation`）。
    - 執行 `git commit`。
    - 執行 `git push` 推送至遠端倉庫。
-6. **撰寫 Walkthrough**：更新或撰寫 [walkthrough.md](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/walkthrough.md) 以總結所做變更、測試成果，並向用戶報告。
+6. **撰寫 Walkthrough**：更新或撰寫 [walkthrough.md](/walkthrough.md) 以總結所做變更、測試成果，並向用戶報告。
 
 ---
 
@@ -89,7 +89,7 @@
 
 - **當前階段**：**Phase 10: Complete Integration & Refinement (全階段收斂與實用化落地)**
 - **活動變更**：`none` (所有 Phase 1 到 Phase 10 的 OpenSpec change 已全數封存歸檔並合併至 Baseline)
-- **架構指導**：[SPEC.md](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/SPEC.md), [ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md)
+- **架構指導**：[SPEC.md](/docs/SPEC.md), [ADR-0004](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md)
 
 
 ---

@@ -95,11 +95,11 @@ response = httpx.post(f"{self.nim_base_url}/chat/completions", json=payload, hea
 
 ## 4. 變更檔案列表 (What Will Change)
 
-- `[NEW]` [test_nim_connection.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/scripts/test_nim_connection.py) —— 驗證 NVIDIA NIM API 連通性與 JSON 輸出的測試腳本。
-- `[NEW]` [demo_ingestion_nim.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/demo_ingestion_nim.py) —— 供使用者跑一次真實使用流程的實作演示入口。
-- `[MODIFY]` [llm_client.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/extraction/llm_client.py) —— 擴展 `LLMClient` 整合 NVIDIA NIM API，提供多模型分發。
-- `[MODIFY]` [llm_extractor.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/extraction/llm_extractor.py) —— 讓 Chunker 和 Extractor 能動態從 `LLMClient` 獲取個別指定的 NIM 模型名稱。
-- `[MODIFY]` [.env](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/.env) —— 建立環境配置，寫入 API key。
+- `[NEW]` [test_nim_connection.py](/scripts/test_nim_connection.py) —— 驗證 NVIDIA NIM API 連通性與 JSON 輸出的測試腳本。
+- `[NEW]` [demo_ingestion_nim.py](/demo_ingestion_nim.py) —— 供使用者跑一次真實使用流程的實作演示入口。
+- `[MODIFY]` [llm_client.py](/src/extraction/llm_client.py) —— 擴展 `LLMClient` 整合 NVIDIA NIM API，提供多模型分發。
+- `[MODIFY]` [llm_extractor.py](/src/extraction/llm_extractor.py) —— 讓 Chunker 和 Extractor 能動態從 `LLMClient` 獲取個別指定的 NIM 模型名稱。
+- `[MODIFY]` [.env](/.env) —— 建立環境配置，寫入 API key。
 
 ---
 

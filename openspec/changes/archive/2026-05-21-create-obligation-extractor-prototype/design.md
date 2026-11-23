@@ -1,6 +1,6 @@
 # Technical Design: Create Obligation Extractor Prototype
 
-本設計文件定義了 **Phase 4: Obligation Extractor Prototype** 的具體技術實現方案。本設計完全契合 [ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的混合元模型策略與強型別合約設計。
+本設計文件定義了 **Phase 4: Obligation Extractor Prototype** 的具體技術實現方案。本設計完全契合 [ADR-0004](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的混合元模型策略與強型別合約設計。
 
 ---
 
@@ -53,12 +53,12 @@ graph TD
 ## 3. 預計變更的檔案列表 (Files to Change)
 
 ### [NEW]
-1. **[extractor.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/src/extraction/extractor.py)**: 抽取器主程式。
-2. **[test_obligation_extractor.py](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/tests/test_obligation_extractor.py)**: 針對合約、失敗分類與評估指標的單元測試。
+1. **[extractor.py](/src/extraction/extractor.py)**: 抽取器主程式。
+2. **[test_obligation_extractor.py](/tests/test_obligation_extractor.py)**: 針對合約、失敗分類與評估指標的單元測試。
 
 ### [MODIFY]
-1. **[task.md](file:///Users/andrew-ideaslab/.gemini/antigravity/brain/4715f275-5668-4503-957f-b889b1a87ca4/task.md)**: 勾選後續任務。
-2. **[walkthrough.md](file:///Users/andrew-ideaslab/.gemini/antigravity/brain/4715f275-5668-4503-957f-b889b1a87ca4/walkthrough.md)**: 追加 Phase 4 完成報告。
+1. **`task.md` (coding agent workspace, not in repo)**: 勾選後續任務。
+2. **`walkthrough.md` (coding agent workspace, not in repo)**: 追加 Phase 4 完成報告。
 
 ---
 

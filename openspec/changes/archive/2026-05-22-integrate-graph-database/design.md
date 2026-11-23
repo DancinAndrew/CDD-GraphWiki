@@ -1,6 +1,6 @@
 # Design: Neo4j 圖資料庫對接與極深股權 UBO 關係鏈穿透
 
-本設計文檔說明了將 CDD-GraphWiki 合規關係與客戶股權圖譜寫入正式圖資料庫 Neo4j 的技術實現細節。本方案關聯架構決策 [ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的混合元模型策略，並擴展為具備圖數據穿透能力的架構。
+本設計文檔說明了將 CDD-GraphWiki 合規關係與客戶股權圖譜寫入正式圖資料庫 Neo4j 的技術實現細節。本方案關聯架構決策 [ADR-0004](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的混合元模型策略，並擴展為具備圖數據穿透能力的架構。
 
 ---
 
@@ -20,7 +20,7 @@ graph TD
 
 ## 2. docker-compose.yml 容器化配置變更
 
-我們將在專案根目錄的 [docker-compose.yml](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docker-compose.yml) 中新增 Neo4j 圖資料庫容器服務，配備本地數據卷以保持數據持久性：
+我們將在專案根目錄的 [docker-compose.yml](/docker-compose.yml) 中新增 Neo4j 圖資料庫容器服務，配備本地數據卷以保持數據持久性：
 
 ```yaml
   neo4j:

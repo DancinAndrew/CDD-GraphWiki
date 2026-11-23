@@ -65,10 +65,10 @@ class Concept(BaseModel):
 
 ## 2. 架構決策關聯 (ADR Alignment)
 
-* **[ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的混合元模型策略**：
+* **[ADR-0004](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的混合元模型策略**：
   * 我們新增的 `Concept` 類將使用 `Pydantic` 實作權威代碼模型。
   * 執行 `scripts/compile_schemas.py` 將自動把 `Concept` 模型編譯為 `Concept.schema.json`，作為聲明式契約，實現單一事實來源。
-* **[ADR-0003](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0003-start-with-manual-gold-dataset-before-automation.md) 的金標先行**：
+* **[ADR-0003](/docs/adr/0003-start-with-manual-gold-dataset-before-automation.md) 的金標先行**：
   * 衝突偵測引擎產出的 Conflicts，將直接與 `data/gold/conflicts.yaml` 的 Ground Truth 進行字段與內容對齊，確保 F1-score 達 **1.00**。
 
 ---

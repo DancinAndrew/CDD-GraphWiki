@@ -1,6 +1,6 @@
 # 技術設計方案：合規官工作台全棧 Dashboard (create-compliance-dashboard)
 
-本設計方案遵循 [ADR-0004](file:///Users/andrew-ideaslab/Documents/CDD-GraphWiki/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的混合元模型策略與強型別合約設計，並嚴格落實 Everything Claude Code (ECC) 的最小化依賴與條款級溯源規範。
+本設計方案遵循 [ADR-0004](/docs/adr/0004-schema-representation-and-python-dataclass-strategy.md) 的混合元模型策略與強型別合約設計，並嚴格落實 Everything Claude Code (ECC) 的最小化依賴與條款級溯源規範。
 
 ---
 
